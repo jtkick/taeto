@@ -9,6 +9,7 @@ using namespace std;
 #include <cmath>
 #include <vector>
 #include <ctime>
+#include <chrono>
 
 int w_char = 119;
 int a_char = 97;
@@ -48,10 +49,16 @@ class Model
         
 };
 
+Model::Model(void)
+{
+
+}
+
 
 // Sprites are made up of models and/or other sprites
 class Sprite
 {
+    protected:
 
     // Position on screen relative to origin? parent sprite?
     long int x_position;
@@ -64,7 +71,8 @@ class Sprite
     long int depth;
     
     // models is an array of 3d models at different zoom levels
-    vector<Model> models;
+    //vector<Model> models;
+    Model model;
         
     // Sprites that this sprite is made out of
     // Any transformation/translation of this sprite will be done to sub_sprites
@@ -74,17 +82,35 @@ class Sprite
     // Used to determine when next frame should be generated
     time_t local_timer;
     
+    // Character that denotes that the given 'pixel' should not be drawn
+    char alpha_char = '\0';
+    
+    // Current frame as it should be displayed
+    //vector<string> current_frame;
+    
+    // Because fuck C strings
+    vector<string> data;
+    
     public:
+        vector<string> current_frame;
     
         Sprite();
         
         char get_pixel(long int, long int);
+        
+        long int get_height();
+        
+        long int get_width();
+        
+        long int get_x_position();
+        
+        long int get_y_position();
     
         void map(char, Texture);
         
         void move(long int, long int, long int);
         
-        void animate(time_t);
+        void animate();
     
 };
 
@@ -95,9 +121,36 @@ Sprite::Sprite(void)
 }
 
 
-char Sprite::get_pixel(long int abs_x, long int abs_y)
+char Sprite::get_pixel(long int rel_x, long int rel_y)
 {
-    return '\0';
+    if (current_frame[rel_y][rel_x] != alpha_char)
+        return current_frame[rel_y][rel_x];
+    else
+        return '\0';
+}
+
+
+long int Sprite::get_x_position()
+{
+    return x_position;
+}
+
+        
+long int Sprite::get_y_position()
+{
+    return y_position;
+}
+
+        
+long int Sprite::get_width()
+{
+    return width;
+}
+
+        
+long int Sprite::get_height()
+{
+    return height;
 }
 
 
@@ -120,20 +173,19 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
     vector<Sprite>::iterator it;
     int i = 0;
     for (it = sub_sprites.begin(); it != sub_sprites.end(); it++, i++)
-    {
-        (*it).move(x_diff, y_diff, z_diff);
-    } 
+        it->move(x_diff, y_diff, z_diff);
 }
 
 
 // Generate new frame of sprite
 // First parameter is time since last frame was generated
-void Sprite::animate(time_t time_diff)
+// void Sprite::animate(time_t time_diff)
+void Sprite::animate()
 {
     // Add time_diff to local counter
     // Keeps sprite from updating frame too fast, and allows
     // sprites to be animated at different speeds
-    local_timer += time_diff;
+    //local_timer += time_diff;
     
     // Animate if enough time has passed
     time_t frame_length;
@@ -141,6 +193,8 @@ void Sprite::animate(time_t time_diff)
     // {
     //     // animate
     // }
+    
+    //current_frame = data;
 }
 
 
@@ -160,10 +214,18 @@ class Engine
     public:
     
         Engine(void);
+        
+        void add_sprite(Sprite);
+                
+        void animate();
+        
+        void display_frame(vector<string>);
     
         void move_camera(long int, long int, long int);
         
-        void render_frame();
+        vector<string> render_frame();
+        
+        void write_frame(char*);
         
 };
 
@@ -189,6 +251,63 @@ Engine::Engine()
     
     scrollok(stdscr, TRUE);
     
+    // Initialize camera position
+    x_camera_position = 0;
+    y_camera_position = 0;
+    z_camera_position = 0;
+    
+}
+
+
+void Engine::add_sprite(Sprite sprite)
+{
+
+    sprites.push_back(sprite);
+
+}
+
+
+void Engine::animate()
+{
+
+    // Loop over every sprite 
+    vector<Sprite>::iterator sprite;
+    for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)
+
+        // Tell each sprite to animate itself
+        // It is each sprite's job to animate it's own sub-sprites
+        sprite->animate();
+
+}
+
+
+void Engine::display_frame(vector<string> frame)
+{
+
+    // Loop over lines
+    for (int i = 0; i < frame.size(); i++)
+    {
+    
+        // Loop over columns
+        for (int j = 0; j < frame[i].length(); j++)
+        {
+        
+            // Get pixel in question
+            char pixel = frame[i][j];
+        
+            // Move cursor to origin
+            move(i, j);
+
+            // Write character
+            waddch(stdscr, pixel);
+        
+            // Refresh window
+            wrefresh(stdscr);
+            
+        }
+        
+    }
+
 }
 
 
@@ -203,71 +322,101 @@ void Engine::move_camera(long int x_diff, long int y_diff, long int z_diff)
 }
 
 
-void Engine::render_frame()
+vector<string> Engine::render_frame()
 {
     // Create frame for window
     int h, w;
     getmaxyx(stdscr, h, w);
+    
+    vector<string> frame;
 
     // Loop over each 'pixel' in frame
-    for (int x = 0; x < w; x++)
+    for (int y = 0; y < h; y++)
     {
-        for (int y = 0; y < h; y++)
+        // Create row
+        string line;
+        
+        for (int x = 0; x < w; x++)
         {
+            // 'Pixel' to be added to new frame
+            char frame_pixel = ' ';
+        
             // Get absolute location of given 'pixel'
             long int abs_x = x_camera_position - (w / 2) + x;
-            long int abs_y = y_camera_position - (h / 2) + x;
+            long int abs_y = y_camera_position - (h / 2) + y;
             
             // Loop over each sprite, and write to current frame
-            vector<Sprite>::iterator it;
-            int i = 0;
-            for (it = sprites.begin(); it != sprites.end(); it++, i++)
+            vector<Sprite>::iterator sprite;
+            for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)
             {
-                // First check if given 'pixel' overlaps with window
-        
+                // Get pixel relative to sprite
+                long int rel_x = abs_x - sprite->get_x_position();
+                long int rel_y = abs_y - sprite->get_y_position();
+                
+                // Get sprite dimensions
+                long int sprite_width = sprite->get_width();
+                long int sprite_height = sprite->get_height();
+                
+                // If pixel overlaps with sprite
+                if ( 0 <= rel_x && rel_x < sprite_width && 0 <= rel_y && rel_y < sprite_height)
+                     
+                    // First check if sprite cares about 'pixel'
+                    if (sprite->get_pixel(rel_x, rel_y) != '\0')
+                
+                        // Write 'pixel' to frame
+                        frame_pixel = sprite->get_pixel(rel_x, rel_y);
+
             }
+            
+            // Write pixel to line
+            line += frame_pixel;
         }
-    } 
+        
+        // Add to frame
+        frame.push_back(line);
+    }
+    
+    return frame;
+
 }
 
 
 
 
-/*
+
 class Palm_tree: public Sprite
 {
 public:
-int h;
-int w;
-const char *data;
     // I am going to kill myself
-    Palm_tree() :
-           h(22),
-           w(45),
-           data("              _____                          "
-                "           __/ / / \\_                        "
-                "          / / / / / /\\                       "
-                "          \\/\\/\\/ / / /\\                      "
-                "               \\/\\/_/ /\\                     "
-                "          ________  \\/ /|     ________       "
-                "     ____/ / / / /\\__\\/ | ___/_ \\ \\ \\ \\__    "
-                "  __/ / / / / / / / /\\|/|/ \\ \\ \\_\\ \\ \\ \\ \\   "
-                " / / / / / / / / / / / \\/ \\ \\ \\ \\ \\_\\_\\ \\ \\  "
-                "/ / / / /\\/\\/\\/\\/\\/\\/\\|XX|/\\ \\ \\ \\ \\   \\_\\ \\ "
-                "|/\\/\\/\\/              |XX|  \\/\\ \\ \\ \\     \\ |"
-                "                      |XX|     \\/\\ \\|      \\|"
-                "                      \\XX\\        \\ |        "
-                "                       |XX|        \\|        "
-                "                       |XX|                  "
-                "                       \\XX\\                  "
-                "                        |XX|                 "
-                "                        |XX|                 "
-                "                        \\XX\\                 "
-                "                         |XX\\                "
-                "                        /XXXX\\               "
-                "                       /XXXXXX\\              ") {}
+    Palm_tree() { height = 22; 
+                width = 45;
+                x_position = 0;
+                y_position = 0;
+                current_frame = {"              _____                          ",
+                "           __/ / / \\_                        ",
+                "          / / / / / /\\                       ",
+                "          \\/\\/\\/ / / /\\                      ",
+                "               \\/\\/_/ /\\                     ",
+                "          ________  \\/ /|     ________       ",
+                "     ____/ / / / /\\__\\/ | ___/_ \\ \\ \\ \\__    ",
+                "  __/ / / / / / / / /\\|/|/ \\ \\ \\_\\ \\ \\ \\ \\   ",
+                " / / / / / / / / / / / \\/ \\ \\ \\ \\ \\_\\_\\ \\ \\  ",
+                "/ / / / /\\/\\/\\/\\/\\/\\/\\|XX|/\\ \\ \\ \\ \\   \\_\\ \\ ",
+                "|/\\/\\/\\/              |XX|  \\/\\ \\ \\ \\     \\ |",
+                "                      |XX|     \\/\\ \\|      \\|",
+                "                      \\XX\\        \\ |        ",
+                "                       |XX|        \\|        ",
+                "                       |XX|                  ",
+                "                       \\XX\\                  ",
+                "                        |XX|                 ",
+                "                        |XX|                 ",
+                "                        \\XX\\                 ",
+                "                         |XX\\                ",
+                "                        /XXXX\\               ",
+                "                       /XXXXXX\\              "};}
+                //data[3][2] = 'l';}
 };
-*/
+
 
 int kbhit(void)
 {
@@ -284,142 +433,57 @@ int kbhit(void)
 
 int main()
 {
+    Engine engine;
+    
+    Palm_tree tree;
+    
+    engine.add_sprite(tree);
 
-/*
-Palm_tree tree;
-
-for( int i = 0; i < tree.h; i++)
-{
-    for (int j = 0; j < tree.w; j++)
-    {
-    
-
-    cout << tree.data[i * tree.w + j];
-    }
-    cout << endl;
-    }
-*/
-return 0;
-
-
-    // Initialize ncurses
-    initscr();
-    
-    // Don't buffer input characters
-    cbreak();
-    
-    // Don't print entered characters
-    noecho();
-    
-    // Allow special keystrokes
-    keypad(stdscr, TRUE);
-    
-    nodelay(stdscr, TRUE);
-    
-    scrollok(stdscr, TRUE);
-    
-    // Get window dimensions
-    int h, w;
-    getmaxyx(stdscr, h, w);
-
-    int x = 10;
-    int y = 10;
-    
-    float y_speed = 0;
-    
-    move(5, 50);
+    chrono::microseconds time;
+   
+    move(0, 0);
+    string s = "Testing, attention please.          ";
+    waddstr(stdscr, s.c_str());
+        
+    // Refresh window
     wrefresh(stdscr);
     
-    while (true)
+    sleep(2);
+ 
+    while (TRUE)
     {
-        if (kbhit())
+        int c = getch();
+        switch(c)
         {
-        
-            //clear();
-            wrefresh(stdscr);
-         
-            // Get character input
-            int ch = getch();
+            case 'w':
+                engine.move_camera(0, -1, 0);
+                break;
             
-            move(0, 0);
-            string s = "C: " + to_string(ch);
-            waddstr(stdscr, s.c_str());
-            
-            move(y, x);
-            addch(' ');
-            
-            // Move character
-            switch (ch)
-            {
-                case 119:
-                    y = (y - 1) % h;
-                    break;
-                    
-                case 97:
-                    x = (x - 1) % w;
-                    break;
-                    
-                case 115:
-                    y = (y + 1) % h;
-                    break;
-                    
-                case 100:
-                    x = (x + 1) % w;
-                    break;
-            }
-            
-            move(1, 0);
-            s = "X: " + to_string(x);
-            waddstr(stdscr, s.c_str());
-            
-            move(2, 0);
-            s = "Y: " + to_string(y);
-            waddstr(stdscr, s.c_str());
-            
-            if (ch == space_char)
-            {
-                y_speed = 1.0;
-                for (int i = -3; i < 5; i++)
-                {
-                    clearok(stdscr, TRUE);
-
-                    usleep(100000);
-                    y -= (-0.1 * pow(i, 3));
-                    
-                    move(0, 0);
-                    string s = "Y: " + to_string(y) + "          ";
-                    waddstr(stdscr, s.c_str());
-                    
-                    move(1, 0);
-                    s = "i: " + to_string(i) + "          ";
-                    waddstr(stdscr, s.c_str());
-                    
-                    // Move cursor to origin
-                    move((int)y, x);
-
-                    // Write character
-                    waddch(stdscr, 'o');
-        
-                    // Refresh window
-                    wrefresh(stdscr);
-                    
-                }
-            }
-        
-            // Move cursor to origin
-            move(y, x);
-
-            // Write character
-            waddch(stdscr, 'o');
-            
-            move(h, w);
-
-            // Refresh window
-            wrefresh(stdscr);
-            
-            usleep(4166);
+            case 'a':
+                engine.move_camera(-1, 0, 0);
+                break;
+                
+            case 's':
+                engine.move_camera(0, 1, 0);
+                break;
+                
+            case 'd':
+                engine.move_camera(1, 0, 0);
+                break;
         }
+    
+        // Tell every sprite to animate itself
+        engine.animate();
         
+        // Render new frame
+        vector<string> new_frame = engine.render_frame();
+        
+        // Display new frame
+        engine.display_frame(new_frame);
+        
+        // Wait for the length of one frame
+        // Test with 1FPS
+        usleep(100000);
     }
 
 }
