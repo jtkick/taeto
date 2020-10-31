@@ -34,7 +34,8 @@ class Palm_tree: public Sprite
         
             // Default position to the origin
             x_position = 0;
-            y_position = 0;            
+            y_position = 0;
+            z_position = 0;     
         
             // Set frame details
             height = 22; 
@@ -80,7 +81,8 @@ class Person: public Sprite
         
             // Default position to the origin
             x_position = 0;
-            y_position = 0;            
+            y_position = 0;
+            z_position = 0;       
         
             // Set frame details
             height = 7; 
@@ -122,7 +124,7 @@ void Person::animate()
     
     long long time_since_last_run = now - last_run_time;
     
-    long long frame_length_ms = 500;
+    long long frame_length_ms = 250;
     
     if (time_since_last_run > frame_length_ms)
     {
@@ -159,25 +161,27 @@ int main()
     Engine engine;
     
     Palm_tree tree;
+    tree.move(0, 0, -10);
     Palm_tree tree2;
-    tree2.move(30, 2, 0);
+    tree2.move(0, 0, -12);
     Palm_tree tree3;
-    tree3.move(100, 0, 0);
+    tree3.move(0, 0, -16);
     Palm_tree tree4;
-    tree4.move(150, 0, 0);
+    tree4.move(150, 0, -1);
     Palm_tree tree5;
-    tree5.move(200, 0, 0);
+    tree5.move(200, 0, -1);
     
     Person person;
     //person.move(75, 16, 0);
-    person.move(0, 0, 0);
+    person.move(0, 0, -1);
     
     engine.add_sprite(&tree);
-    engine.add_sprite(&tree2);
     engine.add_sprite(&tree3);
     engine.add_sprite(&tree4);
     engine.add_sprite(&tree5);
     engine.add_sprite(&person);
+    engine.add_sprite(&tree2);
+    
 
     chrono::microseconds time;
    
@@ -197,23 +201,23 @@ int main()
         switch(c)
         {
             case 'w':
-                engine.move_camera(0, -2, 0);
-                person.move(0, -2, 0);
+                engine.move_camera(0, -10, 0);
+                person.move(0, -10, 0);
                 break;
             
             case 'a':
-                engine.move_camera(-2, 0, 0);
-                person.move(-2, 0, 0);
+                engine.move_camera(-10, 0, 0);
+                person.move(-10, 0, 0);
                 break;
                 
             case 's':
-                engine.move_camera(0, 2, 0);
-                person.move(0, 2, 0);
+                engine.move_camera(0, 10, 0);
+                person.move(0, 10, 0);
                 break;
                 
             case 'd':
-                engine.move_camera(2, 0, 0);
-                person.move(2, 0, 0);
+                engine.move_camera(10, 0, 0);
+                person.move(10, 0, 0);
                 break;
         }
         

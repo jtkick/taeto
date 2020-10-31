@@ -1,5 +1,4 @@
 #include "Engine.h"
-
 #include "Sprite.h"
 
 #include <vector>
@@ -37,8 +36,18 @@ Engine::Engine()
 
 void Engine::add_sprite(Sprite* sprite)
 {
-
+    // Add sprite to list
     sprites.push_back(sprite);
+    
+    // Loop over every sub_sprite
+    // Engine does not care about actual sprite structures, so just add every
+    // individual sprite to the list to be rendered
+    // TODO: YEAH THATS NOT GONNA WORK
+    vector<Sprite*>::iterator sub_sprite;
+    for (sub_sprite = sprite->sub_sprites.begin(); sub_sprite != sprite->sub_sprites.end(); sub_sprite++)
+    
+        // Recursively add sub_sprite to list
+        this->add_sprite(*sub_sprite);
 
 }
 
@@ -97,6 +106,29 @@ void Engine::move_camera(long int x_diff, long int y_diff, long int z_diff)
     
 }
 
+
+//  __________________________
+// |     _              _     |
+// |   _/ \            / \_   |
+// |  |__  \ ________ /  __|  |
+// |     \  /        \  /     |
+// |      \| ___  ___ |/      |
+// |       | \_/  \_/ |       |
+// |       (__  /\  __)       |
+// |         \\MMMM//         |
+// |         /\MMMM/\         |
+// |        /  /  \  \        |
+// |     __/  /    \  \__     |
+// |    |_   /      \   _|    |
+// |      \_/        \_/      |
+// |                          |
+// |  Lasciate ogni speranza, |
+// |      voi ch'intrate.     |
+// |__________________________|
+//
+
+// This method iterates all sprites known to the engine, and renders a
+// frame with them.  
 vector<string> Engine::render_frame()
 {
     // Create frame for window
@@ -115,22 +147,34 @@ vector<string> Engine::render_frame()
         {
             // 'Pixel' to be added to new frame
             char frame_pixel = ' ';
-        
-            // Get absolute location of given 'pixel'
-            long int abs_x = x_camera_position - (w / 2) + x;
-            long int abs_y = y_camera_position - (h / 2) + y;
             
             // Loop over each sprite, and write to current frame
             vector<Sprite*>::iterator sprite;
             for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)
             {
+                // Get distance between sprite and camera
+                long int z_diff = z_camera_position - (*sprite)->get_z_position();
+                
+                // Make sure sprite is at least in front of the camera
+                // Also handle case where z-diff is 0 to prevent divide by zero error
+                if (z_diff <= 0)
+                    continue;
+            
+                // Get absolute position of pixel taking distance from camera into account
+                long int abs_x = x_camera_position - (w / 2)*z_diff + (x * z_diff);
+                long int abs_y = y_camera_position - (h / 2)*z_diff + (y * z_diff);
+                
                 // Get pixel relative to sprite
-                long int rel_x = abs_x - (*sprite)->get_x_position();
-                long int rel_y = abs_y - (*sprite)->get_y_position();
+                long int rel_x = abs_x - (*sprite)->get_x_position() * z_diff;
+                long int rel_y = abs_y - (*sprite)->get_y_position() * z_diff;
                 
                 // Get sprite dimensions
                 long int sprite_width = (*sprite)->get_width();
                 long int sprite_height = (*sprite)->get_height();
+                
+                // Get index relative to sprite size
+                rel_x = (rel_x / z_diff) - 1;
+                rel_y = (rel_y / z_diff) - 1;
                 
                 // If pixel overlaps with sprite
                 if ( 0 <= rel_x && rel_x < sprite_width && 0 <= rel_y && rel_y < sprite_height)

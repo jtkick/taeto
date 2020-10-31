@@ -1,12 +1,14 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "Model.h"
 #include "Texture.h"
 
 #include <chrono>
+#include <map>
 #include <string>
 #include <vector>
+
+using namespace std;
 
 class Sprite
 {
@@ -22,13 +24,16 @@ class Sprite
     long int width;
     long int depth;
     
-    // models is an array of 3d models at different zoom levels
-    //vector<Model> models;
-    Model model;
+    // Each element of the dict is 3D model of what this particular sprite
+    // should look like at this distance from the camera, taking zoom into
+    // account. The engine will determine based on the camera's relative
+    // z position and zoom level, how big the sprite should appear on screen,
+    // and look for the appropriate model in the following dict.
+    //map<long int, Model> models;
         
     // Sprites that this sprite is made out of
     // Any transformation/translation of this sprite will be done to sub_sprites
-    vector<Sprite> sub_sprites;
+    vector<Sprite*> sub_sprites;
     
     // Time at which the last frame was animated in milliseconds since UNIX epoch
     long long last_run_time;
@@ -58,8 +63,10 @@ class Sprite
         long int get_x_position();
         
         long int get_y_position();
+        
+        long int get_z_position();
     
-        void map(char, Texture);
+        void map_sprite(char, Sprite*, long int, long int);
         
         void move(long int, long int, long int);
         

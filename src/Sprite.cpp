@@ -22,6 +22,11 @@ long int Sprite::get_y_position()
 {
     return y_position;
 }
+
+long int Sprite::get_z_position()
+{
+    return z_position;
+}
         
 long int Sprite::get_width()
 {
@@ -33,8 +38,9 @@ long int Sprite::get_height()
     return height;
 }
 
-// Maps a sub-sprite on this sprite using map
-void Sprite::map(char c, Texture tex)
+// Maps a sub-sprite on this sprite's given character, at the relative coordinates of the given offsets
+// Use c='\0' for any 'pixel'
+void Sprite::map_sprite(char c, Sprite* sub_sprite, long int x_offset, long int y_offset)
 {
 
 }
@@ -49,10 +55,10 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
     z_position += z_diff;
     
     // Move all sub_sprites
-    vector<Sprite>::iterator it;
+    vector<Sprite*>::iterator it;
     int i = 0;
     for (it = sub_sprites.begin(); it != sub_sprites.end(); it++, i++)
-        it->move(x_diff, y_diff, z_diff);
+        (*it)->move(x_diff, y_diff, z_diff);
         
 }
 
