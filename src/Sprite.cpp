@@ -5,6 +5,13 @@ Sprite::Sprite(void)
     last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
 }
 
+Sprite::Sprite(long int x, long int y, long int z)
+{
+    x_position = x;
+    y_position = y;
+    z_position = z;
+}
+
 char Sprite::get_pixel(long int rel_x, long int rel_y)
 {
     if (current_frame[rel_y][rel_x] != alpha_char)

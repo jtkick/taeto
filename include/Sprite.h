@@ -54,6 +54,8 @@ class Sprite
     
         Sprite();
         
+        Sprite(long int, long int, long int);
+        
         char get_pixel(long int, long int);
         
         long int get_height();

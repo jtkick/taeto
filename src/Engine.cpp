@@ -67,6 +67,11 @@ void Engine::animate()
 void Engine::display_frame(vector<string> frame)
 {
 
+    start_color();
+    
+    //init_pair(1, COLOR_RED, COLOR_BLACK);
+    //init_pair(2, COLOR_GREEN, COLOR_BLACK);
+
     // Loop over lines
     for (int i = 0; i < frame.size(); i++)
     {
@@ -83,6 +88,11 @@ void Engine::display_frame(vector<string> frame)
         
             // Move cursor to origin
             move(i, j);
+            
+            //if (j % 2 == 0)
+            //    attron(COLOR_PAIR(1));
+            //else
+            //    attron(COLOR_PAIR(2));
 
             // Write character
             waddch(stdscr, pixel);
