@@ -27,11 +27,11 @@ class Engine
                 
         void animate();
         
-        void display_frame(vector<string>);
+        void display_frame(Frame);
     
         void move_camera(long int, long int, long int);
         
-        vector<string> render_frame();
+        Frame render_frame();
         
         void write_frame(char*);
         

@@ -4,6 +4,7 @@ using namespace std;
 
 #include "Engine.h"
 #include "Sprite.h"
+#include "Frame.h"
 
 #include <curses.h>
 #include <iostream>
@@ -41,7 +42,7 @@ class Palm_tree: public Sprite
             height = 22; 
             width = 45;
             alpha_char = '@';
-            current_frame = {
+            vector<string> default_chars = {
                 R"(@@@@@@@@@@@@@@_____@@@@@@@@@@@@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@__/ / / \_@@@@@@@@@@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@/ / / / / /\@@@@@@@@@@@@@@@@@@@@@@@)",
@@ -64,6 +65,9 @@ class Palm_tree: public Sprite
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@@|XX\@@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@/XXXX\@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@/XXXXXX\@@@@@@@@@@@@@@)" };
+            Frame default_frame(45, 22);
+            default_frame.set_chars(default_chars);
+            
     }
     
 };
@@ -88,6 +92,7 @@ class Person: public Sprite
             height = 7; 
             width = 7;
             alpha_char = '@';
+            current_frame = Frame(7, 7);
             data =
             {
                 {
@@ -109,7 +114,7 @@ class Person: public Sprite
                     R"(@@|@|@@)"
                 }
             };
-            current_frame = data[0];
+            current_frame.set_chars(data[0]);
             
         }
     
@@ -132,7 +137,7 @@ void Person::animate()
         {
             current_frame_index = (current_frame_index + 1) % 2;
         
-            current_frame = data.at(current_frame_index);
+            current_frame.set_chars(data.at(current_frame_index));
         
             time_since_last_run -= frame_length_ms;
         }
@@ -228,7 +233,7 @@ int main()
         engine.animate();
         
         // Render new frame
-        vector<string> new_frame = engine.render_frame();
+        Frame new_frame = engine.render_frame();
         
         // Display new frame
         engine.display_frame(new_frame);

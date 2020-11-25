@@ -64,7 +64,7 @@ void Engine::animate()
 
 }
 
-void Engine::display_frame(vector<string> frame)
+void Engine::display_frame(Frame f)
 {
 
     start_color();
@@ -72,22 +72,22 @@ void Engine::display_frame(vector<string> frame)
     //init_pair(1, COLOR_RED, COLOR_BLACK);
     //init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-    // Loop over lines
-    for (int i = 0; i < frame.size(); i++)
+    // Loop over rows
+    for (int h = 0; h < f.get_height(); h++)
     {
     
         //move(i, 0);
         //waddstr(stdscr, frame[i].c_str());
             
         // Loop over columns
-        for (int j = 0; j < frame[i].length(); j++)
+        for (int w = 0; w < f.get_width(); w++)
         {
         
             // Get pixel in question
-            char pixel = frame[i][j];
+            char c = f.get_pixel(h, w).c;
         
             // Move cursor to origin
-            move(i, j);
+            move(h, w);
             
             //if (j % 2 == 0)
             //    attron(COLOR_PAIR(1));
@@ -95,7 +95,7 @@ void Engine::display_frame(vector<string> frame)
             //    attron(COLOR_PAIR(2));
 
             // Write character
-            waddch(stdscr, pixel);
+            waddch(stdscr, c);
             
         }
         
@@ -139,24 +139,24 @@ void Engine::move_camera(long int x_diff, long int y_diff, long int z_diff)
 
 // This method iterates all sprites known to the engine, and renders a
 // frame with them.  
-vector<string> Engine::render_frame()
+Frame Engine::render_frame()
 {
     // Create frame for window
     int h, w;
     getmaxyx(stdscr, h, w);
     
-    vector<string> frame;
+    Frame f(h, w);
 
     // Loop over each 'pixel' in frame
     for (int y = 0; y < h; y++)
     {
         // Create row
-        string line;
+        //vector<pixel> line;
         
         for (int x = 0; x < w; x++)
         {
             // 'Pixel' to be added to new frame
-            char frame_pixel = ' ';
+            pixel frame_pixel;
             
             // Loop over each sprite, and write to current frame
             vector<Sprite*>::iterator sprite;
@@ -187,24 +187,24 @@ vector<string> Engine::render_frame()
                 rel_y = (rel_y / z_diff) - 1;
                 
                 // If pixel overlaps with sprite
-                if ( 0 <= rel_x && rel_x < sprite_width && 0 <= rel_y && rel_y < sprite_height)
+                if ( 0 <= rel_x && rel_x < sprite_width && 0 <= rel_y && rel_y < sprite_height){}
                      
                     // First check if sprite cares about 'pixel'
-                    if ((*sprite)->get_pixel(rel_x, rel_y) != '\0')
+                    //if (((*sprite)->get_pixel(rel_x, rel_y)).c != '\0')
                 
                         // Write 'pixel' to frame
-                        frame_pixel = (*sprite)->get_pixel(rel_x, rel_y);
+                        //frame_pixel = (*sprite)->get_pixel(rel_x, rel_y);
 
             }
             
             // Write pixel to line
-            line += frame_pixel;
+            f.set_pixel(y, x, frame_pixel);
         }
         
         // Add to frame
-        frame.push_back(line);
+        //f.pixels.push_back(line);
     }
     
-    return frame;
+    return f;
 
 }

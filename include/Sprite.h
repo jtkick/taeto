@@ -2,6 +2,8 @@
 #define SPRITE_H
 
 #include "Texture.h"
+#include "Frame.h"
+#include "structs.h"
 
 #include <chrono>
 #include <map>
@@ -50,13 +52,13 @@ class Sprite
     vector<vector<string>> data;
     
     public:
-        vector<string> current_frame;
+        Frame current_frame;
     
         Sprite();
         
         Sprite(long int, long int, long int);
         
-        char get_pixel(long int, long int);
+        pixel get_pixel(long int, long int);
         
         long int get_height();
         
@@ -67,6 +69,8 @@ class Sprite
         long int get_y_position();
         
         long int get_z_position();
+        
+        void set_frame_chars(vector<string>);
     
         void map_sprite(char, Sprite*, long int, long int);
         
