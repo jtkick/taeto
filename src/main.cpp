@@ -65,8 +65,9 @@ class Palm_tree: public Sprite
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@@|XX\@@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@/XXXX\@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@/XXXXXX\@@@@@@@@@@@@@@)" };
-            Frame default_frame(45, 22);
+            Frame default_frame(22, 45);
             default_frame.set_chars(default_chars);
+            current_frame = default_frame;
             
     }
     
@@ -92,29 +93,27 @@ class Person: public Sprite
             height = 7; 
             width = 7;
             alpha_char = '@';
-            current_frame = Frame(7, 7);
-            data =
-            {
-                {
-                    R"(@@___@@)",
-                    R"(@/ ..\@)",
-                    R"(@\_U_/@)",
-                    R"((__|__@)",
-                    R"(@@@|@@))",
-                    R"(@@_|_@@)",
-                    R"(@@|@|@@)"
-                },
-                {
-                    R"(@@___@@)",
-                    R"(@/.. \@)",
-                    R"(@\_U_/@)",
-                    R"(@__|__))",
-                    R"((@@|@@@)",
-                    R"(@@_|_@@)",
-                    R"(@@|@|@@)"
-                }
-            };
-            current_frame.set_chars(data[0]);
+            //current_frame = new Frame(7, 7);
+            Frame f = Frame(7, 7);
+            f.set_chars({ R"(@@___@@)",
+                          R"(@/ ..\@)",
+                          R"(@\_U_/@)",
+                          R"((__|__@)",
+                          R"(@@@|@@))",
+                          R"(@@_|_@@)",
+                          R"(@@|@|@@)" });
+            frames.push_back(f);
+            
+            f.set_chars({ R"(@@___@@)",
+                          R"(@/.. \@)",
+                          R"(@\_U_/@)",
+                          R"(@__|__))",
+                          R"((@@|@@@)",
+                          R"(@@_|_@@)",
+                          R"(@@|@|@@)" });
+            frames.push_back(f);
+                               
+            //current_frame.set_chars(data[0]);
             
         }
     
@@ -137,7 +136,7 @@ void Person::animate()
         {
             current_frame_index = (current_frame_index + 1) % 2;
         
-            current_frame.set_chars(data.at(current_frame_index));
+            current_frame = frames.at(current_frame_index);
         
             time_since_last_run -= frame_length_ms;
         }
@@ -163,6 +162,7 @@ int kbhit(void)
 
 int main()
 {
+
     Engine engine;
     
     Palm_tree tree;
@@ -179,6 +179,7 @@ int main()
     Person person;
     //person.move(75, 16, 0);
     person.move(0, 0, -1);
+    tree.move(0, 0, -1);
     
     engine.add_sprite(&tree);
     engine.add_sprite(&tree3);
@@ -198,6 +199,8 @@ int main()
     wrefresh(stdscr);
     
     sleep(1);
+    
+    //engine.move_camera(0, 0, 10);
  
     while (TRUE)
     {

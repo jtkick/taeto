@@ -1,34 +1,50 @@
 #include "Frame.h"
 
+#include <fstream>
+
 // Constructors
-Frame::Frame()
+//Frame::Frame()
+//{
+//
+//}
+
+Frame::Frame(unsigned long int h, unsigned long int w)
 {
 
-}
-
-Frame::Frame(unsigned long int w, unsigned long int h)
-{
-
-    width = w;
     height = h;
+    width = w;
     
-    pixels = new pixel*[h];
-    
-    for (int i = 0; i < h; i++)
-        pixels[i] = new pixel[w];
+    for (int i = 0; i < height; i++)
+    {
+        vector<Pixel> row;
+        for (int j = 0; j < width; j++)
+        {
+            row.push_back(Pixel());
+        }
+        pixels.push_back(row);
+    }            
+    //pixels = array<array<Pixel, width>, height>;
                
 }
 
+// Destructor
+Frame::~Frame()
+{
+
+}
+
 // Getters and setters
-pixel Frame::get_pixel(long int h, long int w)
+Pixel Frame::get_pixel(long int h, long int w)
 {
     // Make sure width in range
     if (w < 0 || w >= width)
-        throw "Frame width index out of range.";
+        //throw "Frame width index out of range.";
+        throw 1;
         
     // Make sure height in range
     if (h < 0 || h >= height)
-        throw "Frame height index out of range.";
+        //throw "Frame height index out of range.";
+        throw 2;
     
     return pixels[h][w];
 }
@@ -43,8 +59,18 @@ unsigned long int Frame::get_height()
     return height;
 }
 
-void Frame::set_pixel(long int h, long int w, pixel p)
+void Frame::set_pixel(long int h, long int w, Pixel p)
 {
+    // Make sure width in range
+    if (w < 0 || w >= width)
+        //throw "Frame width index out of range.";
+        throw 3;
+        
+    // Make sure height in range
+    if (h < 0 || h >= height)
+        //throw "Frame height index out of range.";
+        throw 4;
+        
     pixels[h][w] = p;
 }
         
@@ -63,22 +89,22 @@ void Frame::set_chars(vector<string> chars)
 {
 
     for (int i = 0; i < height; i++)
-    
+
         for (int j = 0; j < width; j++)
-        
+
             // Write chars character to pixel at corresponding location
-            pixels[i][j].c = chars.at(i).at(j);
+            pixels[i][j].set_char(chars[i][j]);
         
 }
         
 // Set just the colors of all pixels in frame
-void Frame::set_colors(vector<vector<unsigned char>>)
+void Frame::set_foreground_colors(vector<vector<unsigned char>>)
 {
-
+    throw "Method not implemented yet.";
 }
         
 // Set just the bold parameter of all pixels in frame
 void Frame::set_bolds(vector<vector<bool>>)
 {
-
+    throw "Method not implemented yet.";
 }

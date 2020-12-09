@@ -19,9 +19,14 @@ class Engine
     long int y_camera_position;
     long int z_camera_position;
     
+    // If set to true, engine will display FPS in top left corner
+    bool display_frame_rate;
+    
     public:
     
         Engine(void);
+        
+        ~Engine(void);
         
         void add_sprite(Sprite*);
                 
@@ -32,8 +37,6 @@ class Engine
         void move_camera(long int, long int, long int);
         
         Frame render_frame();
-        
-        void write_frame(char*);
         
 };
 

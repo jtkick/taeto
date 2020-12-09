@@ -3,19 +3,35 @@
 Sprite::Sprite(void)
 {
     last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    
+    //current_frame = Frame(0, 0);
 }
 
 Sprite::Sprite(long int x, long int y, long int z)
 {
+    // Init time so call to animate() doesn't try to animate every frame since the UNIX epoch
+    last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    
+    // Set initial position
     x_position = x;
     y_position = y;
     z_position = z;
+    
+    // Initialize current_frame array to size of sprite
 }
 
-pixel Sprite::get_pixel(long int rel_x, long int rel_y)
+// Destructor
+Sprite::~Sprite(void)
+{
+    // Delete dynamic array
+    //delete current_frame;
+    //current_frame = NULL;
+}
+
+Pixel Sprite::get_pixel(long int rel_x, long int rel_y)
 {
     // Empty pixel with c == '\0'
-    pixel p;
+    Pixel p;
 
     // If pixel is out of bounds, this sprite doesn't care about given frame location
     if (rel_x < 0 || rel_x >= current_frame.get_width())
@@ -24,8 +40,8 @@ pixel Sprite::get_pixel(long int rel_x, long int rel_y)
         return p;
     
     // If pixel does overlap with given coordinate, make sure character is not meant to be transparent
-    if (current_frame.get_pixel(rel_y, rel_x) != alpha_char)
-        return current_frame.get_pixels(rel_y, rel_x);
+    if (current_frame.get_pixel(rel_y, rel_x).get_char() != alpha_char)
+        return current_frame.get_pixel(rel_y, rel_x);
     else
         return p;
 }
@@ -55,17 +71,12 @@ long int Sprite::get_height()
     return height;
 }
 
-// Set which character each pixel is in the
-void set_frame_chars(vector<string> chars)
-{
-
-}
 // Maps a sub-sprite on this sprite's given character, at the relative coordinates of the given offsets
 // Use c='\0' for any 'pixel'
-void Sprite::map_sprite(char c, Sprite* sub_sprite, long int x_offset, long int y_offset)
-{
-
-}
+//void Sprite::map_sprite(char c, Sprite* sub_sprite, long int x_offset, long int y_offset)
+//{
+//
+//}
 
 // Move sprite in space
 void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
@@ -85,7 +96,7 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
 }
 
 // Generate new frame of sprite
-// MUST be implemented by derived classes
+// To be implemented by derived classes if sprite should animate itself
 void Sprite::animate()
 {
 

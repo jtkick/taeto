@@ -32,6 +32,13 @@ Engine::Engine()
     y_camera_position = 0;
     z_camera_position = 0;
     
+    display_frame_rate = false;
+    
+}
+
+Engine::~Engine()
+{
+    endwin();
 }
 
 void Engine::add_sprite(Sprite* sprite)
@@ -69,33 +76,43 @@ void Engine::display_frame(Frame f)
 
     start_color();
     
-    //init_pair(1, COLOR_RED, COLOR_BLACK);
-    //init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    //init_pair(1, 127, COLOR_BLACK);
+    //init_pair(2, 111, COLOR_BLACK);
+
+    attron(A_BOLD);
+    //attron(A_UNDERLINE);
 
     // Loop over rows
-    for (int h = 0; h < f.get_height(); h++)
+    for (uint32_t h = 0; h < f.get_height(); h++)
     {
     
         //move(i, 0);
         //waddstr(stdscr, frame[i].c_str());
             
         // Loop over columns
-        for (int w = 0; w < f.get_width(); w++)
+        for (uint32_t w = 0; w < f.get_width(); w++)
         {
         
             // Get pixel in question
-            char c = f.get_pixel(h, w).c;
+            Pixel p = f.get_pixel(h, w);
         
             // Move cursor to origin
             move(h, w);
             
-            //if (j % 2 == 0)
-            //    attron(COLOR_PAIR(1));
-            //else
-            //    attron(COLOR_PAIR(2));
+            //uint64_t pair_number = ((uint64_t)h) << 32;
+            //pair_number += w;
+            
+            //int r = 0;
+            //int g = 255;
+            //int b = 0;
+            //int color = (r*6/256)*36 + (g*6/256)*6 + (b*6/256);
+            
+            //init_pair(pair_number, color, COLOR_BLACK);
+                
+            //attron(COLOR_PAIR(pair_number));
 
             // Write character
-            waddch(stdscr, c);
+            waddch(stdscr, p.get_char());
             
         }
         
@@ -156,7 +173,10 @@ Frame Engine::render_frame()
         for (int x = 0; x < w; x++)
         {
             // 'Pixel' to be added to new frame
-            pixel frame_pixel;
+            Pixel frame_pixel;
+            
+            // Start with blank pixel
+            frame_pixel.set_char(' ');
             
             // Loop over each sprite, and write to current frame
             vector<Sprite*>::iterator sprite;
@@ -171,12 +191,12 @@ Frame Engine::render_frame()
                     continue;
             
                 // Get absolute position of pixel taking distance from camera into account
-                long int abs_x = x_camera_position - (w / 2)*z_diff + (x * z_diff);
-                long int abs_y = y_camera_position - (h / 2)*z_diff + (y * z_diff);
+                long int abs_x = x_camera_position - (w / 2) * z_diff + x * z_diff;
+                long int abs_y = y_camera_position - (h / 2) * z_diff + y * z_diff;
                 
                 // Get pixel relative to sprite
-                long int rel_x = abs_x - (*sprite)->get_x_position() * z_diff;
-                long int rel_y = abs_y - (*sprite)->get_y_position() * z_diff;
+                long int rel_x = abs_x - (*sprite)->get_x_position();
+                long int rel_y = abs_y - (*sprite)->get_y_position();
                 
                 // Get sprite dimensions
                 long int sprite_width = (*sprite)->get_width();
@@ -190,19 +210,17 @@ Frame Engine::render_frame()
                 if ( 0 <= rel_x && rel_x < sprite_width && 0 <= rel_y && rel_y < sprite_height){}
                      
                     // First check if sprite cares about 'pixel'
-                    //if (((*sprite)->get_pixel(rel_x, rel_y)).c != '\0')
+                    if (((*sprite)->get_pixel(rel_x, rel_y)).get_char() != '\0')
                 
                         // Write 'pixel' to frame
-                        //frame_pixel = (*sprite)->get_pixel(rel_x, rel_y);
+                        frame_pixel = (*sprite)->get_pixel(rel_x, rel_y);
 
             }
             
             // Write pixel to line
             f.set_pixel(y, x, frame_pixel);
         }
-        
-        // Add to frame
-        //f.pixels.push_back(line);
+
     }
     
     return f;
