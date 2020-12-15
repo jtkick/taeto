@@ -180,6 +180,8 @@ Frame Engine::render_frame()
             // Start with blank pixel
             frame_pixel.set_char(' ');
             
+            frame_pixel.set_foreground_color(Color(255, 0, 255));
+            
             // Loop over each sprite, and write to current frame
             vector<Sprite*>::iterator sprite;
             for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)

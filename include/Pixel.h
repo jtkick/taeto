@@ -17,10 +17,10 @@ class Pixel
     
         // Color of this 'pixel'
         // Based on whatever color palette is set in the engine
-        Color foreground_color;
+        Color foreground_color = Color(255, 255, 255);
         
         // Color of background of 'pixel'
-        Color background_color;
+        Color background_color = Color(255, 255, 255);
  
         // Whether or not this 'pixel' should be printed in bold
         bool bold = false;

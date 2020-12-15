@@ -88,6 +88,13 @@ class Palm_tree: public Sprite
             { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
             { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
             { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t},
             { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t}
             
             });               
@@ -120,6 +127,10 @@ class Person: public Sprite
             alpha_char = '@';
             //current_frame = new Frame(7, 7);
             Frame f = Frame(7, 7);
+                        
+            Color r = Color(255, 0, 0);
+            Color b = Color(0, 0, 255);
+            
             f.set_chars({ R"(@@___@@)",
                           R"(@/ ..\@)",
                           R"(@\_U_/@)",
@@ -127,6 +138,13 @@ class Person: public Sprite
                           R"(@@@|@@))",
                           R"(@@_|_@@)",
                           R"(@@|@|@@)" });
+            f.set_foreground_colors( { { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r },
+                                       { r, r, r, r, r, r, r } } );
             frames.push_back(f);
             
             f.set_chars({ R"(@@___@@)",
@@ -136,7 +154,17 @@ class Person: public Sprite
                           R"((@@|@@@)",
                           R"(@@_|_@@)",
                           R"(@@|@|@@)" });
+            f.set_foreground_colors( { { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b },
+                                       { b, b, b, b, b, b, b } } );
             frames.push_back(f);
+
+            
+            
                                
             //current_frame.set_chars(data[0]);
             
