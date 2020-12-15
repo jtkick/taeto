@@ -5,10 +5,18 @@ Pixel::Pixel()
 
 }
 
-
-Pixel::Pixel(char, int16_t, int16_t, int8_t)
+Pixel::Pixel(char character)
 {
+    c = character;
+}
 
+
+Pixel::Pixel(char ch, Color fc, Color bc, bool b)
+{
+    c = ch;
+    foreground_color = fc;
+    background_color = bc;
+    bold = b;
 }
         
 // Getters and setters
@@ -18,13 +26,13 @@ char Pixel::get_char() const
 }
 
         
-uint8_t Pixel::get_foreground_color() const
+Color Pixel::get_foreground_color() const
 {
     return foreground_color;
 }
 
         
-uint8_t Pixel::get_background_color() const
+Color Pixel::get_background_color() const
 {
     return background_color;
 }
@@ -35,6 +43,12 @@ bool Pixel::get_bold() const
     return bold;
 }
 
+
+bool Pixel::get_underline() const
+{
+    return underline;
+}
+
         
 void Pixel::set_char(char new_char)
 {
@@ -42,12 +56,12 @@ void Pixel::set_char(char new_char)
 }
 
         
-void Pixel::set_foreground_color(uint8_t color)
+void Pixel::set_foreground_color(Color color)
 {
     foreground_color = color;
 }
         
-void Pixel::set_background_color(uint8_t color)
+void Pixel::set_background_color(Color color)
 {
     background_color = color;
 }
@@ -57,7 +71,13 @@ void Pixel::set_bold(bool b)
     bold = b;
 }
 
-    
+void Pixel::set_underline(bool b)
+{
+    underline = b;
+}
+
+
+/*    
 bool operator == (const Pixel& p1, const Pixel& p2)
 {
     return (p1.get_char() == p2.get_char() &&
@@ -65,7 +85,7 @@ bool operator == (const Pixel& p1, const Pixel& p2)
             p1.get_background_color() == p2.get_background_color() &&
             p1.get_bold() == p2.get_bold());
 }
-
+*/
 
 void Pixel::operator = (const Pixel &p)
 {
@@ -75,10 +95,21 @@ void Pixel::operator = (const Pixel &p)
     bold = p.get_bold();
 }
 
+// Reset values to default
+void Pixel::clear()
+{
+    c = '\0';
+    foreground_color = Color(0, 0, 0, 255);
+    background_color = Color(0, 0, 0, 255);
+    bold = false;
+    underline = false;
+}
+
 
 // This function combines pixels, element by element
 // If both pixels have the same property defined, it is undefined behavior
 // and the function will throw an error
+/*
 void Pixel::operator + (const Pixel &p)
 {
     // Combine char
@@ -122,3 +153,4 @@ void Pixel::operator + (const Pixel &p)
         throw "Cannot combine pixels: both bold properties defined.";
         
 }
+*/

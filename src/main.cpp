@@ -65,8 +65,33 @@ class Palm_tree: public Sprite
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@@|XX\@@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@@/XXXX\@@@@@@@@@@@@@@@)",
                 R"(@@@@@@@@@@@@@@@@@@@@@@@/XXXXXX\@@@@@@@@@@@@@@)" };
+
             Frame default_frame(22, 45);
             default_frame.set_chars(default_chars);
+                
+            // Trunk color
+            Color t = Color(170, 166, 161);
+            // Leaf color
+            Color l = Color(105, 181, 130);
+            
+            default_frame.set_foreground_colors({{ l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, t, t, t, t, t, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l},
+            { t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t}
+            
+            });               
+
             current_frame = default_frame;
             
     }
@@ -117,6 +142,34 @@ class Person: public Sprite
             
         }
     
+};
+
+class Color_Test: public Sprite
+{
+    public:
+    Color_Test() {
+        x_position = 0;
+        y_position = 0;
+        z_position = 0;
+        
+        height = 1;
+        width = 8;
+        Frame f = Frame(height, width);
+        f.set_chars({ R"(XXXXXXXXX)" });
+        
+        Color r = Color(255, 0, 0);
+        Color o = Color(255, 127, 0);
+        Color y = Color(255, 255, 0);
+        Color g = Color(0, 255, 0);
+        Color b = Color(0, 255, 255);
+        Color i = Color(0, 127, 255);
+        Color v = Color(0, 0, 255);
+        Color w = Color(255, 255, 255);
+        
+        f.set_foreground_colors({{ r, o, y, g, b, i, v, w }});
+        
+        current_frame = f;
+    }
 };
 
 
@@ -181,12 +234,16 @@ int main()
     person.move(0, 0, -1);
     tree.move(0, 0, -1);
     
+    Color_Test color_test;
+    color_test.move(0, 0, -1);
+    
     engine.add_sprite(&tree);
     engine.add_sprite(&tree3);
     engine.add_sprite(&tree4);
     engine.add_sprite(&tree5);
     engine.add_sprite(&person);
     engine.add_sprite(&tree2);
+    engine.add_sprite(&color_test);
     
 
     chrono::microseconds time;
@@ -201,6 +258,8 @@ int main()
     sleep(1);
     
     //engine.move_camera(0, 0, 10);
+ 
+    int counter = 0;
  
     while (TRUE)
     {
@@ -235,6 +294,10 @@ int main()
         // Tell every sprite to animate itself
         engine.animate();
         
+        // TODO: MAKE SURE FRAME IS CORRECT SIZE FOR WINDOW
+        int h, w;
+        getmaxyx(stdscr, h, w);
+        
         // Render new frame
         Frame new_frame = engine.render_frame();
         
@@ -243,7 +306,10 @@ int main()
         
         // Wait for the length of one frame
         // Test with 1FPS
-        usleep(33333);
+        //usleep(33333);
+        
+        if (counter++ > 10000)
+            break;
     }
 
 }

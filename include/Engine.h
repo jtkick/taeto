@@ -4,15 +4,23 @@
 #include "Sprite.h"
 
 #include <curses.h>
+#include <chrono>
 #include <vector>
 
 class Engine
 {
+public:
     // Sprites to render
     vector<Sprite*> sprites;
     
-    // Frame rate
-    unsigned int frame_rate = 0;
+    // Frame rate to aim for
+    unsigned int target_frame_rate = 0;
+    
+    // Actual rate engine is running at
+    unsigned int actual_frame_rate = 0;
+    
+    // Possibly temporary
+    long long last_count_time = 0;
     
     // Camera position
     long int x_camera_position;

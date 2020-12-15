@@ -1,6 +1,8 @@
 #ifndef STRUCTS
 #define STRUCTS
 
+#include <Color.h>
+
 #include <vector>
 #include <stdint.h>
 
@@ -15,41 +17,53 @@ class Pixel
     
         // Color of this 'pixel'
         // Based on whatever color palette is set in the engine
-        uint8_t foreground_color = 0;
+        Color foreground_color;
         
         // Color of background of 'pixel'
-        uint8_t background_color = 0;
+        Color background_color;
  
         // Whether or not this 'pixel' should be printed in bold
         bool bold = false;
+        
+        // Whether or not the 'pixel' is underlined
+        bool underline = false;
         
     public:
     
         // Constructors
         Pixel();
         
-        Pixel(char, int16_t, int16_t, int8_t);
+        Pixel(char);
+        
+        Pixel(char, Color, Color, bool);
         
         // Getters and setters
         char get_char() const;
         
-        uint8_t get_foreground_color() const;
+        Color get_foreground_color() const;
         
-        uint8_t get_background_color() const;
+        Color get_background_color() const;
         
         bool get_bold() const;
         
+        bool get_underline() const;
+        
         void set_char(char);
         
-        void set_foreground_color(uint8_t);
+        void set_foreground_color(Color);
         
-        void set_background_color(uint8_t);
+        void set_background_color(Color);
         
         void set_bold(bool);
         
+        void set_underline(bool);
+        
         void operator = (const Pixel &p);
         
-        void operator + (const Pixel &p);
+        // Reset to default values
+        void clear();
+        
+        //void operator + (const Pixel &p);
 };
 
 #endif

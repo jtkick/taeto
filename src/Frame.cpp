@@ -98,13 +98,24 @@ void Frame::set_chars(vector<string> chars)
 }
         
 // Set just the colors of all pixels in frame
-void Frame::set_foreground_colors(vector<vector<unsigned char>>)
+void Frame::set_foreground_colors(vector<vector<Color>> color_vector)
 {
-    throw "Method not implemented yet.";
+    for (int i = 0; i < color_vector.size(); i++)
+    
+        for (int j = 0; j < color_vector[i].size(); j++)
+        
+            // Write color to character foreground
+            pixels[i][j].set_foreground_color(color_vector[i][j]);
 }
         
 // Set just the bold parameter of all pixels in frame
 void Frame::set_bolds(vector<vector<bool>>)
 {
     throw "Method not implemented yet.";
+}
+
+void Frame::add_string(long int y, long int x, string str)
+{
+    for (int i = 0; i < str.length(); i++)
+        pixels[y][x+i].set_char(str.at(i));
 }

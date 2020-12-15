@@ -48,16 +48,16 @@ class Frame
         void set_chars(vector<string>);
         
         // Set just the foreground colors of all pixels in frame
-        void set_foreground_colors(vector<vector<unsigned char>>);
+        void set_foreground_colors(vector<vector<Color>>);
         
         // Set just the foreground color of single pixel in frame
-        void set_foreground_color(unsigned long int, unsigned long int, unsigned char);
+        void set_foreground_color(unsigned long int, unsigned long int, Color);
         
         // Set just the background colors of all pixels in frame
-        void set_background_colors(vector<vector<unsigned char>>);
+        void set_background_colors(vector<vector<Color>>);
         
         // Set just the background color of single pixel in frame
-        void set_background_color(unsigned long int, unsigned long int, unsigned char);
+        void set_background_color(unsigned long int, unsigned long int, Color);
         
         // Set just the bold parameter of all pixels in frame
         void set_bolds(vector<vector<bool>>);
@@ -66,6 +66,9 @@ class Frame
         void set_bold(unsigned long int, unsigned long int, bool);
         
         // Helper methods
+        
+        // Write string to given location in frame
+        void add_string(long int, long int, string);
         
         // Maps frame onto this frame wherever current frame has the given character
         void map(Frame f, char c); 

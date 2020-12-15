@@ -1,12 +1,10 @@
 #include "Engine.h"
 #include "Sprite.h"
 
-#include <vector>
-
 Engine::Engine()
 {
     // Initialize data members
-    frame_rate = 0;
+    //frame_rate = 0;
     
     // Initialize ncurses
     initscr();
@@ -79,8 +77,12 @@ void Engine::display_frame(Frame f)
     //init_pair(1, 127, COLOR_BLACK);
     //init_pair(2, 111, COLOR_BLACK);
 
-    attron(A_BOLD);
+    //attron(A_BOLD);
     //attron(A_UNDERLINE);
+
+    unsigned int pair_number = 0;
+    
+    Pixel p;
 
     // Loop over rows
     for (uint32_t h = 0; h < f.get_height(); h++)
@@ -94,25 +96,25 @@ void Engine::display_frame(Frame f)
         {
         
             // Get pixel in question
-            Pixel p = f.get_pixel(h, w);
+            p = f.get_pixel(h, w);
         
+            uint8_t foreground_color = (p.get_foreground_color()).to_iterm();
+            
+            init_pair(foreground_color, foreground_color, COLOR_BLACK);
+        
+
+            
+
+                
+            attron(COLOR_PAIR(foreground_color));
+
             // Move cursor to origin
             move(h, w);
-            
-            //uint64_t pair_number = ((uint64_t)h) << 32;
-            //pair_number += w;
-            
-            //int r = 0;
-            //int g = 255;
-            //int b = 0;
-            //int color = (r*6/256)*36 + (g*6/256)*6 + (b*6/256);
-            
-            //init_pair(pair_number, color, COLOR_BLACK);
-                
-            //attron(COLOR_PAIR(pair_number));
 
             // Write character
             waddch(stdscr, p.get_char());
+            
+            pair_number++;
             
         }
         
@@ -222,6 +224,38 @@ Frame Engine::render_frame()
         }
 
     }
+
+    static unsigned int frames;
+    
+    // Keep track of number of frames until second elapses
+    long long now = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    
+    if (now - last_count_time > 1000)
+    {
+        actual_frame_rate = frames;
+        frames = 0;
+    
+        // Last run time
+        last_count_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    }
+    
+    //if (actual_frame_rate > 99)
+    //    actual_frame_rate = 99;
+    
+    // Put FPS on rendered frame
+    Color white = Color(255, 255, 255);
+    /*f.set_pixel(1, 0, Pixel('F', white, white, true));
+    f.set_pixel(1, 1, Pixel('P', white, white, true));
+    f.set_pixel(1, 2, Pixel('S', white, white, true));
+    f.set_pixel(1, 3, Pixel(':', white, white, true));
+    f.set_pixel(1, 4, Pixel(' ', white, white, true));
+    f.set_pixel(1, 5, Pixel( (char)(actual_frame_rate / 10) + 48, white, white, true));
+    f.set_pixel(1, 6, Pixel( (char)(actual_frame_rate % 10) + 48, white, white, true));*/
+
+    f.add_string(1, 0, "FPS: " + std::to_string(actual_frame_rate));
+    
+    
+    frames++;
     
     return f;
 

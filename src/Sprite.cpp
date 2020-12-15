@@ -42,8 +42,12 @@ Pixel Sprite::get_pixel(long int rel_x, long int rel_y)
     // If pixel does overlap with given coordinate, make sure character is not meant to be transparent
     if (current_frame.get_pixel(rel_y, rel_x).get_char() != alpha_char)
         return current_frame.get_pixel(rel_y, rel_x);
+        
+    // TODO: THIS LINE SHOULD NEVER BE REACHED, LIKELY WORSENING EFFICIENCY
     else
         return p;
+
+    //throw "ouch";
 }
 
 long int Sprite::get_x_position()
