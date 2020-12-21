@@ -16,4 +16,4 @@ file(GLOB SOURCES "src/*.cpp")
  
 add_executable(taeto ${SOURCES})
 
-target_link_libraries(taeto ncurses)
+target_link_libraries(taeto ncurses sfml-window)

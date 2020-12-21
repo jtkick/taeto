@@ -15,6 +15,8 @@ using namespace std;
 #include <ctime>
 #include <chrono>
 
+#include <SFML/Graphics.hpp>
+
 int w_char = 119;
 int a_char = 97;
 int s_char = 115;
@@ -122,51 +124,21 @@ class Person: public Sprite
             z_position = 0;       
         
             // Set frame details
-            height = 7; 
-            width = 7;
+            height = 2; 
+            width = 6;
             alpha_char = '@';
-            //current_frame = new Frame(7, 7);
-            Frame f = Frame(7, 7);
-                        
-            Color r = Color(255, 0, 0);
-            Color b = Color(0, 0, 255);
-            
-            f.set_chars({ R"(@@___@@)",
-                          R"(@/ ..\@)",
-                          R"(@\_U_/@)",
-                          R"((__|__@)",
-                          R"(@@@|@@))",
-                          R"(@@_|_@@)",
-                          R"(@@|@|@@)" });
-            f.set_foreground_colors( { { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r },
-                                       { r, r, r, r, r, r, r } } );
-            frames.push_back(f);
-            
-            f.set_chars({ R"(@@___@@)",
-                          R"(@/.. \@)",
-                          R"(@\_U_/@)",
-                          R"(@__|__))",
-                          R"((@@|@@@)",
-                          R"(@@_|_@@)",
-                          R"(@@|@|@@)" });
-            f.set_foreground_colors( { { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b },
-                                       { b, b, b, b, b, b, b } } );
-            frames.push_back(f);
-
-            
-            
-                               
-            //current_frame.set_chars(data[0]);
+            data =
+            {
+                {
+                    R"(@@__@@)",
+                    R"(@( ')')"
+                },
+                {
+                    R"(@@__@@)",
+                    R"('(' )@)"
+                }
+            };
+            current_frame = data[0];
             
         }
     
@@ -211,7 +183,7 @@ void Person::animate()
     
     long long frame_length_ms = 250;
     
-    if (time_since_last_run > frame_length_ms)
+/*    if (time_since_last_run > frame_length_ms)
     {
         while (time_since_last_run > frame_length_ms)
         {
@@ -224,7 +196,7 @@ void Person::animate()
         
         last_run_time = now;
     }
-
+*/
 }
 
 
@@ -247,11 +219,11 @@ int main()
     Engine engine;
     
     Palm_tree tree;
-    tree.move(0, 0, -10);
+    tree.move(0, -10, -10);
     Palm_tree tree2;
-    tree2.move(0, 0, -12);
+    tree2.move(0, -10, -11);
     Palm_tree tree3;
-    tree3.move(0, 0, -16);
+    tree3.move(0, -10, -12);
     Palm_tree tree4;
     tree4.move(150, 0, -1);
     Palm_tree tree5;
@@ -292,6 +264,21 @@ int main()
     while (TRUE)
     {
     
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            engine.move_camera(-10, 0, 0);
+            person.move(-10, 0, 0);
+            person.current_frame = person.data[1];
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            engine.move_camera(10, 0, 0);
+            person.move(10, 0, 0);
+            person.current_frame = person.data[0];
+        }
+        
+/*
         int c = getch();
         switch(c)
         {
@@ -303,6 +290,7 @@ int main()
             case 'a':
                 engine.move_camera(-10, 0, 0);
                 person.move(-10, 0, 0);
+                person.current_frame = person.data[1];
                 break;
                 
             case 's':
@@ -313,9 +301,10 @@ int main()
             case 'd':
                 engine.move_camera(10, 0, 0);
                 person.move(10, 0, 0);
+                person.current_frame = person.data[0];
                 break;
         }
-        
+*/        
         //engine.move_camera(2, 0, 0);
         //person.move(2, 0, 0);
     
