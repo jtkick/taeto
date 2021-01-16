@@ -8,7 +8,7 @@ class Color
 {
     private:
     
-        uint8_t rgba[4] = { 0 };
+        uint8_t rgba[4] = { 255 };
         
         // Since iterm colors don't follow a strict rule,
         // we're just going to use a lookup table for going back to RGB
@@ -287,13 +287,13 @@ class Color
         
         Color(uint8_t, uint8_t, uint8_t, uint8_t);
     
-        uint8_t get_red();
+        uint8_t get_red() const;
         
-        uint8_t get_green();
+        uint8_t get_green() const;
         
-        uint8_t get_blue();
+        uint8_t get_blue() const;
         
-        uint8_t get_alpha();
+        uint8_t get_alpha() const;
         
         void set_red(uint8_t);
         
@@ -302,10 +302,18 @@ class Color
         void set_blue(uint8_t);
         
         void set_alpha(uint8_t);
+        
+        void set_all(uint8_t, uint8_t, uint8_t, uint8_t);
+        
+        void set_brightness(uint8_t);
     
         void from_iterm(uint8_t);
         
-        uint8_t to_iterm();
+        uint8_t to_iterm() const;
+        
+        Color operator * (const Color&);
+        
+        //void operator = (const Color&);
         
 };
 

@@ -5,6 +5,7 @@
 
 #include <array>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,6 +20,9 @@ class Frame
         // Pixels that frame is made up of
         vector<vector<Pixel>> pixels;
         
+        // Setup vector
+        void init_pixels();
+        
     public:
 
         //Frame();
@@ -29,7 +33,7 @@ class Frame
         ~Frame();
         
         // Getters and setters
-        Pixel get_pixel(long int, long int);
+        Pixel* get_pixel(long int, long int);
         
         unsigned long int get_width();
         
@@ -64,6 +68,12 @@ class Frame
         
         // Set just the bold parameter of single pixel in frame
         void set_bold(unsigned long int, unsigned long int, bool);
+        
+        // Set just the normal vector parameter of all pixels in frame
+        void set_normals(vector<vector<Vector>>); // I'm going to kill myself
+        
+        // Set just the normal vector parameter of single pixel in frame
+        void set_normal(unsigned long int, unsigned long int, Vector);
         
         // Helper methods
         

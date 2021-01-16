@@ -2,16 +2,23 @@
 #define ENGINE_H
 
 #include "Sprite.h"
+#include "Light.h"
 
 #include <curses.h>
 #include <chrono>
+#include <cmath>
 #include <vector>
+#include <iostream>
+#include <unistd.h>
 
 class Engine
 {
 public:
     // Sprites to render
     vector<Sprite*> sprites;
+    
+    // Light sources
+    vector<Light*> lights;
     
     // Frame rate to aim for
     unsigned int target_frame_rate = 0;
@@ -36,15 +43,19 @@ public:
         
         ~Engine(void);
         
+        void add_light(Light*);
+        
         void add_sprite(Sprite*);
                 
         void animate();
         
-        void display_frame(Frame);
+        void display_frame(Frame*);
+        
+        void display_frame_ncurses(Frame*);
     
         void move_camera(long int, long int, long int);
         
-        Frame render_frame();
+        void render_frame(Frame*);
         
 };
 

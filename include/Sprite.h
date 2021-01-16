@@ -16,7 +16,9 @@ class Sprite
 {
     protected:
 
-    // Position on screen relative to origin? parent sprite?
+    // Position on screen relative to origin
+    // TODO: Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
+    // This allows for positions and speeds that aren't tied to frame rate
     long int x_position;
     long int y_position;
     long int z_position;
@@ -51,6 +53,10 @@ class Sprite
     // Let the engine decide the color of this sprite based on light sources
     bool respect_light_sources = false;
     
+    // Whether or not engine looks at normal to determine light brightness
+    // Only applies if respect_light_sources is true
+    bool use_normal_mapping = false;
+    
     // If this sprite is entirely off screen, this determines if the animate() function is called
     bool animate_off_screen = false;
     
@@ -67,7 +73,7 @@ class Sprite
         
         ~Sprite();
         
-        Pixel get_pixel(long int, long int);
+        Pixel* get_pixel(long int, long int);
         
         long int get_height();
         
@@ -78,6 +84,10 @@ class Sprite
         long int get_y_position();
         
         long int get_z_position();
+        
+        bool respects_light_sources();
+        
+        bool compare_normals();
         
         void set_frame_chars(vector<string>);
     

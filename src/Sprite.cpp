@@ -28,24 +28,26 @@ Sprite::~Sprite(void)
     //current_frame = NULL;
 }
 
-Pixel Sprite::get_pixel(long int rel_x, long int rel_y)
+Pixel* Sprite::get_pixel(long int rel_x, long int rel_y)
 {
     // Empty pixel with c == '\0'
-    Pixel p;
+    //Pixel p;
+    
+    return current_frame.get_pixel(rel_y, rel_x);
 
     // If pixel is out of bounds, this sprite doesn't care about given frame location
     if (rel_x < 0 || rel_x >= current_frame.get_width())
-        return p;
+        return NULL;
     if (rel_y < 0 || rel_y >= current_frame.get_height())
-        return p;
+        return NULL;
     
     // If pixel does overlap with given coordinate, make sure character is not meant to be transparent
-    if (current_frame.get_pixel(rel_y, rel_x).get_char() != alpha_char)
+    if (current_frame.get_pixel(rel_y, rel_x)->get_char() != alpha_char)
         return current_frame.get_pixel(rel_y, rel_x);
         
     // TODO: THIS LINE SHOULD NEVER BE REACHED, LIKELY WORSENING EFFICIENCY
     else
-        return p;
+        return NULL;
 
     //throw "ouch";
 }
@@ -63,6 +65,16 @@ long int Sprite::get_y_position()
 long int Sprite::get_z_position()
 {
     return z_position;
+}
+
+bool Sprite::respects_light_sources()
+{
+    return respect_light_sources;
+}
+
+bool Sprite::compare_normals()
+{
+    return use_normal_mapping;
 }
         
 long int Sprite::get_width()

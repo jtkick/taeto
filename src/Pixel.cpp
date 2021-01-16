@@ -2,14 +2,25 @@
 
 Pixel::Pixel()
 {
-
+    c = ' ';
+    foreground_color = Color(255, 255, 255, 255);
+    background_color = Color(50, 50, 50, 0);
+    bold = false;
+    underline = false;
+    normal = Vector(0, 0, 1);
+    collide = false;
 }
 
 Pixel::Pixel(char character)
 {
     c = character;
+    foreground_color = Color(255, 255, 255, 255);
+    background_color = Color(50, 50, 50, 0);
+    bold = false;
+    underline = false;
+    normal = Vector(0, 0, 1);
+    collide = false;
 }
-
 
 Pixel::Pixel(char ch, Color fc, Color bc, bool b)
 {
@@ -17,44 +28,52 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b)
     foreground_color = fc;
     background_color = bc;
     bold = b;
+    underline = false;
+    normal = Vector(0, 0, 1);
+    collide = false;
 }
         
-// Getters and setters
+// Getters
 char Pixel::get_char() const
 {
     return c;
 }
-
         
-Color Pixel::get_foreground_color() const
+const Color* Pixel::get_foreground_color() const
 {
-    return foreground_color;
+    return &foreground_color;
 }
-
         
-Color Pixel::get_background_color() const
+const Color* Pixel::get_background_color() const
 {
-    return background_color;
+    return &background_color;
 }
-
         
 bool Pixel::get_bold() const
 {
     return bold;
 }
 
-
 bool Pixel::get_underline() const
 {
     return underline;
 }
 
-        
+const Vector* Pixel::get_normal() const
+{
+    return &normal;
+}
+
+bool Pixel::get_collide() const
+{
+    return collide;
+}
+
+// Setters       
 void Pixel::set_char(char new_char)
 {
     c = new_char;
 }
-
         
 void Pixel::set_foreground_color(Color color)
 {
@@ -76,6 +95,28 @@ void Pixel::set_underline(bool b)
     underline = b;
 }
 
+void Pixel::set_normal(Vector v)
+{
+    normal = v;
+}
+
+void Pixel::set_collide(bool b)
+{
+    collide = b;
+}
+
+// Helper functions
+// Reset values to default
+void Pixel::clear()
+{
+    c = ' ';
+    foreground_color.set_all(255, 255, 255, 255);
+    background_color.set_all(50, 50, 50, 0);
+    bold = false;
+    underline = false;
+    normal.set_all(0, 0, 127);
+    collide = false;
+}
 
 /*    
 bool operator == (const Pixel& p1, const Pixel& p2)
@@ -90,21 +131,13 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 void Pixel::operator = (const Pixel &p)
 {
     c = p.get_char();
-    foreground_color = p.get_foreground_color();
-    background_color = p.get_background_color();
+    foreground_color = *(p.get_foreground_color());
+    background_color = *(p.get_background_color());
     bold = p.get_bold();
+    underline = p.get_underline();
+    normal = *(p.get_normal());
+    collide = p.get_collide();
 }
-
-// Reset values to default
-void Pixel::clear()
-{
-    c = '\0';
-    foreground_color = Color(0, 0, 0, 255);
-    background_color = Color(0, 0, 0, 255);
-    bold = false;
-    underline = false;
-}
-
 
 // This function combines pixels, element by element
 // If both pixels have the same property defined, it is undefined behavior

@@ -5,6 +5,36 @@
 #define BLUE_INDEX 2
 #define ALPHA_INDEX 3
 
+#define K (1 << (8 - 1))
+
+//////////////////////////////////////
+//          HELPER METHODS          //
+//////////////////////////////////////
+
+uint8_t sat8(uint16_t x)
+{
+    if (x > 0xFF)
+        return 0xFF;
+    else if (x < 0x00)
+        return 0x00;
+    else
+        return (uint8_t)x;
+}
+
+uint8_t q8_mul(uint8_t a, uint8_t b)
+{
+    uint8_t result;
+    uint16_t temp;
+    
+    temp = (uint16_t)a * (uint16_t)b;
+    
+    temp += K;
+    
+    result = sat8(temp >> 8);
+    
+    return result;
+}
+
 Color::Color(void)
 {
 
@@ -26,22 +56,22 @@ Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
     rgba[ALPHA_INDEX] = alpha;
 }
 
-uint8_t Color::get_red()
+uint8_t Color::get_red() const
 {
     return rgba[RED_INDEX];
 }
 
-uint8_t Color::get_green()
+uint8_t Color::get_green() const
 {
     return rgba[GREEN_INDEX];
 }
 
-uint8_t Color::get_blue()
+uint8_t Color::get_blue() const
 {
     return rgba[BLUE_INDEX];
 }
 
-uint8_t Color::get_alpha()
+uint8_t Color::get_alpha() const
 {
     return rgba[ALPHA_INDEX];
 }
@@ -66,6 +96,21 @@ void Color::set_alpha(uint8_t alpha)
     rgba[ALPHA_INDEX] = alpha;
 }
 
+void Color::set_all(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    rgba[RED_INDEX] = r;
+    rgba[GREEN_INDEX] = g;
+    rgba[BLUE_INDEX] = b;
+    rgba[ALPHA_INDEX] = a;
+}
+
+void Color::set_brightness(uint8_t brightness)
+{
+    // Scale all colors
+    for (int i = 0; i < 3; i++)
+        rgba[i] = q8_mul(rgba[i], brightness);
+}
+
 void Color::from_iterm(uint8_t i_color)
 {
     // Pull RGB values from lookup table
@@ -80,7 +125,7 @@ void Color::from_iterm(uint8_t i_color)
 // Lol, what a mess
 // This method takes this object's RGB color and returns the closest 
 // x-term color number
-uint8_t Color::to_iterm()
+uint8_t Color::to_iterm() const
 {
     int increments_length = 6;
     int increments[6] = { 0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff };
@@ -125,3 +170,23 @@ uint8_t Color::to_iterm()
     else
         throw "Couldn't find color in table.";
 }
+
+Color Color::operator * (const Color &c)
+{
+    Color new_color;
+    
+    new_color.set_red(q8_mul(rgba[RED_INDEX], c.get_red()));
+    new_color.set_green(q8_mul(rgba[GREEN_INDEX], c.get_green()));
+    new_color.set_blue(q8_mul(rgba[BLUE_INDEX], c.get_blue()));
+    
+    return new_color;
+}
+/*
+void Color::operator = (const Color &c)
+{
+    rgba[0] = c.get_red();
+    rgba[1] = c.get_green();
+    rgba[2] = c.get_blue();
+    rgba[3] = c.get_alpha();
+
+}*/

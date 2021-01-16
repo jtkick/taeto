@@ -1,10 +1,11 @@
-#ifndef STRUCTS
-#define STRUCTS
+#ifndef PIXEL
+#define PIXEL
 
 #include <Color.h>
+#include <Vector.h>
 
-#include <vector>
-#include <stdint.h>
+#include <cmath>
+#include <memory>
 
 using namespace std;
 
@@ -13,20 +14,26 @@ class Pixel
     private:
     
         // Actual character to print
-        char c = '\0';
+        char c;
     
         // Color of this 'pixel'
         // Based on whatever color palette is set in the engine
-        Color foreground_color = Color(255, 255, 255);
+        Color foreground_color;
         
         // Color of background of 'pixel'
-        Color background_color = Color(255, 255, 255);
+        Color background_color;
  
         // Whether or not this 'pixel' should be printed in bold
-        bool bold = false;
+        bool bold;
         
         // Whether or not the 'pixel' is underlined
-        bool underline = false;
+        bool underline;
+        
+        // Normal vector 
+        Vector normal;
+        
+        // Whether or not to do collision detection on this pixel
+        bool collide;
         
     public:
     
@@ -37,17 +44,22 @@ class Pixel
         
         Pixel(char, Color, Color, bool);
         
-        // Getters and setters
+        // Getters
         char get_char() const;
         
-        Color get_foreground_color() const;
+        const Color* get_foreground_color() const;
         
-        Color get_background_color() const;
+        const Color* get_background_color() const;
         
         bool get_bold() const;
         
         bool get_underline() const;
         
+        const Vector* get_normal() const;
+        
+        bool get_collide() const;
+        
+        // Setters
         void set_char(char);
         
         void set_foreground_color(Color);
@@ -57,6 +69,10 @@ class Pixel
         void set_bold(bool);
         
         void set_underline(bool);
+        
+        void set_normal(Vector);
+        
+        void set_collide(bool);
         
         void operator = (const Pixel &p);
         
