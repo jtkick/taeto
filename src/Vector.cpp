@@ -1,6 +1,7 @@
 #include "Vector.h"
 
 #include <cmath>
+#include <iostream>
 
 Vector::Vector()
 {
@@ -72,7 +73,10 @@ void Vector::set_all(char xc, char yc, char zc)
 void Vector::set_magnitude(char mag)
 {
     if (mag > 127)
+    {
+        std::cout << "Cannot set magnitude greater than 127.\n";
         throw "Cannot set magnitude greater than 127.";
+    }
 
     // Get current magnitude
     double factor = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) / mag;

@@ -34,6 +34,9 @@ public:
     long int y_camera_position;
     long int z_camera_position;
     
+    // Distance to drawing plane with respect to camera's z location
+    unsigned int drawing_plane_distance;
+    
     // If set to true, engine will display FPS in top left corner
     bool display_frame_rate;
     

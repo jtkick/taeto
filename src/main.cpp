@@ -8,6 +8,8 @@ using namespace std;
 #include "Light.h"
 
 #include "Point_Light.h"
+#include "Spotlight.h"
+#include "Directional_Light.h"
 
 #include <curses.h>
 #include <iostream>
@@ -101,7 +103,9 @@ class Palm_tree: public Sprite
             // Default position to the origin
             x_position = 0;
             y_position = 0;
-            z_position = 0;     
+            z_position = 0;
+            
+            respect_light_sources = true; 
         
             // Set frame details
             height = 22; 
@@ -265,7 +269,7 @@ class main_character: public Sprite
             
             f.set_chars({ R"(@@__@@)",
                           R"(@( ')')",
-                          R"(@@@@@@)",});
+                          R"(@@¯¯@@)",});
             f.set_foreground_colors( { { a, a, g, g, a, a },
                                        { a, g, g, g, g, g },
                                        { a, a, a, a, a, a } } );
@@ -348,6 +352,154 @@ class Normal_Test: public Sprite
                           
             current_frame = f;
         }          
+};
+
+class Transparent_Test: public Sprite
+{
+    public:
+        Transparent_Test(int r, int g, int b) {
+            x_position = 0;
+            y_position = 0;
+            z_position = 0;
+            
+            height = 8;
+            width = 16;
+            
+            respect_light_sources = true;
+            use_normal_mapping = false;
+            
+            Frame f = Frame(height, width);
+            f.set_chars({ R"(                )",
+                          R"(                )",
+                          R"(                )",
+                          R"(                )",
+                          R"(                )",
+                          R"(                )",
+                          R"(                )",
+                          R"(                )" });
+                          
+            Color c = Color(r, g, b, 127);
+            
+            f.set_background_colors({{ c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c }});
+            
+            f.set_foreground_colors({{ c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c },
+                                     { c, c, c, c, c, c, c, c, c, c, c, c, c, c, c, c }});
+                          
+            current_frame = f;
+        }          
+};
+
+class Whiteboard: public Sprite
+{
+    public:
+        Whiteboard(int h, int w) {
+            x_position = 0;
+            y_position = 0;
+            z_position = 0;
+            
+            height = h;
+            width = w;
+            
+            respect_light_sources = true;
+            use_normal_mapping = false;
+            
+            Frame f = Frame(height, width);
+            
+            vector<string> chars;
+            
+            Color white = Color(255, 255, 255);
+            
+            vector<vector<Color>> back_colors;
+            
+            for (int i = 0; i < height; i++)
+            {
+                vector<Color> color_row;
+                string char_row;
+                
+                for (int j = 0; j < width; j++)
+                {
+                    color_row.push_back(white);
+                    char_row += "X";
+                }
+                
+                back_colors.push_back(color_row);
+                chars.push_back(char_row);
+            }
+            
+            f.set_background_colors(back_colors);
+            f.set_chars(chars);
+                          
+            current_frame = f;
+        }          
+};
+
+class Moon: public Sprite
+{
+    public:
+        Moon() {
+            x_position = 0;
+            y_position = 0;
+            z_position = 0;
+            
+            height = 9;
+            width = 17;
+            
+            respect_light_sources = false;
+            use_normal_mapping = false;
+            
+            Frame f = Frame(height, width);
+            
+            f.set_chars({ R"(@@@@ O  . .  @@@@)",
+                          R"(@@  __  o   o  @@)",
+                          R"(   /  \    @  . O)",
+                          R"(o  \__O    ____  )",
+                          R"(  _     O / o  \ )",
+                          R"( (_) o.  | .    |)",
+                          R"(     o    \___ / )",
+                          R"(@@   .  o  .   @@)",
+                          R"(@@@@  O  o   @@@@)"});
+                          
+            Color a = Color(0, 255, 0, 0);
+                          
+            Color w = Color(255, 255, 255);
+            
+            f.set_background_colors({{w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w},
+                                     {w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w}});
+            
+            Color g = Color(200, 200, 200);
+            
+            f.set_foreground_colors({{a, a, a, a, g, g, g, g, g, g, g, g, g, a, a, a, a},
+                                     {a, a, g, g, g, g, g, g, g, g, g, g, g, g, g, a, a},
+                                     {g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g},
+                                     {g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g},
+                                     {g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g},
+                                     {g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g},
+                                     {g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g},
+                                     {a, a, g, g, g, g, g, g, g, g, g, g, g, g, g, a, a},
+                                     {a, a, a, a, g, g, g, g, g, g, g, g, g, a, a, a, a}});
+                                     
+            current_frame = f;
+        }
 };
 
 class ground1: public Sprite
@@ -507,15 +659,38 @@ int kbhit(void)
 
 int main()
 {
+/*
+    std::cout << "Testing" << std::endl;
+    
+    Color cr = Color(81, 188, 87, 255);
+    Color cg = Color(239, 133, 11, 191);
+    
+    Color both = cr & cg;
+    
+    std::cout << "Red:      " << std::to_string(cr.get_red()) << ", "
+                              << std::to_string(cr.get_green()) << ", "
+                              << std::to_string(cr.get_blue()) << ", "
+                              << std::to_string(cr.get_alpha()) << std::endl;
+    std::cout << "Green:    " << std::to_string(cg.get_red()) << ", "
+                              << std::to_string(cg.get_green()) << ", "
+                              << std::to_string(cg.get_blue()) << ", "
+                              << std::to_string(cg.get_alpha()) << std::endl;
+    std::cout << "Combined: " << std::to_string(both.get_red()) << ", "
+                              << std::to_string(both.get_green()) << ", "
+                              << std::to_string(both.get_blue()) << ", "
+                              << std::to_string(both.get_alpha()) << std::endl;
+    
+    
+    return 0;*/
 
     Engine engine;
     
     Palm_tree tree;
-    tree.move(0, 0, -10);
+    tree.move(0, 0, -1);
     Palm_tree tree2;
-    tree2.move(0, 0, -12);
+    tree2.move(20, 0, -95);
     Palm_tree tree3;
-    tree3.move(0, 0, -16);
+    tree3.move(40, 0, 95);
     Palm_tree tree4;
     tree4.move(150, 0, -1);
     Palm_tree tree5;
@@ -524,7 +699,6 @@ int main()
     main_character person;
     //person.move(75, 16, 0);
     person.move(0, 15, -1);
-    tree.move(0, 0, -1);
     
     Color_Test color_test;
     color_test.move(0, 0, -1);
@@ -547,14 +721,61 @@ int main()
     engine.add_sprite(&tree2);
     engine.add_sprite(&color_test);
     
-    Point_Light p = Point_Light(Color(255, 255, 255), 0.95);
+    Moon moon;
+    engine.add_sprite(&moon);
+    
+    
+    Point_Light p = Point_Light(Color(255, 255, 255), 0.9999);
     engine.add_light(&p);
     
+    
+    Whiteboard wh = Whiteboard(40, 100);
+    wh.move(0, 0, -1);
+    engine.add_sprite(&wh);
+    
+    
+    /*
+    Point_Light red = Point_Light(Color(255, 0, 0), 0.85);
+    Point_Light green = Point_Light(Color(0, 255, 0), 0.85);
+    Point_Light blue = Point_Light(Color(0, 0, 255), 0.85);
+    
+    red.move(60, 5, 1);
+    green.move(20, 5, 1);
+    blue.move(40, 15, 1);
+    
+    engine.add_light(&red);
+    engine.add_light(&green);
+    engine.add_light(&blue);
+    */
+    
+    //engine.add_light(&p);
+    
+    Spotlight red = Spotlight(Color(255, 0, 0), 0.45, 15);
+    Spotlight green = Spotlight(Color(0, 255, 0), 0.45, 15);
+    Spotlight blue = Spotlight(Color(0, 0, 255), 0.45, 15);
+    
+    red.move(50, 5, 1);
+    green.move(30, 5, 1);
+    blue.move(40, 15, 1);
+    
+    engine.add_light(&red);
+    engine.add_light(&green);
+    engine.add_light(&blue);
+    
+    Directional_Light dl = Directional_Light(Color(25, 25, 25), Vector(0, 0, -127));
+    engine.add_light(&dl);
+    
+    Transparent_Test tt1 = Transparent_Test(0, 255, 0);
+    Transparent_Test tt2 = Transparent_Test(255, 0, 0);
+    tt1.move(10, 30, 1);
+    tt2.move(16, 30, 1);
+    engine.add_sprite(&tt1);
+    engine.add_sprite(&tt2);
     
     
     Bars b;
     b.move(-(b.get_width() / 2), -(b.get_height() / 2), -1);
-    engine.add_sprite(&b);
+    //engine.add_sprite(&b);
     
     
     Normal_Test nt;
@@ -610,6 +831,8 @@ int main()
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
     Frame new_frame(size.ws_row, size.ws_col);
  
+    //engine.move_camera(0, 0, 1);
+ 
     while (TRUE)
     {
     
@@ -617,34 +840,36 @@ int main()
         switch(c)
         {
             case 'w':
-                //engine.move_camera(0, -5, 0);
+                engine.move_camera(0, -1, 0);
                 //person.move(0, -5, 0);
                 p.move(0, -1, 0);
                 break;
             
             case 'a':
-                //engine.move_camera(-5, 0, 0);
+                engine.move_camera(-1, 0, 0);
                 //person.move(-5, 0, 0);
                 p.move(-1, 0, 0);
                 break;
                 
             case 's':
-                //engine.move_camera(0, 5, 0);
+                engine.move_camera(0, 1, 0);
                 //person.move(0, 5, 0);
                 p.move(0, 1, 0);
                 break;
                 
             case 'd':
-                //engine.move_camera(5, 0, 0);
+                engine.move_camera(1, 0, 0);
                 //person.move(5, 0, 0);
                 p.move(1, 0, 0);
                 break;
                 
             case 'q':
+                engine.move_camera(0, 0, -1);
                 p.move(0, 0, -1);
                 break;
                 
             case 'e':
+                engine.move_camera(0, 0, 1);
                 p.move(0, 0, 1);
                 break;
         }

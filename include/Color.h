@@ -313,6 +313,14 @@ class Color
         
         Color operator * (const Color&);
         
+        // Additive color addition
+        Color operator + (const Color&);
+        
+        // Subtractive color addition
+        Color operator & (const Color&);
+        
+        Color operator += (const Color&);
+        
         //void operator = (const Color&);
         
 };

@@ -36,6 +36,9 @@ Engine::Engine()
     y_camera_position = 0;
     z_camera_position = 0;
     
+    // CANNOT GO BELOW ONE, IS USED IN DIVISION
+    drawing_plane_distance = 5;
+    
     display_frame_rate = false;
     
 }
@@ -70,7 +73,6 @@ void Engine::add_sprite(Sprite* sprite)
 
 void Engine::animate()
 {
-
     // Loop over every sprite 
     vector<Sprite*>::iterator sprite;
     for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)
@@ -78,7 +80,6 @@ void Engine::animate()
         // Tell each sprite to animate itself
         // It is each sprite's job to animate it's own sub-sprites
         (*sprite)->animate();
-
 }
 
 void Engine::display_frame(Frame* f)
@@ -212,16 +213,16 @@ void Engine::render_frame(Frame* rendered_frame)
 
     // Loop over each 'pixel' in frame
     int h = rendered_frame->get_height();
-    for (int y = 0; y < h; y++)
+    for (int y = (int)(-h/2); y < (int)(h/2); y++)
     {
         // Create row
         //vector<pixel> line;
         
         int w = rendered_frame->get_width();
-        for (int x = 0; x < rendered_frame->get_width(); x++)
+        for (int x = (int)(-w/2); x < (int)(w/2); x++)
         {
             // Get current pixel of frame
-            Pixel *rendered_pixel = rendered_frame->get_pixel(y, x);
+            Pixel *rendered_pixel = rendered_frame->get_pixel(y + (int)(h/2), x + (int)(w/2));
             
             // Reset pixel
             rendered_pixel->clear();
@@ -232,30 +233,37 @@ void Engine::render_frame(Frame* rendered_frame)
             for (int sprite_num = 0, size = sprites.size(); sprite_num < size; sprite_num++)
             {
                 Sprite* current_sprite = sprites[sprite_num];
-            
-                // Get distance between sprite and camera
-                long int z_diff = z_camera_position - current_sprite->get_z_position();
                 
-                // Make sure sprite is at least in front of the camera
+                Pixel new_pixel = Pixel(' ', Color(0, 0, 0, 0), Color(0, 0, 0, 0), false);
+                
+                // Make sure sprite is at least in front of the rendering plane
                 // Also handle case where z-diff is 0 to prevent divide by zero error
-                if (z_diff <= 0)
+                if (current_sprite->get_z_position() >= (z_camera_position /*- drawing_plane_distance*/))
                     continue;
-            
-                // Get absolute position of pixel taking distance from camera into account
-                long int abs_x = x_camera_position - (w / 2) * z_diff + x * z_diff;
-                long int abs_y = y_camera_position - (h / 2) * z_diff + y * z_diff;
                 
-                // Get pixel relative to sprite
-                long int rel_x = abs_x - current_sprite->get_x_position();
-                long int rel_y = abs_y - current_sprite->get_y_position();
+                //                     ________
+                //                    | Object |
+                //     rendered       /¯¯¯¯¯¯¯¯
+                //      pixel        /|
+                //            \     / |
+                //             \   /  |
+                //              ┘ /   |
+                //---------------X---------------------  <- drawing_plane
+                //              /|    |
+                //             / |    | <------- z_camera_position - current_sprite->get_z_position()
+                //            /  | <------------ drawing_plane_distance
+                //           /   |    |
+                //         _/____|____|
+                //         \_/ ^    ^-----(x/y) * z_diff_ratio
+                //         | | └----------(x/y) 
+                //          ¯
+                //          ^- camera
+                //
                 
-                // Get sprite dimensions
-                //long int sprite_width = current_sprite->get_width();
-                //long int sprite_height = current_sprite->get_height();
+                float z_diff_ratio = (z_camera_position - current_sprite->get_z_position()) / (float)drawing_plane_distance;
                 
-                // Get index relative to sprite size
-                rel_x = (rel_x / z_diff) - 1;
-                rel_y = (rel_y / z_diff) - 1;
+                long int rel_x = (int)(x_camera_position + (x * z_diff_ratio) - current_sprite->get_x_position());
+                long int rel_y = (int)(y_camera_position + (y * z_diff_ratio) - current_sprite->get_y_position());
                 
                 // If pixel overlaps with sprite
                 if ( 0 <= rel_x && rel_x < current_sprite->get_width() &&
@@ -269,18 +277,19 @@ void Engine::render_frame(Frame* rendered_frame)
                     if (current_pixel->get_foreground_color()->get_alpha() != 0)
                     {
                         // Write character to pixel
-                        rendered_pixel->set_char(current_pixel->get_char());
+                        new_pixel.set_char(current_pixel->get_char());
 
                         // TODO: THIS PROBABLY WON'T WORK FOR TRANSPARENT COLORS
                         // Write initial colors to pixel
-                        rendered_pixel->set_foreground_color(*(current_pixel->get_foreground_color()));
-                        rendered_pixel->set_background_color(*(current_pixel->get_background_color()));
+                        new_pixel.set_foreground_color(*(current_pixel->get_foreground_color()));
+                        new_pixel.set_background_color(*(current_pixel->get_background_color()));
+
+                        // What color light is going to be applied to this pixel
+                        static Color c = Color(0, 0, 0, 0);
 
                         // Handle dynamic lighting
                         if (current_sprite->respects_light_sources())
                         {
-                            Color c;
-                        
                             // Calculate new color based on nearby light sources
                             // Iterate over all light sources known to the engine
                             for (int light_num = 0, size = lights.size(); light_num < size; light_num++)
@@ -292,14 +301,14 @@ void Engine::render_frame(Frame* rendered_frame)
                                 long int abs_z = current_sprite->get_z_position();
                                 
                                 // Light color at location
-                                c = current_light->get_color(abs_x, abs_y, abs_z);
+                                Color light_color = current_light->get_color(abs_x, abs_y, abs_z);
                                 
                                 // Compare normals to get light intensity
                                 if (current_sprite->compare_normals())
                                 {
                                     // Get vectors
                                     const Vector* pixel_normal = current_pixel->get_normal();
-                                    const Vector light_vector = current_light->get_vector(abs_x, abs_y, abs_z);
+                                    const Vector light_vector = current_light->get_vector(current_sprite->get_x_position(), current_sprite->get_y_position(), abs_z);
                                 
                                     // Get vector components
                                     char x1 = pixel_normal->get_x_component();
@@ -316,33 +325,37 @@ void Engine::render_frame(Frame* rendered_frame)
                                     unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
                                     
                                     // Adjust light brightness accordingly
-                                    c.set_brightness(brightness);
+                                    light_color.set_brightness(brightness);
                                 }
                             
-                                rendered_pixel->set_foreground_color(c * (*(rendered_pixel->get_foreground_color())));
-                                rendered_pixel->set_background_color(c * (*(rendered_pixel->get_background_color())));
+                                c += light_color;
                             }
+                            
+                            // Calculate reflected light based on available light
+                            new_pixel.set_foreground_color(c * (*(new_pixel.get_foreground_color())));
+                            new_pixel.set_background_color(c * (*(new_pixel.get_background_color())));
+                            
                         }
                         else
                         {
                             // Write foreground color to pixel
-                            rendered_pixel->set_foreground_color(*(current_pixel->get_foreground_color()));
-                            rendered_pixel->set_background_color(*(current_pixel->get_background_color()));
+                            new_pixel.set_foreground_color(*(current_pixel->get_foreground_color()));
+                            new_pixel.set_background_color(*(current_pixel->get_background_color()));
                         }
                         
                         // Write bold to pixel
-                        rendered_pixel->set_bold(current_pixel->get_bold());
+                        new_pixel.set_bold(current_pixel->get_bold());
                         
                         // Write underline to pixel
-                        rendered_pixel->set_underline(current_pixel->get_underline());
+                        new_pixel.set_underline(current_pixel->get_underline());
                     }
                     
                 }
+                
+                *rendered_pixel = new_pixel & *rendered_pixel;
 
             }
             
-            // Write pixel to line
-            //f.set_pixel(y, x, frame_pixel);
         }
 
     }
@@ -362,12 +375,14 @@ void Engine::render_frame(Frame* rendered_frame)
     }
 
     rendered_frame->add_string(1, 0, "FPS: " + std::to_string(actual_frame_rate));
-    rendered_frame->add_string(2, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
-    rendered_frame->add_string(3, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
-    rendered_frame->add_string(4, 0, "CAMERA LOCATION: (" + std::to_string(x_camera_position) + ", "
+    rendered_frame->add_string(2, 0, "CURRENT DIMENSIONS: " + std::to_string(rendered_frame->get_width())
+                                     + "x" + std::to_string(rendered_frame->get_height()));
+    rendered_frame->add_string(3, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
+    rendered_frame->add_string(4, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
+    rendered_frame->add_string(5, 0, "CAMERA LOCATION: (" + std::to_string(x_camera_position) + ", "
                                                           + std::to_string(y_camera_position) + ", "
                                                           + std::to_string(z_camera_position) + ")");
-    rendered_frame->add_string(5, 0, "WILL TO LIVE: " + std::to_string(0));
+    rendered_frame->add_string(6, 0, "WILL TO LIVE: " + std::to_string(0));
     
     
     frames++;

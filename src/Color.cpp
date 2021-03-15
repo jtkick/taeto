@@ -1,5 +1,7 @@
 #include "Color.h"
 
+#include <iostream>
+
 #define RED_INDEX 0
 #define GREEN_INDEX 1
 #define BLUE_INDEX 2
@@ -33,6 +35,18 @@ uint8_t q8_mul(uint8_t a, uint8_t b)
     result = sat8(temp >> 8);
     
     return result;
+}
+
+uint8_t q8_div(uint8_t a, uint8_t b)
+{
+    int32_t temp = (int32_t)a << 8;
+    
+    if ((temp >= 0 && b >= 0) || (temp < 0 && b < 0))
+        temp += b / 2;
+    else
+        temp -= b / 2;
+        
+    return (uint8_t)(temp / b);
 }
 
 Color::Color(void)
@@ -168,7 +182,42 @@ uint8_t Color::to_iterm() const
     if (match_index != 256)
         return match_index;
     else
+    {
+        std::cout << "Couldn't find color in table.\n";
         throw "Couldn't find color in table.";
+    }
+}
+
+// Mix colors additively
+Color Color::operator + (const Color &c)
+{
+    for (int i = 0; i < 4; i++)
+        this->rgba[i] = this->rgba[i] + c.rgba[i] < 255 ? this->rgba[i] + c.rgba[i] : 255;
+
+    return *this;
+}
+
+// Mix colors subtractively
+Color Color::operator & (const Color &c)
+{
+    
+    // Try more sophisticated method, that takes alpha into account
+    Color new_color;
+    
+    float t_alpha = (float)(this->get_alpha()) / 255;
+    float c_alpha = (float)(c.get_alpha()) / 255;
+    
+    new_color.set_red(this->get_red() * t_alpha * (1 - c_alpha) + c.get_red() * c_alpha);
+    new_color.set_green(this->get_green() * t_alpha * (1 - c_alpha) + c.get_green() * c_alpha);
+    new_color.set_blue(this->get_blue() * t_alpha * (1 - c_alpha) + c.get_blue() * c_alpha);
+    new_color.set_alpha((t_alpha * (1 - c_alpha) + c_alpha) * 255);
+        
+    return new_color;
+}
+
+Color Color::operator += (const Color &c)
+{
+    return *this + c;
 }
 
 Color Color::operator * (const Color &c)

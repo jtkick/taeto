@@ -74,6 +74,8 @@ class Pixel
         
         void set_collide(bool);
         
+        Pixel operator & (const Pixel &p);
+        
         void operator = (const Pixel &p);
         
         // Reset to default values

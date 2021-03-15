@@ -1,5 +1,5 @@
-#ifndef POINT_LIGHT_H
-#define POINT_LIGHT_H
+#ifndef DIRECTIONAL_LIGHT_H
+#define DIRECTIONAL_LIGHT_H
 
 #include "Light.h"
 #include "Color.h"
@@ -7,22 +7,22 @@
 
 using namespace std;
 
-class Point_Light: public Light
+class Directional_Light: public Light
 {
     public:
     
         Color color;
     
-        float fade;
+        Vector vector;
     
-        Point_Light();
+        Directional_Light();
         
-        Point_Light(Color, float);
+        Directional_Light(Color, Vector);
         
         Color get_color(long int, long int, long int);
         
         Vector get_vector(long int, long int, long int);
-        
+
 };
 
 #endif

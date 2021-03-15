@@ -45,6 +45,14 @@ class Sprite
     // Must be defined everytime animate() is called
     Frame current_frame = Frame(0, 0);
     
+    // Denotes whether or not the current sprite should collide with other sprites
+    bool detect_collisions = true;
+    
+    // Current frame denoted which pixels of given frame should collide with other sprites
+    // Must be defined when 'detect_collisions' is true'
+    vector<vector<char>> collision_mesh;
+    
+    
     unsigned int current_frame_index = 0;
     
     // Place to store useful frames

@@ -1,6 +1,7 @@
 #include "Frame.h"
 
 #include <fstream>
+#include <iostream>
 
 // Constructors
 //Frame::Frame()
@@ -44,13 +45,18 @@ Pixel* Frame::get_pixel(long int h, long int w)
 {
     // Make sure width in range
     if (w < 0 || w >= width)
-        //throw "Frame width index out of range.";
-        throw "nah";
+    {
+        std::cout << "Width out of range.\n";
+        std::cout << "Width: " << std::to_string(w) << std::endl;
+        throw 1;
+    }
         
     // Make sure height in range
     if (h < 0 || h >= height)
-        //throw "Frame height index out of range.";
-        throw "nah";
+    {
+        std::cout << "Height out of range.\n";
+        throw 1;
+    }
     
     return &pixels[h][w];
 }

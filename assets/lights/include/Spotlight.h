@@ -1,5 +1,5 @@
-#ifndef POINT_LIGHT_H
-#define POINT_LIGHT_H
+#ifndef SPOTLIGHT_H
+#define SPOTLIGHT_H
 
 #include "Light.h"
 #include "Color.h"
@@ -7,17 +7,19 @@
 
 using namespace std;
 
-class Point_Light: public Light
+class Spotlight: public Light
 {
     public:
     
         Color color;
     
         float fade;
-    
-        Point_Light();
         
-        Point_Light(Color, float);
+        unsigned int radius;
+    
+        Spotlight();
+        
+        Spotlight(Color, float, int);
         
         Color get_color(long int, long int, long int);
         

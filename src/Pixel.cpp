@@ -111,7 +111,7 @@ void Pixel::clear()
 {
     c = ' ';
     foreground_color.set_all(255, 255, 255, 255);
-    background_color.set_all(50, 50, 50, 0);
+    background_color.set_all(0, 0, 0, 0);
     bold = false;
     underline = false;
     normal.set_all(0, 0, 127);
@@ -137,6 +137,38 @@ void Pixel::operator = (const Pixel &p)
     underline = p.get_underline();
     normal = *(p.get_normal());
     collide = p.get_collide();
+}
+
+// This function combines pixels, applying the right pixel 
+// onto the left pixel. Taking color alpha into account
+Pixel Pixel::operator & (const Pixel &p)
+{
+    Pixel new_pixel;
+
+    // Only combine if foreground color is not fully transparent
+    if ((p.get_foreground_color())->get_alpha() != 0)
+    {
+        // Write char
+        new_pixel.set_char(p.get_char());
+        
+        // Write foreground color
+        Color c1 = *(this->get_foreground_color());
+        Color c2 = *(p.get_foreground_color());
+        this->set_foreground_color(c1 & c2);
+        
+        // Write background color
+        c1 = *(this->get_background_color());
+        c2 = *(p.get_background_color());
+        new_pixel.set_background_color(c1 & c2);
+        
+        // Write bold
+        new_pixel.set_bold(p.get_bold());
+        
+        // Write underline
+        new_pixel.set_underline(p.get_underline());
+    }
+    
+    return new_pixel;
 }
 
 // This function combines pixels, element by element
