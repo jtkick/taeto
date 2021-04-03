@@ -10,9 +10,9 @@ project(taeto)
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Curses REQUIRED)
-include_directories(include assets/lights/include ${CURSES_INCLUDE_DIR})
+include_directories("include" "include/system_layer" "include/message_layer" "assets/lights/include" ${CURSES_INCLUDE_DIR})
  
-file(GLOB SOURCES "src/*.cpp" "assets/*/src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp")
  
 add_executable(taeto ${SOURCES})
 

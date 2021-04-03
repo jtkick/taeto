@@ -13,10 +13,10 @@ Frame::Frame(unsigned long int h, unsigned long int w)
 
     height = h;
     width = w;
-    
-    init_pixels();         
+
+    init_pixels();
     //pixels = array<array<Pixel, width>, height>;
-               
+
 }
 
 // Destructor
@@ -36,30 +36,30 @@ void Frame::init_pixels()
             row.push_back(Pixel());
         }
         pixels.push_back(row);
-    }      
+    }
 }
 
 // Getters and setters
-Pixel* Frame::get_pixel(long int h, long int w)
+unique_ptr<Pixel> Frame::get_pixel(long int h, long int w)
 {
     // Make sure width in range
     if (w < 0 || w >= width)
         //throw "Frame width index out of range.";
         throw "nah";
-        
+
     // Make sure height in range
     if (h < 0 || h >= height)
         //throw "Frame height index out of range.";
         throw "nah";
-    
-    return &pixels[h][w];
+
+    return unique_ptr<Pixel>(&pixels[h][w]);
 }
 
 unsigned long int Frame::get_width()
 {
     return width;
 }
-        
+
 unsigned long int Frame::get_height()
 {
     return height;
@@ -71,15 +71,15 @@ void Frame::set_pixel(long int h, long int w, Pixel p)
     if (w < 0 || w >= width)
         //throw "Frame width index out of range.";
         throw 3;
-        
+
     // Make sure height in range
     if (h < 0 || h >= height)
         //throw "Frame height index out of range.";
         throw 4;
-        
+
     pixels[h][w] = p;
 }
-        
+
 void Frame::set_width(unsigned long int w)
 {
     // Only update dimensions if they changed, becuase it expensive
@@ -89,7 +89,7 @@ void Frame::set_width(unsigned long int w)
         init_pixels();
     }
 }
-        
+
 void Frame::set_height(unsigned long int h)
 {
     // Only update dimensions if they changed, becuase it expensive
@@ -99,7 +99,7 @@ void Frame::set_height(unsigned long int h)
         init_pixels();
     }
 }
-        
+
 // Set just the characters of all pixels in frame
 void Frame::set_chars(vector<string> chars)
 {
@@ -110,16 +110,16 @@ void Frame::set_chars(vector<string> chars)
 
             // Write chars character to pixel at corresponding location
             pixels[i][j].set_char(chars[i][j]);
-        
+
 }
-        
+
 // Set just the colors of all pixels in frame
 void Frame::set_foreground_colors(vector<vector<Color>> color_vector)
 {
     for (int i = 0; i < color_vector.size(); i++)
-    
+
         for (int j = 0; j < color_vector[i].size(); j++)
-        
+
             // Write color to character foreground
             pixels[i][j].set_foreground_color(color_vector[i][j]);
 }
@@ -128,13 +128,13 @@ void Frame::set_foreground_colors(vector<vector<Color>> color_vector)
 void Frame::set_background_colors(vector<vector<Color>> color_vector)
 {
     for (int i = 0; i < color_vector.size(); i++)
-    
+
         for (int j = 0; j < color_vector[i].size(); j++)
-        
+
             // Write color to character foreground
             pixels[i][j].set_background_color(color_vector[i][j]);
 }
-        
+
 // Set just the bold parameter of all pixels in frame
 void Frame::set_bolds(vector<vector<bool>>)
 {
@@ -145,12 +145,12 @@ void Frame::set_bolds(vector<vector<bool>>)
 void Frame::set_normals(vector<vector<Vector>> normals) // Ah yes, the vector<vector<Vector>>.
 {
     for (int i = 0; i < normals.size(); i++)
-    
+
         for (int j = 0; j < normals[i].size(); j++)
-        
+
             pixels[i][j].set_normal(normals[i][j]);
 }
-        
+
 // Set just the normal vector parameter of single pixel in frame
 void set_normal(unsigned long int, unsigned long int, Vector normal)
 {
