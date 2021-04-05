@@ -1,17 +1,23 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-enum id_numbers { ADD_SPRITE, ADD_LIGHT, RENDER_FRAME, MOVE_CAMERA };
+enum id_numbers { SPRITE_UPDATE,
+                  LIGHT_UPDATE,
+                  RENDER_FRAME,
+                  DISPLAY_FRAME,
+                  MOVE_CAMERA };
 
 class Message
 {
-    int id;
+    protected:
+
+        int id;
 
     public:
 
         Message();
 
-        ~Message();
+        virtual ~Message();
 
         int get_id();
 

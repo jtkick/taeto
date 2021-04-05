@@ -275,6 +275,8 @@ class main_character: public Sprite
 
             current_frame = f;
 
+            respect_light_sources = false;
+
         }
 
 };
@@ -510,6 +512,7 @@ int main()
 
     Engine engine;
 
+/*
     Palm_tree tree;
     tree.move(0, 0, -10);
     Palm_tree tree2;
@@ -520,21 +523,22 @@ int main()
     tree4.move(150, 0, -1);
     Palm_tree tree5;
     tree5.move(200, 0, -1);
+*/
 
     main_character person;
     //person.move(75, 16, 0);
-    person.move(0, 15, -1);
-    tree.move(0, 0, -1);
+    person.move(0, 0, -21);
+    //tree.move(0, 0, -1);
 
-    Color_Test color_test;
-    color_test.move(0, 0, -1);
+    //Color_Test color_test;
+    //color_test.move(0, 0, -1);
 
     //Palm_tree more_trees[100];
     //for (int i = 0; i < 100; i++)
     //    engine.add_sprite(&more_trees[i]);
 
-    ground1 g;
-    g.move(0, 22, -1);
+    //ground1 g;
+    //g.move(0, 22, -1);
 
     //engine.add_sprite(&g);
 
@@ -543,7 +547,7 @@ int main()
     //engine.add_sprite(&tree3);
     //engine.add_sprite(&tree4);
     //engine.add_sprite(&tree5);
-    //engine.add_sprite(&person);
+    engine.add_sprite(make_shared<Sprite>(person));
     //engine.add_sprite(&tree2);
     //engine.add_sprite(&color_test);
 
@@ -552,13 +556,13 @@ int main()
 
 
 
-    Bars b;
-    b.move(-(b.get_width() / 2), -(b.get_height() / 2), -1);
+    //Bars b;
+    //b.move(-(b.get_width() / 2), -(b.get_height() / 2), -1);
     //engine.add_sprite(&b);
 
 
-    Normal_Test nt;
-    nt.move(-50, 0, -1);
+    //Normal_Test nt;
+    //nt.move(-50, 0, -1);
     //engine.add_sprite(&nt);
 
 
@@ -580,7 +584,7 @@ int main()
     //////////////////////
 
 
-
+/*
 
 
     chrono::microseconds time;
@@ -609,7 +613,7 @@ int main()
     struct winsize size;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
     Frame new_frame(size.ws_row, size.ws_col);
-
+*/
     while (TRUE)
     {
 
@@ -671,8 +675,8 @@ int main()
         //usleep(10000);
 
 
-        if (counter++ > 10000)
-            break;
+//        if (counter++ > 10000)
+//            break;
     }
 
 }

@@ -2,32 +2,43 @@
 #define RENDER_SYSTEM_H
 
 #include "Message.h"
+#include "Render_Frame_Message.h"
+#include "Sprite_Update_Message.h"
+#include "System.h"
 #include "Sprite.h"
 #include "Light.h"
 
 #include <chrono>
 #include <deque>
 #include <memory>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 #include <vector>
+
+
+
+#include <iostream>
 
 using namespace std;
 using namespace std::chrono;
 
-class Render_System
+class Render_System: public System
 {
+    // Engine-wide logger
+    shared_ptr<spdlog::logger> logger;
 
     // Sprites to be rendered
-    vector<unique_ptr<Sprite>> sprites;
+    vector<shared_ptr<Sprite>> sprites;
 
     // Light sources
-    vector<unique_ptr<Light>> lights;
+    vector<shared_ptr<Light>> lights;
 
     // Current frame rate of render system
     // List of times each frame was rendered
     std::deque<milliseconds> frame_times;
 
     // Amount of time in milliseconds to average in order to determine FPS
-    int averaging_time = 2000;
+    unsigned int averaging_time = 2000;
 
     // Member to store current FPS
     unsigned int current_fps;
@@ -52,13 +63,15 @@ class Render_System
     public:
 
         // Contructor
-        Render_System(void);
+        Render_System();
+
+        Render_System(shared_ptr<spdlog::logger>);
 
         // Destructor
         ~Render_System(void);
 
         // Read messages from message bus
-        void handle_message(unique_ptr<Message>);
+        void handle_message(shared_ptr<Message>);
 
     // These methods are for doing work in this system
     // They are private since all calls to do work should be done
@@ -69,7 +82,7 @@ class Render_System
         void move_camera(long int, long int, long int);
 
         // Used to render new frame
-        void render_frame(Frame &);
+        void render_frame(shared_ptr<Frame>);
 
 };
 

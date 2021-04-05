@@ -1,20 +1,33 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "Display_System.h"
+#include "Render_System.h"
 #include "Sprite.h"
 #include "Light.h"
 
 #include <curses.h>
 #include <chrono>
 #include <cmath>
-#include <memory>
-#include <vector>
 #include <iostream>
-#include <unistd.h>
+#include <memory>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#include <vector>
 
 class Engine
 {
 public:
+
+    // Engine-wide logger
+    std::shared_ptr<spdlog::logger> logger;
+
+    // System to render new frames
+    Render_System render_system;
+
+    // System for output to screen
+    Display_System display_system;
+
     // Sprites to render
     vector<Sprite*> sprites;
 
@@ -44,19 +57,13 @@ public:
 
         ~Engine(void);
 
-        void add_light(Light*);
+        void add_light(shared_ptr<Light>);
 
-        void add_sprite(Sprite*);
+        void add_sprite(shared_ptr<Sprite>);
 
         void animate();
 
-        void display_frame(Frame*);
-
-        void display_frame_ncurses(Frame*);
-
-        void move_camera(long int, long int, long int);
-
-        void render_frame(Frame*);
+        void display_frame(shared_ptr<Frame>);
 
 };
 

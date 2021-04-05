@@ -1,12 +1,24 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#include "Message.h"
+
+#include <memory>
+
+using namespace std;
+
 class System
 {
 
     public:
-        
-        // Method for handling messages from other systems or the engine
-	    virtual void handle_message(Messages::message &m);
 
-}
+        System();
+
+        virtual ~System();
+
+        // Method for handling messages from other systems or the engine
+	    virtual void handle_message(shared_ptr<Message>);
+
+};
+
+#endif

@@ -1,6 +1,7 @@
 #include "Frame.h"
 
 #include <fstream>
+#include <iostream>
 
 // Constructors
 //Frame::Frame()
@@ -52,7 +53,7 @@ unique_ptr<Pixel> Frame::get_pixel(long int h, long int w)
         //throw "Frame height index out of range.";
         throw "nah";
 
-    return unique_ptr<Pixel>(&pixels[h][w]);
+    return make_unique<Pixel>(pixels[h][w]);
 }
 
 unsigned long int Frame::get_width()

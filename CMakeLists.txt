@@ -10,10 +10,16 @@ project(taeto)
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Curses REQUIRED)
-include_directories("include" "include/system_layer" "include/message_layer" "assets/lights/include" ${CURSES_INCLUDE_DIR})
- 
+
+if(NOT TARGET spdlog)
+    # Stand-alone build
+    find_package(spdlog REQUIRED)
+endif()
+
+include_directories("include" "prerequisites/spdlog" "include/system_layer" "include/message_layer" "assets/lights/include" ${CURSES_INCLUDE_DIR})
+
 file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp")
- 
+
 add_executable(taeto ${SOURCES})
 
-target_link_libraries(taeto ncurses)
+target_link_libraries(taeto ncurses spdlog::spdlog)
