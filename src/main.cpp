@@ -134,6 +134,8 @@ class Palm_tree: public Sprite
             Frame default_frame(22, 45);
             default_frame.set_chars(default_chars);
 
+            respect_light_sources = true;
+
             // Trunk color
             Color t = Color(170, 166, 161);
             // Leaf color
@@ -512,10 +514,10 @@ int main()
 
     Engine engine;
 
-/*
+
     Palm_tree tree;
-    tree.move(0, 0, -10);
-    Palm_tree tree2;
+    tree.move(0, 0, -1);
+/*    Palm_tree tree2;
     tree2.move(0, 0, -12);
     Palm_tree tree3;
     tree3.move(0, 0, -16);
@@ -527,7 +529,7 @@ int main()
 
     main_character person;
     //person.move(75, 16, 0);
-    person.move(0, 0, -21);
+    person.move(0, 0, -1);
     //tree.move(0, 0, -1);
 
     //Color_Test color_test;
@@ -542,6 +544,8 @@ int main()
 
     //engine.add_sprite(&g);
 
+    engine.add_sprite(make_shared<Sprite>(tree));
+
 
     //engine.add_sprite(&tree);
     //engine.add_sprite(&tree3);
@@ -551,10 +555,10 @@ int main()
     //engine.add_sprite(&tree2);
     //engine.add_sprite(&color_test);
 
-    Point_Light p = Point_Light(Color(255, 255, 255), 0.95);
-    //engine.add_light(&p);
+    shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.95);
+    engine.add_light(p);
 
-
+    engine.run();
 
     //Bars b;
     //b.move(-(b.get_width() / 2), -(b.get_height() / 2), -1);
@@ -613,7 +617,7 @@ int main()
     struct winsize size;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
     Frame new_frame(size.ws_row, size.ws_col);
-*/
+*//*
     while (TRUE)
     {
 
@@ -652,7 +656,7 @@ int main()
                 p.move(0, 0, 1);
                 break;
         }
-
+*/
         //engine.move_camera(2, 0, 0);
         //person.move(2, 0, 0);
 
@@ -677,6 +681,6 @@ int main()
 
 //        if (counter++ > 10000)
 //            break;
-    }
+//    }
 
 }

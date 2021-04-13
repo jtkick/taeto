@@ -28,28 +28,9 @@ Sprite::~Sprite(void)
     //current_frame = NULL;
 }
 
-unique_ptr<Pixel> Sprite::get_pixel(long int rel_x, long int rel_y)
+shared_ptr<Pixel> Sprite::get_pixel(long int rel_y, long int rel_x)
 {
-    // Empty pixel with c == '\0'
-    //Pixel p;
-
     return current_frame.get_pixel(rel_y, rel_x);
-
-    // If pixel is out of bounds, this sprite doesn't care about given frame location
-    if (rel_x < 0 || rel_x >= current_frame.get_width())
-        return NULL;
-    if (rel_y < 0 || rel_y >= current_frame.get_height())
-        return NULL;
-
-    // If pixel does overlap with given coordinate, make sure character is not meant to be transparent
-    if (current_frame.get_pixel(rel_y, rel_x)->get_char() != alpha_char)
-        return current_frame.get_pixel(rel_y, rel_x);
-
-    // TODO: THIS LINE SHOULD NEVER BE REACHED, LIKELY WORSENING EFFICIENCY
-    else
-        return NULL;
-
-    //throw "ouch";
 }
 
 long int Sprite::get_x_position()

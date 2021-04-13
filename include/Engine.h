@@ -1,8 +1,15 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+// Systems
 #include "Display_System.h"
 #include "Render_System.h"
+
+// Messages
+#include "Render_Frame_Message.h"
+#include "Sprite_Update_Message.h"
+#include "Light_Update_Message.h"
+
 #include "Sprite.h"
 #include "Light.h"
 
@@ -22,17 +29,14 @@ public:
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger;
 
+    // Bus for notifying systems of messages
+    shared_ptr<Message_Bus> message_bus;
+
     // System to render new frames
-    Render_System render_system;
+    shared_ptr<Render_System> render_system;
 
     // System for output to screen
-    Display_System display_system;
-
-    // Sprites to render
-    vector<Sprite*> sprites;
-
-    // Light sources
-    vector<Light*> lights;
+    shared_ptr<Display_System> display_system;
 
     // Frame rate to aim for
     unsigned int target_frame_rate = 0;
@@ -64,6 +68,9 @@ public:
         void animate();
 
         void display_frame(shared_ptr<Frame>);
+
+        // Continually render and display frames until program stopped
+        void run();
 
 };
 

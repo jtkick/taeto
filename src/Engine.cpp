@@ -1,7 +1,5 @@
 #include "Engine.h"
 
-#include "Render_Frame_Message.h"
-
 // For getting window size info in UNIX
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -11,34 +9,21 @@
 
 Engine::Engine()
 {
-    cout << "YoOoOoOoOoOoOoOoO!" << endl;
-
     logger = spdlog::basic_logger_mt("logger", "logs/log.txt");
 
     // Make sure logger flushes on all error messages
     logger->flush_on(spdlog::level::err);
 
-    logger->info("testing, attention please");
-    logger->error("my leg!");
-    logger->critical("go get em!");
-    logger->debug("i must kermit sudoku");
+    // Setup all engine systems
+    logger->info("Setting up engine systems.");
+    render_system = make_shared<Render_System>(logger, message_bus);
+    display_system = make_shared<Display_System>(logger, message_bus);
 
-    render_system = Render_System(logger);
-    display_system = Display_System(logger);
+    // Connect systems to message bus
+    message_bus->add_system(render_system);
+    message_bus->add_system(display_system);
 
-    // Create new frame
-    struct winsize size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-    shared_ptr<Frame> new_frame = make_shared<Frame>(size.ws_row, size.ws_col);
-
-    shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(new_frame);
-
-    render_system.handle_message(rfm);
-
-    shared_ptr<Display_Frame_Message> dfm = make_shared<Display_Frame_Message>(new_frame);
-
-    display_system.handle_message(dfm);
-
+    logger->error("Done setting up engine.");
 }
 
 Engine::~Engine()
@@ -46,53 +31,44 @@ Engine::~Engine()
     endwin();
 }
 
+void Engine::add_light(shared_ptr<Light> l)
+{
+    logger->error("Adding light to engine.");
+
+    // Create message
+    shared_ptr<Light_Update_Message> lum = make_shared<Light_Update_Message>(l);
+
+    // Post message
+    render_system->handle_message(lum);
+}
+
 void Engine::add_sprite(shared_ptr<Sprite> s)
 {
-    logger->info("Adding sprite");
+    logger->error("Adding sprite to engine.");
 
     // Create sprite update message
     shared_ptr<Sprite_Update_Message> sum = make_shared<Sprite_Update_Message>(s, true, true);
 
-    render_system.handle_message(sum);
-
-    // Purely for testing purposes, remove0
-    struct winsize size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-    shared_ptr<Frame> new_frame = make_shared<Frame>(size.ws_row, size.ws_col);
-    shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(new_frame);
-    render_system.handle_message(rfm);
+    // Post message
+    render_system->handle_message(sum);
 }
 
-void Engine::display_frame(shared_ptr<Frame> f)
+void Engine::run()
 {
+    // Create new frame
+    struct winsize size;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+    shared_ptr<Frame> frame = make_shared<Frame>(size.ws_row, size.ws_col);
 
-    unique_ptr<Pixel> current_pixel;
-
-    for (int h = 0; h < f->get_height(); h++)
+    // Start rendering
+    while (true)
     {
-        // Move to beginning of line
-        printf("%c[%d;%df", 0X1B, h, 0);
+        logger->info("Rendering new frame.");
+        shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
+        render_system->handle_message(rfm);
 
-        for (int w = 0; w < f->get_width(); w++)
-        {
-            // Get pixel in question
-            current_pixel = f->get_pixel(h, w);
-
-            // Write background color
-            //const Color* c = current_pixel->get_background_color();
-            //printf("\033[48;2;%d;%d;%dm", c->get_red(), c->get_green(), c->get_blue());
-
-            // Write foreground color
-            //c = current_pixel->get_foreground_color();
-            //printf("\033[38;2;%d;%d;%dm", c->get_red(), c->get_green(), c->get_blue());
-
-            // Write character
-            printf("%c", current_pixel->get_char());
-        }
-
+        logger->info("Displaying frame.");
+        shared_ptr<Display_Frame_Message> dfm = make_shared<Display_Frame_Message>(frame);
+        display_system->handle_message(dfm);
     }
-
-    // Flush output
-    fflush(stdout);
-
 }

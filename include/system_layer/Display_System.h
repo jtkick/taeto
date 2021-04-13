@@ -3,6 +3,7 @@
 
 #include "Display_Frame_Message.h"
 #include "Frame.h"
+#include "Message_Bus.h"
 #include "System.h"
 
 #include <iostream>
@@ -17,11 +18,12 @@ class Display_System: public System
     // Engine-wide logger
     shared_ptr<spdlog::logger> logger;
 
+    // Message bus for posting messages
+    shared_ptr<Message_Bus> message_bus;
+
     public:
 
-        Display_System();
-
-        Display_System(shared_ptr<spdlog::logger>);
+        Display_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         ~Display_System(void);
 

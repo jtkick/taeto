@@ -77,7 +77,7 @@ class Sprite
 
         ~Sprite();
 
-        unique_ptr<Pixel> get_pixel(long int, long int);
+        shared_ptr<Pixel> get_pixel(long int, long int);
 
         long int get_height();
 

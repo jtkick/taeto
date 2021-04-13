@@ -16,7 +16,6 @@ Frame::Frame(unsigned long int h, unsigned long int w)
     width = w;
 
     init_pixels();
-    //pixels = array<array<Pixel, width>, height>;
 
 }
 
@@ -31,29 +30,19 @@ void Frame::init_pixels()
 {
     for (int i = 0; i < height; i++)
     {
-        vector<Pixel> row;
+        vector<shared_ptr<Pixel>> row;
         for (int j = 0; j < width; j++)
         {
-            row.push_back(Pixel());
+            row.push_back(make_shared<Pixel>());
         }
         pixels.push_back(row);
     }
 }
 
 // Getters and setters
-unique_ptr<Pixel> Frame::get_pixel(long int h, long int w)
+shared_ptr<Pixel> Frame::get_pixel(long int h, long int w)
 {
-    // Make sure width in range
-    if (w < 0 || w >= width)
-        //throw "Frame width index out of range.";
-        throw "nah";
-
-    // Make sure height in range
-    if (h < 0 || h >= height)
-        //throw "Frame height index out of range.";
-        throw "nah";
-
-    return make_unique<Pixel>(pixels[h][w]);
+    return pixels[h][w];
 }
 
 unsigned long int Frame::get_width()
@@ -78,7 +67,7 @@ void Frame::set_pixel(long int h, long int w, Pixel p)
         //throw "Frame height index out of range.";
         throw 4;
 
-    pixels[h][w] = p;
+    pixels[h][w] = make_shared<Pixel>(p);
 }
 
 void Frame::set_width(unsigned long int w)
@@ -110,7 +99,7 @@ void Frame::set_chars(vector<string> chars)
         for (int j = 0; j < width; j++)
 
             // Write chars character to pixel at corresponding location
-            pixels[i][j].set_char(chars[i][j]);
+            pixels[i][j]->set_char(chars[i][j]);
 
 }
 
@@ -122,7 +111,7 @@ void Frame::set_foreground_colors(vector<vector<Color>> color_vector)
         for (int j = 0; j < color_vector[i].size(); j++)
 
             // Write color to character foreground
-            pixels[i][j].set_foreground_color(color_vector[i][j]);
+            pixels[i][j]->set_foreground_color(color_vector[i][j]);
 }
 
 // Set just the colors of all pixels in frame
@@ -133,7 +122,7 @@ void Frame::set_background_colors(vector<vector<Color>> color_vector)
         for (int j = 0; j < color_vector[i].size(); j++)
 
             // Write color to character foreground
-            pixels[i][j].set_background_color(color_vector[i][j]);
+            pixels[i][j]->set_background_color(color_vector[i][j]);
 }
 
 // Set just the bold parameter of all pixels in frame
@@ -149,7 +138,7 @@ void Frame::set_normals(vector<vector<Vector>> normals) // Ah yes, the vector<ve
 
         for (int j = 0; j < normals[i].size(); j++)
 
-            pixels[i][j].set_normal(normals[i][j]);
+            pixels[i][j]->set_normal(normals[i][j]);
 }
 
 // Set just the normal vector parameter of single pixel in frame
@@ -164,5 +153,5 @@ void Frame::add_string(long int y, long int x, string str)
     Color black = Color(0, 0, 0, 255);
 
     for (int i = 0; i < str.length(); i++)
-        pixels[y][x+i] = Pixel(str.at(i), white, black, false);
+        pixels[y][x+i] = make_shared<Pixel>(str.at(i), white, black, false);
 }

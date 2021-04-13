@@ -2,7 +2,9 @@
 #define RENDER_SYSTEM_H
 
 #include "Message.h"
+#include "Message_Bus.h"
 #include "Render_Frame_Message.h"
+#include "Light_Update_Message.h"
 #include "Sprite_Update_Message.h"
 #include "System.h"
 #include "Sprite.h"
@@ -15,10 +17,6 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include <vector>
 
-
-
-#include <iostream>
-
 using namespace std;
 using namespace std::chrono;
 
@@ -26,6 +24,9 @@ class Render_System: public System
 {
     // Engine-wide logger
     shared_ptr<spdlog::logger> logger;
+
+    // Message bus for posting messages
+    shared_ptr<Message_Bus> message_bus;
 
     // Sprites to be rendered
     vector<shared_ptr<Sprite>> sprites;
@@ -38,7 +39,7 @@ class Render_System: public System
     std::deque<milliseconds> frame_times;
 
     // Amount of time in milliseconds to average in order to determine FPS
-    unsigned int averaging_time = 2000;
+    unsigned int averaging_time = 1000;
 
     // Member to store current FPS
     unsigned int current_fps;
@@ -63,9 +64,7 @@ class Render_System: public System
     public:
 
         // Contructor
-        Render_System();
-
-        Render_System(shared_ptr<spdlog::logger>);
+        Render_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         // Destructor
         ~Render_System(void);
@@ -83,6 +82,9 @@ class Render_System: public System
 
         // Used to render new frame
         void render_frame(shared_ptr<Frame>);
+
+        // Old way of doing it for testing
+        void render_frame_old(shared_ptr<Frame>);
 
 };
 
