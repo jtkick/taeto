@@ -1,8 +1,8 @@
 #include "Message_Bus.h"
 
-Message_Bus::Message_Bus()
+Message_Bus::Message_Bus(shared_ptr<spdlog::logger> l)
 {
-
+    logger = l;
 }
 
 Message_Bus::~Message_Bus()
@@ -13,6 +13,7 @@ Message_Bus::~Message_Bus()
 void Message_Bus::add_system(shared_ptr<System> system)
 {
     // Put on vector
+    logger->error("Adding system to message bus...");
     systems.push_back(system);
 }
 
