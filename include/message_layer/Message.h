@@ -5,7 +5,9 @@ enum id_numbers { SPRITE_UPDATE,
                   LIGHT_UPDATE,
                   RENDER_FRAME,
                   DISPLAY_FRAME,
-                  MOVE_CAMERA };
+                  MOVE_CAMERA,
+                  POLL_INPUTS,
+                  KEY_UPDATE};
 
 class Message
 {

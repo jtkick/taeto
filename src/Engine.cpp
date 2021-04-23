@@ -17,6 +17,7 @@ Engine::Engine()
 
     // Setup all engine systems
     logger->info("Constructing engine systems.");
+    input_system = make_shared<Input_System>(logger, message_bus);
     render_system = make_shared<Render_System>(logger, message_bus);
     display_system = make_shared<Display_System>(logger, message_bus);
 
@@ -26,6 +27,7 @@ Engine::Engine()
 
     // Connect systems to message bus
     logger->info("Conencting systems to message bus.");
+    message_bus->add_system(input_system);
     message_bus->add_system(render_system);
     message_bus->add_system(display_system);
 
@@ -45,7 +47,7 @@ void Engine::add_light(shared_ptr<Light> l)
     shared_ptr<Light_Update_Message> lum = make_shared<Light_Update_Message>(l);
 
     // Post message
-    render_system->handle_message(lum);
+    message_bus->post_message(lum);
 }
 
 void Engine::add_sprite(shared_ptr<Sprite> s)
@@ -56,7 +58,7 @@ void Engine::add_sprite(shared_ptr<Sprite> s)
     shared_ptr<Sprite_Update_Message> sum = make_shared<Sprite_Update_Message>(s, true, true);
 
     // Post message
-    render_system->handle_message(sum);
+    message_bus->post_message(sum);
 }
 
 void Engine::run()
@@ -69,6 +71,10 @@ void Engine::run()
     // Start rendering
     while (true)
     {
+        logger->info("Polling inputs.");
+        shared_ptr<Poll_Inputs_Message> pim = make_shared<Poll_Inputs_Message>();
+        message_bus->post_message(pim);
+
         logger->info("Rendering new frame.");
         shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
         message_bus->post_message(rfm);

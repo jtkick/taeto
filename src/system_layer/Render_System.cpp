@@ -61,15 +61,33 @@ void Render_System::handle_message(shared_ptr<Message> message)
         }
         break;
 
-        case MOVE_CAMERA:
+        case KEY_UPDATE:
+        {
+            logger->info("Render system received key update message.");
 
-            // Move camera to given x, y, and z location
-            //camera_x_position = message.get_x_position();
-            //camera_y_position = message.get_y_position();
-            //camera_z_position = message.get_z_position();
+            shared_ptr<Key_Update_Message> kum = dynamic_pointer_cast<Key_Update_Message>(message);
 
-            break;
+            // Move camera based on key
+            switch(kum->get_key())
+            {
+                case 'w':
+                    camera_y_position -= 1;
+                break;
 
+                case 'a':
+                    camera_x_position -= 1;
+                break;
+
+                case 's':
+                    camera_y_position += 1;
+                break;
+
+                case 'd':
+                    camera_x_position += 1;
+                break;
+            }
+        }
+        break;
     }
 }
 

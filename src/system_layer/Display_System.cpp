@@ -1,5 +1,9 @@
 #include "Display_System.h"
 
+// For debugging
+#include <thread>
+#include <chrono>
+
 Display_System::Display_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> mb)
 {
     logger = l;
@@ -38,6 +42,13 @@ void Display_System::handle_message(shared_ptr<Message> message)
             display_frame(dfm->get_frame());
         }
         break;
+
+        // For debugging
+        case KEY_UPDATE:
+        {
+            logger->info("Received key update message in display system");
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
     }
 
 }

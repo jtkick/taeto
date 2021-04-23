@@ -2,10 +2,12 @@
 #define ENGINE_H
 
 // Systems
+#include "Input_System.h"
 #include "Display_System.h"
 #include "Render_System.h"
 
 // Messages
+#include "Poll_Inputs_Message.h"
 #include "Render_Frame_Message.h"
 #include "Sprite_Update_Message.h"
 #include "Light_Update_Message.h"
@@ -31,6 +33,9 @@ public:
 
     // Bus for notifying systems of messages
     shared_ptr<Message_Bus> message_bus;
+
+    // System to poll any inputs
+    shared_ptr<Input_System> input_system;
 
     // System to render new frames
     shared_ptr<Render_System> render_system;
