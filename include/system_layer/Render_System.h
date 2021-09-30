@@ -62,6 +62,9 @@ class Render_System: public System
     // Number of sprites rendered in the last frame
     unsigned int drawn_sprites;
 
+    // Keep track of frame number for debugging
+    unsigned long long frame_number;
+
     public:
 
         // Contructor

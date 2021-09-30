@@ -84,7 +84,7 @@ void Input_System::poll_inputs()
             shared_ptr<Key_Update_Message> kum = make_shared<Key_Update_Message>(key.key, key.pressed);
             // HOLY SHIT!
             // KUM!
-            //message_bus->post_message(std::move(kum));
+            message_bus->post_message(std::move(kum));
         }
     }
 }

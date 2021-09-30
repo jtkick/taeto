@@ -15,21 +15,23 @@ Engine::Engine()
     // Make sure logger flushes on all error messages
     logger->flush_on(spdlog::level::err);
 
+    // Create message bus
+    logger->info("Constructing message bus.");
+    message_bus = make_shared<Message_Bus>(logger);
+
     // Setup all engine systems
     logger->info("Constructing engine systems.");
     input_system = make_shared<Input_System>(logger, message_bus);
     render_system = make_shared<Render_System>(logger, message_bus);
     display_system = make_shared<Display_System>(logger, message_bus);
-
-    // Create message bus
-    logger->info("Constructing message bus.");
-    message_bus = make_shared<Message_Bus>(logger);
+    physics_system = make_shared<Physics_System>(logger, message_bus);
 
     // Connect systems to message bus
     logger->info("Conencting systems to message bus.");
     message_bus->add_system(input_system);
     message_bus->add_system(render_system);
     message_bus->add_system(display_system);
+    message_bus->add_system(physics_system);
 
     logger->error("Done setting up engine.");
 }
@@ -55,7 +57,7 @@ void Engine::add_sprite(shared_ptr<Sprite> s)
     logger->error("Adding sprite to engine.");
 
     // Create sprite update message
-    shared_ptr<Sprite_Update_Message> sum = make_shared<Sprite_Update_Message>(s, true, true);
+    shared_ptr<Sprite_Update_Message> sum = make_shared<Sprite_Update_Message>(s);
 
     // Post message
     message_bus->post_message(sum);
@@ -74,6 +76,10 @@ void Engine::run()
         logger->info("Polling inputs.");
         shared_ptr<Poll_Inputs_Message> pim = make_shared<Poll_Inputs_Message>();
         message_bus->post_message(pim);
+
+        logger->info("Applying forces to sprites.");
+        shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
+        message_bus->post_message(afm);
 
         logger->info("Rendering new frame.");
         shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);

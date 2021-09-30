@@ -5,6 +5,22 @@ Sprite::Sprite(void)
     last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
 
     //current_frame = Frame(0, 0);
+
+    x_position = 0;
+    y_position = 0;
+    z_position = 0;
+
+    x_force = 0.0;
+    y_force = 0.0;
+    z_force = 0.0;
+
+    x_speed = 0.0;
+    y_speed = 0.0;
+    z_speed = 0.0;
+
+    mass = 1.0;
+
+    time_physics_last_applied = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
 }
 
 Sprite::Sprite(long int x, long int y, long int z)
@@ -33,19 +49,77 @@ shared_ptr<Pixel> Sprite::get_pixel(long int rel_y, long int rel_x)
     return current_frame.get_pixel(rel_y, rel_x);
 }
 
-long int Sprite::get_x_position()
+int32_t Sprite::get_x_pixel_position()
+{
+    // Top 32 bits are pixel position
+    return (int32_t)((x_position >> 32) & 0x00000000FFFFFFFF);
+}
+
+int32_t Sprite::get_y_pixel_position()
+{
+    // Top 32 bits are pixel position
+    return (int32_t)((y_position >> 32) & 0x00000000FFFFFFFF);
+}
+
+int32_t Sprite::get_z_pixel_position()
+{
+    // Top 32 bits are pixel position
+    return (int32_t)((z_position >> 32) & 0x00000000FFFFFFFF);
+}
+
+int64_t Sprite::get_x_exact_position()
 {
     return x_position;
 }
 
-long int Sprite::get_y_position()
+int64_t Sprite::get_y_exact_position()
 {
     return y_position;
 }
 
-long int Sprite::get_z_position()
+int64_t Sprite::get_z_exact_position()
 {
     return z_position;
+}
+
+double Sprite::get_x_force()
+{
+    return x_force;
+}
+
+double Sprite::get_y_force()
+{
+    return y_force;
+}
+
+double Sprite::get_z_force()
+{
+    return z_force;
+}
+
+double Sprite::get_x_speed()
+{
+    return x_speed;
+}
+
+double Sprite::get_y_speed()
+{
+    return y_speed;
+}
+
+double Sprite::get_z_speed()
+{
+    return z_speed;
+}
+
+double Sprite::get_mass()
+{
+    return mass;
+}
+
+long long Sprite::get_time_physics_last_applied()
+{
+    return time_physics_last_applied;
 }
 
 bool Sprite::is_visible()
@@ -63,14 +137,69 @@ bool Sprite::compare_normals()
     return use_normal_mapping;
 }
 
-long int Sprite::get_width()
+uint32_t Sprite::get_width()
 {
     return width;
 }
 
-long int Sprite::get_height()
+uint32_t Sprite::get_height()
 {
     return height;
+}
+
+void Sprite::set_x_pixel_position(int32_t x)
+{
+    x_position = (int64_t)(x) << 32;
+}
+
+void Sprite::set_y_pixel_position(int32_t y)
+{
+    y_position = (int64_t)(y) << 32;
+}
+
+void Sprite::set_z_pixel_position(int32_t z)
+{
+    z_position = (int64_t)(z) << 32;
+}
+
+void Sprite::set_x_exact_position(int64_t x)
+{
+    x_position = x;
+}
+
+void Sprite::set_y_exact_position(int64_t y)
+{
+    y_position = y;
+}
+
+void Sprite::set_z_exact_position(int64_t z)
+{
+    z_position = z;
+}
+
+void Sprite::set_x_speed(double x)
+{
+    x_speed = x;
+}
+
+void Sprite::set_y_speed(double y)
+{
+    y_speed = y;
+}
+
+void Sprite::set_z_speed(double z)
+{
+    z_speed = z;
+}
+
+void Sprite::set_mass(double m)
+{
+    mass = m;
+}
+
+void Sprite::set_time_physics_last_applied(long long t)
+{
+    time_physics_last_applied = t;
 }
 
 void Sprite::set_visible(bool b)
@@ -90,9 +219,9 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
 {
 
     // Move self
-    x_position += x_diff;
-    y_position += y_diff;
-    z_position += z_diff;
+    x_position += (long long)(x_diff) << 32;
+    y_position += (long long)(y_diff) << 32;
+    z_position += (long long)(z_diff) << 32;
 
     // Move all sub_sprites
     vector<Sprite*>::iterator it;

@@ -5,8 +5,10 @@
 #include "Input_System.h"
 #include "Display_System.h"
 #include "Render_System.h"
+#include "Physics_System.h"
 
 // Messages
+#include "Apply_Forces_Message.h"
 #include "Poll_Inputs_Message.h"
 #include "Render_Frame_Message.h"
 #include "Sprite_Update_Message.h"
@@ -42,6 +44,9 @@ public:
 
     // System for output to screen
     shared_ptr<Display_System> display_system;
+
+    // System for applying physics and detecting collisions
+    shared_ptr<Physics_System> physics_system;
 
     // Frame rate to aim for
     unsigned int target_frame_rate = 0;

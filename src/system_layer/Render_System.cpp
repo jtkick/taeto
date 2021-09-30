@@ -13,7 +13,9 @@ Render_System::Render_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bu
     camera_z_position = 0;
 
     // Drawing plane distance can never be lower than 1
-    drawing_plane_distance = 1;
+    drawing_plane_distance = 10;
+
+    frame_number = 0;
 
     logger->info("Done setting up render system.");
 }
@@ -85,6 +87,14 @@ void Render_System::handle_message(shared_ptr<Message> message)
                 case 'd':
                     camera_x_position += 1;
                 break;
+
+                case 'q':
+                    camera_z_position -= 1;
+                break;
+
+                case 'e':
+                    camera_z_position += 1;
+                break;
             }
         }
         break;
@@ -131,8 +141,8 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         logger->error("rendering");
 
         // If beyond render distance, move on
-        if (camera_z_position - (*sprite_ptr)->get_z_position() < render_distance ||
-            (*sprite_ptr)->get_z_position() >= camera_z_position)
+        if (camera_z_position - (*sprite_ptr)->get_z_pixel_position() < render_distance ||
+            (*sprite_ptr)->get_z_pixel_position() >= camera_z_position)
         {
             logger->error("not visible");
             (*sprite_ptr)->set_visible(false);
@@ -148,7 +158,7 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         //              ┘ /   |
         //---------------X---------------------  <- drawing_plane
         //              /|    |
-        //             / |    | <------- camera_z_position - current_sprite->get_z_position()
+        //             / |    | <------- camera_z_position - current_sprite->get_z_pixel_position()
         //            /  | <------------ drawing_plane_distance
         //           /   |    |
         //         _/____|____|
@@ -158,7 +168,7 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         //          ^- camera
         //
 
-        double z_diff = camera_z_position - (*sprite_ptr)->get_z_position();
+        double z_diff = camera_z_position - (*sprite_ptr)->get_z_pixel_position();
 
         //                                           -(frame->get_width() / 2) * z_diff
         //  bounding_box_left = camera_x_position + -----------------------------------
@@ -188,14 +198,14 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         logger->error("bbb: " + std::to_string(bounding_box_bottom));
 
         // Mark sprite not visible if totally outside bounding box
-        if (((*sprite_ptr)->get_x_position() < bounding_box_left &&
-             (*sprite_ptr)->get_x_position() + (*sprite_ptr)->get_width() < bounding_box_left) ||
-            ((*sprite_ptr)->get_x_position() > bounding_box_right &&
-             (*sprite_ptr)->get_x_position() + (*sprite_ptr)->get_width() > bounding_box_right) ||
-            ((*sprite_ptr)->get_y_position() < bounding_box_top &&
-             (*sprite_ptr)->get_y_position() + (*sprite_ptr)->get_height() < bounding_box_top) ||
-            ((*sprite_ptr)->get_y_position() > bounding_box_bottom &&
-             (*sprite_ptr)->get_y_position() + (*sprite_ptr)->get_height() > bounding_box_bottom))
+        if (((*sprite_ptr)->get_x_pixel_position() < bounding_box_left &&
+             (*sprite_ptr)->get_x_pixel_position() + (*sprite_ptr)->get_width() < bounding_box_left) ||
+            ((*sprite_ptr)->get_x_pixel_position() > bounding_box_right &&
+             (*sprite_ptr)->get_x_pixel_position() + (*sprite_ptr)->get_width() > bounding_box_right) ||
+            ((*sprite_ptr)->get_y_pixel_position() < bounding_box_top &&
+             (*sprite_ptr)->get_y_pixel_position() + (*sprite_ptr)->get_height() < bounding_box_top) ||
+            ((*sprite_ptr)->get_y_pixel_position() > bounding_box_bottom &&
+             (*sprite_ptr)->get_y_pixel_position() + (*sprite_ptr)->get_height() > bounding_box_bottom))
         {
             logger->error("outside bounding box");
             (*sprite_ptr)->set_visible(false);
@@ -208,25 +218,25 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         // Now that sprite is known to be at least partially visible, draw it on the frame
 
         // First, map sprite location to pixel relative to camera
-        //                    (sprite_ptr->get_x_position() - camera_x_position) * drawing_plane_distance
+        //                    (sprite_ptr->get_x_pixel_position() - camera_x_position) * drawing_plane_distance
         //  drawn_left_pos = -----------------------------------------------------------------------------
         //                                                 z_diff
-        long int drawn_left_pos = ((*sprite_ptr)->get_x_position() - camera_x_position) * drawing_plane_distance / z_diff;
+        long int drawn_left_pos = ((*sprite_ptr)->get_x_pixel_position() - camera_x_position) * drawing_plane_distance / z_diff;
 
-        //                     (sprite_ptr->get_x_position() + (*sprite_ptr)->get_width() - camera_x_position) * drawing_plane_distance
+        //                     (sprite_ptr->get_x_pixel_position() + (*sprite_ptr)->get_width() - camera_x_position) * drawing_plane_distance
         //  drawn_right_pos = -------------------------------------------------------------------------------------------------------
         //                                                                  z_diff
-        long int drawn_right_pos = ((*sprite_ptr)->get_x_position() + (*sprite_ptr)->get_width() - camera_x_position) * drawing_plane_distance / z_diff;
+        long int drawn_right_pos = ((*sprite_ptr)->get_x_pixel_position() + (*sprite_ptr)->get_width() - camera_x_position) * drawing_plane_distance / z_diff;
 
-        //                    (sprite_ptr->get_y_position() - camera_y_position) * drawing_plane_distance
+        //                    (sprite_ptr->get_y_pixel_position() - camera_y_position) * drawing_plane_distance
         //  drawn_top_pos = -----------------------------------------------------------------------------
         //                                                 z_diff
-        long int drawn_top_pos = ((*sprite_ptr)->get_y_position() - camera_y_position) * drawing_plane_distance / z_diff;
+        long int drawn_top_pos = ((*sprite_ptr)->get_y_pixel_position() - camera_y_position) * drawing_plane_distance / z_diff;
 
-        //                     (sprite_ptr->get_y_position() + (*sprite_ptr)->get_height() - camera_y_position) * drawing_plane_distance
+        //                     (sprite_ptr->get_y_pixel_position() + (*sprite_ptr)->get_height() - camera_y_position) * drawing_plane_distance
         //  drawn_bottom_pos = -------------------------------------------------------------------------------------------------------
         //                                                                  z_diff
-        long int drawn_bottom_pos = ((*sprite_ptr)->get_y_position() + (*sprite_ptr)->get_height() - camera_y_position) * drawing_plane_distance / z_diff;
+        long int drawn_bottom_pos = ((*sprite_ptr)->get_y_pixel_position() + (*sprite_ptr)->get_height() - camera_y_position) * drawing_plane_distance / z_diff;
 
         // Make values relative to top-left of frame rather than camera
         //drawn_left_pos += frame->get_width() / 2;
@@ -246,7 +256,7 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         logger->error("drawn bottom pos: " + std::to_string(drawn_bottom_pos));
 
         // Get ratio between z distances
-        double z_ratio = (float)(camera_z_position - (*sprite_ptr)->get_z_position()) / drawing_plane_distance;
+        double z_ratio = (float)(camera_z_position - (*sprite_ptr)->get_z_pixel_position()) / drawing_plane_distance;
 
         logger->error("Sprite height: " + std::to_string((*sprite_ptr)->get_height()));
         logger->error("Sprite width: " + std::to_string((*sprite_ptr)->get_width()));
@@ -256,8 +266,8 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
             for (int x = 0; x < (*sprite_ptr)->get_width(); x = (int)(x + z_ratio))
             {
                 // Get pixel position relative to sprite
-                long int sprite_y = (long int)(y + (*sprite_ptr)->get_y_position());
-                long int sprite_x = (long int)(x + (*sprite_ptr)->get_x_position());
+                long int sprite_y = (long int)(y + (*sprite_ptr)->get_y_pixel_position());
+                long int sprite_x = (long int)(x + (*sprite_ptr)->get_x_pixel_position());
 
                 // Get pixel of interest
                 logger->error("Getting sprite pixel: (" + std::to_string(sprite_y) + ", " + std::to_string(sprite_x) + ")");
@@ -317,6 +327,28 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
     double half_frame_height = (double)h / 2;
     double half_frame_width = (double)w / 2;
 
+    // For debugging, render transparency checkerboard
+    int size = 1;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            // Get current pixel of frame
+            shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
+
+            rendered_pixel->clear();
+
+            if ( (x % 4 < 2) != (y % 2 < 1) )
+            {
+                rendered_pixel->set_background_color(Color(255, 255, 255));
+            }
+            else
+            {
+                rendered_pixel->set_background_color(Color(127, 127, 127));
+            }
+        }
+    }
+
     // Loop over each 'pixel' in frame
     for (int y = 0; y < h; y++)
     {
@@ -326,7 +358,7 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
             shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
 
             // Reset pixel
-            rendered_pixel->clear();
+            //rendered_pixel->clear();
 
             // Loop over each sprite, and write to current frame
             //vector<Sprite*>::iterator sprite;
@@ -336,7 +368,7 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                 shared_ptr<Sprite> current_sprite = sprites[sprite_num];
 
                 // Get distance between sprite and camera
-                long int z_diff = camera_z_position - current_sprite->get_z_position();
+                double z_diff = camera_z_position - current_sprite->get_z_pixel_position();
 
                 // Make sure sprite is at least in front of the camera
                 // Also handle case where z-diff is 0 to prevent divide by zero error
@@ -348,8 +380,8 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                 long int abs_x = (long int)(((x - half_frame_width) * z_diff) / drawing_plane_distance) + camera_x_position;
 
                 // Map to relative to sprite origin
-                long int rel_y = abs_y - current_sprite->get_y_position();
-                long int rel_x = abs_x - current_sprite->get_x_position();
+                long int rel_y = abs_y - current_sprite->get_y_pixel_position();
+                long int rel_x = abs_x - current_sprite->get_x_pixel_position();
 
                 // If pixel overlaps with sprite
                 if ( 0 <= rel_x && rel_x < current_sprite->get_width() &&
@@ -362,7 +394,6 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                     // If the foreground alpha channel is anything but 0, it will be drawn
                     if (current_pixel->get_foreground_color()->get_alpha() != 0)
                     {
-
                         // Write character to pixel
                         rendered_pixel->set_char(current_pixel->get_char());
 
@@ -382,9 +413,9 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                             {
                                 shared_ptr<Light> current_light = lights[light_num];
 
-                                long int abs_x = current_sprite->get_x_position() + rel_x;
-                                long int abs_y = current_sprite->get_y_position() + rel_y;
-                                long int abs_z = current_sprite->get_z_position();
+                                long int abs_x = current_sprite->get_x_pixel_position() + rel_x;
+                                long int abs_y = current_sprite->get_y_pixel_position() + rel_y;
+                                long int abs_z = current_sprite->get_z_pixel_position();
 
                                 // Light color at location
                                 c = current_light->get_color(abs_x, abs_y, abs_z);
@@ -455,14 +486,17 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
     // Calculate current FPS
     current_fps = frame_times.size() / (averaging_time / 1000);
 
-    rendered_frame->add_string(1, 0, "FPS: " + std::to_string(current_fps));
-
-    rendered_frame->add_string(2, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
-    rendered_frame->add_string(3, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
-    rendered_frame->add_string(4, 0, "CAMERA LOCATION: (" + std::to_string(camera_x_position) + ", "
+    // Print debug information if flag is true
+    rendered_frame->add_string(0, 0, "FPS: " + std::to_string(current_fps));
+    rendered_frame->add_string(1, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
+    rendered_frame->add_string(2, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
+    rendered_frame->add_string(3, 0, "CAMERA LOCATION: (" + std::to_string(camera_x_position) + ", "
                                                           + std::to_string(camera_y_position) + ", "
                                                           + std::to_string(camera_z_position) + ")");
-    rendered_frame->add_string(5, 0, "WILL TO LIVE: 0");
+    rendered_frame->add_string(4, 0, "FRAME DIMENSIONS: " + std::to_string(rendered_frame->get_width()) + "x"
+                                                          + std::to_string(rendered_frame->get_height()));
+    rendered_frame->add_string(5, 0, "CURRENT FRAME: " + std::to_string(frame_number++));
+    rendered_frame->add_string(6, 0, "WILL TO LIVE: 1");
 
     return;
 

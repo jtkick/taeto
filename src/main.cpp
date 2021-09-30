@@ -258,6 +258,10 @@ class main_character: public Sprite
             // Set frame details
             height = 3;
             width = 6;
+
+            mass = 1;
+            y_force = 200000000000;
+
             //current_frame = new Frame(7, 7);
             Frame f = Frame(height, width);
 
@@ -516,7 +520,7 @@ int main()
 
 
     Palm_tree tree;
-    tree.move(0, 0, -1);
+    tree.move(0, 0, -10);
 /*    Palm_tree tree2;
     tree2.move(0, 0, -12);
     Palm_tree tree3;
@@ -529,7 +533,7 @@ int main()
 
     main_character person;
     //person.move(75, 16, 0);
-    person.move(0, 0, -1);
+    person.move(0, 0, -10);
     //tree.move(0, 0, -1);
 
     //Color_Test color_test;
@@ -555,7 +559,7 @@ int main()
     //engine.add_sprite(&tree2);
     //engine.add_sprite(&color_test);
 
-    shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.95);
+    shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.99);
     engine.add_light(p);
 
     engine.run();

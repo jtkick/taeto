@@ -18,16 +18,34 @@ class Sprite
     protected:
 
     // Position on screen relative to origin
-    // TODO: Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
+    // Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
     // This allows for positions and speeds that aren't tied to frame rate
-    long int x_position;
-    long int y_position;
-    long int z_position;
+    int64_t x_position;
+    int64_t y_position;
+    int64_t z_position;
 
     // Size of sprite
-    unsigned long int width;
-    unsigned long int height;
-    unsigned long int depth;
+    uint32_t width;
+    uint32_t height;
+    uint32_t depth;
+
+    // Current forces on object
+    double x_force;
+    double y_force;
+    double z_force;
+
+    // Current speed in pixels per second per second
+    // To be updated by the physics system
+    double x_speed;
+    double y_speed;
+    double z_speed;
+
+    // Objects mass
+    // Idk what the unit is, it doesn't matter, it's just a ratio with the forces
+    double mass;
+
+    // Time at which forces were last applied to sprite by physics system
+    long long time_physics_last_applied;
 
     // Each element of the dict is 3D model of what this particular sprite
     // should look like at this distance from the camera, taking zoom into
@@ -79,21 +97,65 @@ class Sprite
 
         shared_ptr<Pixel> get_pixel(long int, long int);
 
-        long int get_height();
+        uint32_t get_height();
 
-        long int get_width();
+        uint32_t get_width();
 
-        long int get_x_position();
+        int32_t get_x_pixel_position();
 
-        long int get_y_position();
+        int32_t get_y_pixel_position();
 
-        long int get_z_position();
+        int32_t get_z_pixel_position();
+
+        int64_t get_x_exact_position();
+
+        int64_t get_y_exact_position();
+
+        int64_t get_z_exact_position();
+
+        double get_x_force();
+
+        double get_y_force();
+
+        double get_z_force();
+
+        double get_x_speed();
+
+        double get_y_speed();
+
+        double get_z_speed();
+
+        double get_mass();
+
+        long long get_time_physics_last_applied();
 
         bool is_visible();
 
         bool respects_light_sources();
 
         bool compare_normals();
+
+        void set_x_pixel_position(int32_t);
+
+        void set_y_pixel_position(int32_t);
+
+        void set_z_pixel_position(int32_t);
+
+        void set_x_exact_position(int64_t);
+
+        void set_y_exact_position(int64_t);
+
+        void set_z_exact_position(int64_t);
+
+        void set_x_speed(double);
+
+        void set_y_speed(double);
+
+        void set_z_speed(double);
+
+        void set_mass(double);
+
+        void set_time_physics_last_applied(long long);
 
         void set_frame_chars(vector<string>);
 

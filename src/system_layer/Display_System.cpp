@@ -42,29 +42,28 @@ void Display_System::handle_message(shared_ptr<Message> message)
             display_frame(dfm->get_frame());
         }
         break;
-
-        // For debugging
-        case KEY_UPDATE:
-        {
-            logger->info("Received key update message in display system");
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-        }
     }
 
 }
 
 void Display_System::display_frame(shared_ptr<Frame> frame)
 {
+    // Outputting each piece individually causes buffering issues that makes the game flicker
+    // To avoid this, we're going to add everything we want to print to a string, then
+    // output it all at once.
+    // If you are skeptical that this will work better like I was, just know it works well.
+    // It's even faster than what I was doing before
+    std::string output_buffer = "";
 
     shared_ptr<Pixel> current_pixel;
 
     for (int h = 0; h < frame->get_height(); h++)
     {
-        // Move to beginning of line
-        printf("%c[%d;%df", 0X1B, h, 0);
-
         for (int w = 0; w < frame->get_width(); w++)
         {
+            // Move to current column and row
+            output_buffer += "\033[" + std::to_string(h+1) + ";" + std::to_string(w+1) + "H";
+
             // Don't output last character
             if (h == frame->get_height() - 1 &&
                 w == frame->get_width() - 1)
@@ -73,21 +72,24 @@ void Display_System::display_frame(shared_ptr<Frame> frame)
             // Get pixel in question
             current_pixel = frame->get_pixel(h, w);
 
-            // Write background color
+            // Add background color
             const Color* c = current_pixel->get_background_color();
-            printf("\033[48;2;%d;%d;%dm", c->get_red(), c->get_green(), c->get_blue());
+            output_buffer += "\033[48;2;" + std::to_string((int)(c->get_red())) + ";" +
+                                            std::to_string((int)(c->get_green())) + ";" +
+                                            std::to_string((int)(c->get_blue())) + "m";
 
-            // Write foreground color
+            // Add foreground color
             c = current_pixel->get_foreground_color();
-            printf("\033[38;2;%d;%d;%dm", c->get_red(), c->get_green(), c->get_blue());
+            output_buffer += "\033[38;2;" + std::to_string((int)(c->get_red())) + ";" +
+                                            std::to_string((int)(c->get_green())) + ";" +
+                                            std::to_string((int)(c->get_blue())) + "m";
 
-            // Write character
-            printf("%c", current_pixel->get_char());
+            // Add actual character
+            output_buffer += current_pixel->get_char();
         }
-
     }
 
-    // Flush output
-    fflush(stdout);
+    // Print frame and flush output
+    std::cout << output_buffer << std::flush;
 
 }
