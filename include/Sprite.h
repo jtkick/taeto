@@ -11,6 +11,9 @@
 #include <string>
 #include <vector>
 
+// for debugging
+#include <iostream>
+
 using namespace std;
 
 class Sprite
@@ -69,6 +72,15 @@ class Sprite
     // Place to store useful frames
     vector<Frame> frames;
 
+    // True if this sprite should collide with any other sprite that also
+    // has this member set to true
+    bool collide;
+
+    // True if physics_system should check for collisions with this sprite
+    // If this is false and 'collide' is true, this sprite will collide with
+    // other sprites, but the physics system won't check with this sprite
+    bool detect_collisions;
+
     // Let the engine decide the color of this sprite based on light sources
     bool respect_light_sources = false;
 
@@ -97,9 +109,9 @@ class Sprite
 
         shared_ptr<Pixel> get_pixel(long int, long int);
 
-        uint32_t get_height();
+        int64_t get_height();
 
-        uint32_t get_width();
+        int64_t get_width();
 
         int32_t get_x_pixel_position();
 
@@ -130,6 +142,10 @@ class Sprite
         long long get_time_physics_last_applied();
 
         bool is_visible();
+
+        bool get_collide();
+
+        bool get_detect_collisions();
 
         bool respects_light_sources();
 
@@ -163,6 +179,13 @@ class Sprite
 
         // Moving to Frame
         //void map_sprite(char, Sprite*, long int, long int);
+
+        // Returns true if sprite collides with given sprite
+        bool collides_with(shared_ptr<Sprite>);
+
+        // Method define by child sprite
+        // Defines what to do when this sprite collides with another
+        virtual void handle_collision(shared_ptr<Sprite>);
 
         void move(long int, long int, long int);
 

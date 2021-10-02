@@ -127,6 +127,16 @@ bool Sprite::is_visible()
     return visible;
 }
 
+bool Sprite::get_collide()
+{
+    return collide;
+}
+
+bool Sprite::get_detect_collisions()
+{
+    return detect_collisions;
+}
+
 bool Sprite::respects_light_sources()
 {
     return respect_light_sources;
@@ -137,12 +147,12 @@ bool Sprite::compare_normals()
     return use_normal_mapping;
 }
 
-uint32_t Sprite::get_width()
+int64_t Sprite::get_width()
 {
     return width;
 }
 
-uint32_t Sprite::get_height()
+int64_t Sprite::get_height()
 {
     return height;
 }
@@ -213,6 +223,36 @@ void Sprite::set_visible(bool b)
 //{
 //
 //}
+
+
+// Detect collisions with other sprite
+bool Sprite::collides_with(shared_ptr<Sprite> sprite_ptr)
+{
+    // Do rough collision detection
+    // x locations don't overlap
+    if ((this->get_x_pixel_position() > sprite_ptr->get_x_pixel_position() + sprite_ptr->get_width() - 1) ||
+        (this->get_x_pixel_position() + this->get_width() - 1 < sprite_ptr->get_x_pixel_position()))
+        return false;
+
+    // y locations don't overlap
+    if (this->get_y_pixel_position() > sprite_ptr->get_y_pixel_position() + sprite_ptr->get_height() - 1 ||
+        this->get_y_pixel_position() + this->get_height() - 1 < sprite_ptr->get_y_pixel_position())
+        return false;
+
+    // Different z-plane
+    if (this->get_z_pixel_position() != sprite_ptr->get_z_pixel_position())
+        return false;
+
+    // Now it's guaranteed that the sprites overlap in some way, so loop over each sprite's
+    // collision mesh and compare to the other
+
+    return true;
+}
+
+void Sprite::handle_collision(shared_ptr<Sprite> sprite_ptr)
+{
+    throw "lmao";
+}
 
 // Move sprite in space
 void Sprite::move(long int x_diff, long int y_diff, long int z_diff)

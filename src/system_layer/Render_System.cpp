@@ -376,8 +376,8 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                     continue;
 
                 // Map frame position to sprite plane position
-                long int abs_y = (long int)(((y - half_frame_height) * z_diff) / drawing_plane_distance) + camera_y_position;
-                long int abs_x = (long int)(((x - half_frame_width) * z_diff) / drawing_plane_distance) + camera_x_position;
+                double abs_y = (((y - half_frame_height) * z_diff) / drawing_plane_distance) + camera_y_position;
+                double abs_x = (((x - half_frame_width) * z_diff) / drawing_plane_distance) + camera_x_position;
 
                 // Map to relative to sprite origin
                 long int rel_y = abs_y - current_sprite->get_y_pixel_position();

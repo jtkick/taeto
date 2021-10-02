@@ -19,8 +19,6 @@ void Message_Bus::add_system(shared_ptr<System> system)
 
 void Message_Bus::post_message(shared_ptr<Message> message)
 {
-    logger->info("Num systems: " + std::to_string(systems.size()));
-
     // Loop over all known systems and notify them
     //for (auto it = systems.begin(); it != systems.end(); it++)
     //{
@@ -29,7 +27,6 @@ void Message_Bus::post_message(shared_ptr<Message> message)
 
     for (int i = 0; i < systems.size(); i++)
     {
-        logger->info("Current system index: " + std::to_string(i));
         systems[i]->handle_message(message);
     }
 }

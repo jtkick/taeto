@@ -244,7 +244,10 @@ class Person: public Sprite
 
 class main_character: public Sprite
 {
+
     public:
+
+        void handle_collision(shared_ptr<Sprite>);
 
         unsigned long long last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
 
@@ -256,11 +259,14 @@ class main_character: public Sprite
             z_position = 0;
 
             // Set frame details
-            height = 3;
+            height = 2;
             width = 6;
 
             mass = 1;
             y_force = 200000000000;
+
+            collide = true;
+            detect_collisions = true;
 
             //current_frame = new Frame(7, 7);
             Frame f = Frame(height, width);
@@ -270,13 +276,10 @@ class main_character: public Sprite
             Color a = Color(255, 255, 255, 0);
 
             f.set_chars({ R"(@@__@@)",
-                          R"(@( ')')",
-                          R"(@@@@@@)",});
+                          R"(@( ')')"});
             f.set_foreground_colors( { { a, a, g, g, a, a },
-                                       { a, g, g, g, g, g },
-                                       { a, a, a, a, a, a } } );
+                                       { a, g, g, g, g, g } } );
             f.set_background_colors( { { w, w, a, a, w, w },
-                                       { w, w, w, w, w, w },
                                        { w, w, w, w, w, w } } );
 
             current_frame = f;
@@ -285,7 +288,19 @@ class main_character: public Sprite
 
         }
 
+
+
 };
+
+void main_character::handle_collision(shared_ptr<Sprite> sprite_ptr)
+{
+    // Null y speed
+    this->set_y_speed(0.0);
+
+    // Move up
+    while (this->collides_with(sprite_ptr))
+        this->set_y_pixel_position(this->get_y_pixel_position() - 1);
+}
 
 
 class Color_Test: public Sprite
@@ -353,6 +368,41 @@ class Normal_Test: public Sprite
                            { ul, ul, ul, ul, ur, ur, ur, ur, ul, ul, ul, ul, ur, ur, ur, ur },
                            { dl, dl, dl, dl, dr, dr, dr, dr, dl, dl, dl, dl, dr, dr, dr, dr },
                            { dl, dl, dl, dl, dr, dr, dr, dr, dl, dl, dl, dl, dr, dr, dr, dr }});
+
+            current_frame = f;
+        }
+};
+
+class Floor_Test: public Sprite
+{
+    public:
+        Floor_Test() {
+            x_position = -10;
+            y_position = 0;
+            z_position = 0;
+
+            height = 5;
+            width = 20;
+
+            respect_light_sources = false;
+            use_normal_mapping = false;
+
+            collide = true;
+
+            Frame f = Frame(height, width);
+            f.set_chars({ R"(XXXXXXXXXXXXXXXXXXXX)",
+                          R"(XXXXXXXXXXXXXXXXXXXX)",
+                          R"(XXXXXXXXXXXXXXXXXXXX)",
+                          R"(XXXXXXXXXXXXXXXXXXXX)",
+                          R"(XXXXXXXXXXXXXXXXXXXX)" });
+
+            Color r = Color(255, 0, 0);
+
+            f.set_foreground_colors({{ r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
+                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
+                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
+                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
+                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r }});
 
             current_frame = f;
         }
@@ -532,9 +582,7 @@ int main()
 */
 
     main_character person;
-    //person.move(75, 16, 0);
     person.move(0, 0, -10);
-    //tree.move(0, 0, -1);
 
     //Color_Test color_test;
     //color_test.move(0, 0, -1);
@@ -548,14 +596,18 @@ int main()
 
     //engine.add_sprite(&g);
 
-    engine.add_sprite(make_shared<Sprite>(tree));
+    //engine.add_sprite(make_shared<Sprite>(tree));
+
+    Floor_Test ft;
+    ft.move(-5, 20, -10);
+    engine.add_sprite(make_shared<Sprite>(ft));
 
 
     //engine.add_sprite(&tree);
     //engine.add_sprite(&tree3);
     //engine.add_sprite(&tree4);
     //engine.add_sprite(&tree5);
-    engine.add_sprite(make_shared<Sprite>(person));
+    engine.add_sprite(make_shared<main_character>(person));
     //engine.add_sprite(&tree2);
     //engine.add_sprite(&color_test);
 
