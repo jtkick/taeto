@@ -4,10 +4,10 @@
 #include <iostream>
 
 // Constructors
-//Frame::Frame()
-//{
-//
-//}
+Frame::Frame()
+{
+
+}
 
 Frame::Frame(unsigned long int h, unsigned long int w)
 {

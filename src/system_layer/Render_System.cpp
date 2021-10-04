@@ -403,7 +403,7 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                         rendered_pixel->set_background_color(*(current_pixel->get_background_color()));
 
                         // Handle dynamic lighting
-                        if (current_sprite->respects_light_sources())
+                        if (current_sprite->get_respect_light_sources())
                         {
                             Color c;
 
@@ -421,7 +421,7 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                                 c = current_light->get_color(abs_x, abs_y, abs_z);
 
                                 // Compare normals to get light intensity
-                                if (current_sprite->compare_normals())
+                                if (current_sprite->get_use_normal_mapping())
                                 {
                                     // Get vectors
                                     const Vector* pixel_normal = current_pixel->get_normal();
@@ -500,4 +500,43 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 
     return;
 
+}
+
+void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
+{
+    int h = rendered_frame->get_height();
+    int w = rendered_frame->get_width();
+
+    double half_frame_height = (double)h / 2;
+    double half_frame_width = (double)w / 2;
+
+    int size = 1;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            // Get current pixel of frame
+            shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
+
+            rendered_pixel->clear();
+
+            if ( (x % 4 < 2) != (y % 2 < 1) )
+            {
+                rendered_pixel->set_background_color(Color(255, 255, 255));
+            }
+            else
+            {
+                rendered_pixel->set_background_color(Color(127, 127, 127));
+            }
+        }
+    }
+}
+
+void Render_System::write_color_bars(shared_ptr<Frame>)
+{
+    int h = rendered_frame->get_height();
+    int w = rendered_frame->get_width();
+
+    int end_first_row = (int)((double)h * 0.7);
+    int curr_col = 0;
 }

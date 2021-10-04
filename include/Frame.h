@@ -26,7 +26,7 @@ class Frame
 
     public:
 
-        //Frame();
+        Frame();
 
         Frame(unsigned long int, unsigned long int);
 

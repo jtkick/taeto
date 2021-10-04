@@ -90,6 +90,11 @@ class Render_System: public System
         // Old way of doing it for testing
         void render_frame_old(shared_ptr<Frame>);
 
+        // Write alternating white and grey pattern to frame
+        void write_alpha_background(shared_ptr<Frame>);
+
+        // Write old-school tv test screen bars to frame
+        void write_color_bars(shared_ptr<Frame>);
 };
 
 #endif

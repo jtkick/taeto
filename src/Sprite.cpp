@@ -1,53 +1,66 @@
 #include "Sprite.h"
 
+////////////////////////////////////////////////////////////////////////
+///                           CONSTRUCTORS                           ///
+////////////////////////////////////////////////////////////////////////
+
 Sprite::Sprite(void)
 {
-    last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
-
-    //current_frame = Frame(0, 0);
-
+    // Set all default values
     x_position = 0;
     y_position = 0;
     z_position = 0;
+
+    width = 0;
+    height = 0;
+
+    scaling_factor = 1.0;
+
+    z_speed = 0.0;
+    y_speed = 0.0;
+    x_speed = 0.0;
 
     x_force = 0.0;
     y_force = 0.0;
     z_force = 0.0;
 
-    x_speed = 0.0;
-    y_speed = 0.0;
-    z_speed = 0.0;
-
     mass = 1.0;
 
+    collide = false;
+
+    detect_collisions = false;
+
+    respect_light_sources = false;
+
+    use_normal_mapping = false;
+
+    animate_off_screen = false;
+
     time_physics_last_applied = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+
+    visible = false;
 }
 
 Sprite::Sprite(long int x, long int y, long int z)
 {
-    // Init time so call to animate() doesn't try to animate every frame since the UNIX epoch
-    last_run_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
-
     // Set initial position
     x_position = x;
     y_position = y;
     z_position = z;
-
-    // Initialize current_frame array to size of sprite
 }
 
-// Destructor
+////////////////////////////////////////////////////////////////////////
+///                            DESTRUCTOR                            ///
+////////////////////////////////////////////////////////////////////////
+
 Sprite::~Sprite(void)
 {
-    // Delete dynamic array
-    //delete current_frame;
-    //current_frame = NULL;
+
 }
 
-shared_ptr<Pixel> Sprite::get_pixel(long int rel_y, long int rel_x)
-{
-    return current_frame.get_pixel(rel_y, rel_x);
-}
+////////////////////////////////////////////////////////////////////////
+///                             GETTERS                              ///
+////////////////////////////////////////////////////////////////////////
 
 int32_t Sprite::get_x_pixel_position()
 {
@@ -82,19 +95,19 @@ int64_t Sprite::get_z_exact_position()
     return z_position;
 }
 
-double Sprite::get_x_force()
+int64_t Sprite::get_height()
 {
-    return x_force;
+    return height;
 }
 
-double Sprite::get_y_force()
+int64_t Sprite::get_width()
 {
-    return y_force;
+    return width;
 }
 
-double Sprite::get_z_force()
+double Sprite::get_scaling_factor()
 {
-    return z_force;
+    return scaling_factor;
 }
 
 double Sprite::get_x_speed()
@@ -112,19 +125,24 @@ double Sprite::get_z_speed()
     return z_speed;
 }
 
+double Sprite::get_x_force()
+{
+    return x_force;
+}
+
+double Sprite::get_y_force()
+{
+    return y_force;
+}
+
+double Sprite::get_z_force()
+{
+    return z_force;
+}
+
 double Sprite::get_mass()
 {
     return mass;
-}
-
-long long Sprite::get_time_physics_last_applied()
-{
-    return time_physics_last_applied;
-}
-
-bool Sprite::is_visible()
-{
-    return visible;
 }
 
 bool Sprite::get_collide()
@@ -137,25 +155,34 @@ bool Sprite::get_detect_collisions()
     return detect_collisions;
 }
 
-bool Sprite::respects_light_sources()
+bool Sprite::get_respect_light_sources()
 {
     return respect_light_sources;
 }
 
-bool Sprite::compare_normals()
+bool Sprite::get_use_normal_mapping()
 {
     return use_normal_mapping;
 }
 
-int64_t Sprite::get_width()
+bool Sprite::get_animate_off_screen()
 {
-    return width;
+    return animate_off_screen;
 }
 
-int64_t Sprite::get_height()
+long long Sprite::get_time_physics_last_applied()
 {
-    return height;
+    return time_physics_last_applied;
 }
+
+bool Sprite::get_visible()
+{
+    return visible;
+}
+
+////////////////////////////////////////////////////////////////////////
+///                             SETTERS                              ///
+////////////////////////////////////////////////////////////////////////
 
 void Sprite::set_x_pixel_position(int32_t x)
 {
@@ -187,6 +214,11 @@ void Sprite::set_z_exact_position(int64_t z)
     z_position = z;
 }
 
+void Sprite::set_scaling_factor(double sf)
+{
+    scaling_factor = sf;
+}
+
 void Sprite::set_x_speed(double x)
 {
     x_speed = x;
@@ -202,30 +234,65 @@ void Sprite::set_z_speed(double z)
     z_speed = z;
 }
 
+void Sprite::set_x_force(double x)
+{
+    x_force = x;
+}
+
+void Sprite::set_y_force(double y)
+{
+    y_force = y;
+}
+
+void Sprite::set_z_force(double z)
+{
+    z_force = z;
+}
+
 void Sprite::set_mass(double m)
 {
     mass = m;
 }
 
-void Sprite::set_time_physics_last_applied(long long t)
+void Sprite::set_collide(bool c)
 {
-    time_physics_last_applied = t;
+    collide = c;
 }
 
-void Sprite::set_visible(bool b)
+void Sprite::set_detect_collisions(bool dc)
 {
-    visible = b;
+    detect_collisions = dc;
 }
 
-// Maps a sub-sprite on this sprite's given character, at the relative coordinates of the given offsets
-// Use c='\0' for any 'pixel'
-//void Sprite::map_sprite(char c, Sprite* sub_sprite, long int x_offset, long int y_offset)
-//{
-//
-//}
+void Sprite::set_respect_light_sources(bool rls)
+{
+    respect_light_sources = rls;
+}
 
+void Sprite::set_use_normal_mapping(bool unm)
+{
+    use_normal_mapping = unm;
+}
 
-// Detect collisions with other sprite
+void Sprite::set_animate_off_screen(bool aos)
+{
+    animate_off_screen = aos;
+}
+
+void Sprite::set_time_physics_last_applied(long long tpla)
+{
+    time_physics_last_applied = tpla;
+}
+
+void Sprite::set_visible(bool v)
+{
+    visible = v;
+}
+
+////////////////////////////////////////////////////////////////////////
+///                         HELPER METHODS                           ///
+////////////////////////////////////////////////////////////////////////
+
 bool Sprite::collides_with(shared_ptr<Sprite> sprite_ptr)
 {
     // Do rough collision detection
@@ -249,9 +316,10 @@ bool Sprite::collides_with(shared_ptr<Sprite> sprite_ptr)
     return true;
 }
 
-void Sprite::handle_collision(shared_ptr<Sprite> sprite_ptr)
+shared_ptr<Pixel> Sprite::get_pixel(long int rel_y, long int rel_x)
 {
-    throw "lmao";
+    return get_current_frame()->get_pixel((long int)(rel_y / scaling_factor),
+                                          (long int)(rel_x / scaling_factor));
 }
 
 // Move sprite in space
@@ -271,9 +339,21 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
 
 }
 
-// Generate new frame of sprite
-// To be implemented by derived classes if sprite should animate itself
+////////////////////////////////////////////////////////////////////////
+///                       CHILD SPRITE METHODS                       ///
+////////////////////////////////////////////////////////////////////////
+
 void Sprite::animate()
+{
+
+}
+
+shared_ptr<Frame> Sprite::get_current_frame()
+{
+
+}
+
+void Sprite::handle_collision(shared_ptr<Sprite> sprite_ptr)
 {
 
 }
