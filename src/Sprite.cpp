@@ -318,8 +318,9 @@ bool Sprite::collides_with(shared_ptr<Sprite> sprite_ptr)
 
 shared_ptr<Pixel> Sprite::get_pixel(long int rel_y, long int rel_x)
 {
-    return get_current_frame()->get_pixel((long int)(rel_y / scaling_factor),
-                                          (long int)(rel_x / scaling_factor));
+    return get_current_frame()->get_pixel(rel_y, rel_x);
+    return get_current_frame()->get_pixel((long int)(rel_y),// / scaling_factor),
+                                          (long int)(rel_x ));/// scaling_factor));
 }
 
 // Move sprite in space

@@ -28,8 +28,6 @@
 
 class Engine
 {
-public:
-
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger;
 
@@ -75,9 +73,8 @@ public:
 
         void add_sprite(shared_ptr<Sprite>);
 
-        void animate();
-
-        void display_frame(shared_ptr<Frame>);
+        template <class T>
+        void load_scene();
 
         // Continually render and display frames until program stopped
         void run();

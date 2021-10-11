@@ -63,6 +63,12 @@ void Engine::add_sprite(shared_ptr<Sprite> s)
     message_bus->post_message(sum);
 }
 
+template <class T>
+void Engine::load_scene()
+{
+    T test;
+}
+
 void Engine::run()
 {
     // Create new frame

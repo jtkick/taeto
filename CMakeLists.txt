@@ -26,7 +26,14 @@ endif()
 #  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 #endif()
 
-include_directories("include" "prerequisites/spdlog" "include/system_layer" "include/message_layer" "assets/lights/include" ${CURSES_INCLUDE_DIR})
+include_directories("include"
+                    "prerequisites/spdlog"
+                    "include/system_layer"
+                    "include/message_layer"
+                    "include/scene_layer"
+                    "assets/lights/include"
+                    "assets/sprites/include"
+                    ${CURSES_INCLUDE_DIR})
 
 file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp")
 

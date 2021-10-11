@@ -380,8 +380,8 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                 double abs_x = (((x - half_frame_width) * z_diff) / drawing_plane_distance) + camera_x_position;
 
                 // Map to relative to sprite origin
-                long int rel_y = abs_y - current_sprite->get_y_pixel_position();
-                long int rel_x = abs_x - current_sprite->get_x_pixel_position();
+                double rel_y = abs_y - current_sprite->get_y_pixel_position();
+                double rel_x = abs_x - current_sprite->get_x_pixel_position();
 
                 // If pixel overlaps with sprite
                 if ( 0 <= rel_x && rel_x < current_sprite->get_width() &&
@@ -532,7 +532,7 @@ void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
     }
 }
 
-void Render_System::write_color_bars(shared_ptr<Frame>)
+void Render_System::write_color_bars(shared_ptr<Frame> rendered_frame)
 {
     int h = rendered_frame->get_height();
     int w = rendered_frame->get_width();
