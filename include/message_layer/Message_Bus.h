@@ -2,6 +2,7 @@
 #define MESSAGE_BUS_H
 
 #include "Message.h"
+#include "Message_Bus_Entry.h"
 
 #include <algorithm>
 #include <memory>
@@ -18,7 +19,7 @@ class Message_Bus
     std::shared_ptr<spdlog::logger> logger;
 
     // List of all systems that need to receive and send messages
-    std::vector<std::shared_ptr<System>> systems;
+    std::vector<std::shared_ptr<Message_Bus_Entry>> systems;
 
     public:
 
@@ -27,13 +28,13 @@ class Message_Bus
         ~Message_Bus();
 
         // Give pointer to system to message bus for posting messages
-        void add_system(std::shared_ptr<System>);
+        void add_system(std::shared_ptr<Message_Bus_Entry>);
 
         // Method for sending messages to systems
 	    void post_message(std::shared_ptr<Message>);
 
         // Don't track system matching pointer given
-        void remove_system(std::shared_ptr<System>);
+        void remove_system(std::shared_ptr<Message_Bus_Entry>);
 };
 
 #endif

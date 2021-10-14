@@ -42,7 +42,7 @@ void Frame::init_pixels()
 // Getters and setters
 shared_ptr<Pixel> Frame::get_pixel(long int h, long int w)
 {
-    return pixels[h][w];
+    return pixels.at(h).at(w);
 }
 
 unsigned long int Frame::get_width()

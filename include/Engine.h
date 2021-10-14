@@ -7,6 +7,9 @@
 #include "Render_System.h"
 #include "Physics_System.h"
 
+// Scene layer
+#include "Scene.h"
+
 // Messages
 #include "Apply_Forces_Message.h"
 #include "Poll_Inputs_Message.h"
@@ -46,6 +49,9 @@ class Engine
     // System for applying physics and detecting collisions
     shared_ptr<Physics_System> physics_system;
 
+    // Currently loaded scenes
+    vector<shared_ptr<Scene>> scenes;
+
     // Frame rate to aim for
     unsigned int target_frame_rate = 0;
 
@@ -73,8 +79,7 @@ class Engine
 
         void add_sprite(shared_ptr<Sprite>);
 
-        template <class T>
-        void load_scene();
+        void load_scene(shared_ptr<Scene>);
 
         // Continually render and display frames until program stopped
         void run();

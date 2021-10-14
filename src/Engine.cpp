@@ -63,10 +63,20 @@ void Engine::add_sprite(shared_ptr<Sprite> s)
     message_bus->post_message(sum);
 }
 
-template <class T>
-void Engine::load_scene()
+void Engine::load_scene(shared_ptr<Scene> s)
 {
-    T test;
+    logger->info("Adding scene to engine.");
+
+    // Connect engine to scene
+    scenes.push_back(s);
+    message_bus->add_system(s);
+
+    // Connect scene to engine
+    s->connect_to_bus(message_bus);
+    s->connect_to_logger(logger);
+
+    // Now that scene is setup correctly, tell it to load all assets
+    s->load();
 }
 
 void Engine::run()

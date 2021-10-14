@@ -9,6 +9,8 @@ using namespace std;
 
 #include "Point_Light.h"
 
+#include "Opening_Island.h"
+
 #include <curses.h>
 #include <iostream>
 #include <string>
@@ -240,9 +242,17 @@ int main()
     engine.add_sprite(make_shared<Floor_Test>(ft));
 
     engine.add_sprite(make_shared<main_character>(person));
-    
+
     shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.99);
     engine.add_light(p);
+
+    std::cout << "Creating opening island scene." << std::endl;
+    shared_ptr<Opening_Island> o = make_shared<Opening_Island>();
+    std::cout << "Loading island scene." << std::endl;
+    //engine.load_scene(o);
+
+    Palm_Tree tree;
+    engine.add_sprite(make_shared<Palm_Tree>(tree));
 
     engine.run();
 

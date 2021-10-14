@@ -11,7 +11,7 @@ Message_Bus::~Message_Bus()
 
 }
 
-void Message_Bus::add_system(std::shared_ptr<System> system)
+void Message_Bus::add_system(std::shared_ptr<Message_Bus_Entry> system)
 {
     // Put on vector
     logger->info("Adding system to message bus");
@@ -28,7 +28,7 @@ void Message_Bus::post_message(std::shared_ptr<Message> message)
     }
 }
 
-void Message_Bus::remove_system(std::shared_ptr<System> system)
+void Message_Bus::remove_system(std::shared_ptr<Message_Bus_Entry> system)
 {
     // Remove all values matching pointer
     logger->info("Removing system from engine");

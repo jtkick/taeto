@@ -1,5 +1,5 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef SCENE_H
+#define SCENE_H
 
 #include "Message.h"
 #include "Message_Bus_Entry.h"
@@ -12,15 +12,17 @@ using namespace std;
 // Include Message_Bus class
 class Message_Bus;
 
-class System : public Message_Bus_Entry
+class Scene : public Message_Bus_Entry
 {
     public:
 
-        System();
+        Scene();
 
-        virtual ~System();
+        virtual ~Scene();
 
         void handle_message(shared_ptr<Message> message);
+
+        virtual void load();
 };
 
 #endif
