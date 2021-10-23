@@ -90,11 +90,17 @@ class Render_System: public System
         // Old way of doing it for testing
         void render_frame_old(shared_ptr<Frame>);
 
+        // Update current FPS
+        void update_fps();
+
         // Write alternating white and grey pattern to frame
         void write_alpha_background(shared_ptr<Frame>);
 
         // Write old-school tv test screen bars to frame
         void write_color_bars(shared_ptr<Frame>);
+
+        // Write info for debugging to frame after rendering
+        void write_debug_info(shared_ptr<Frame>);
 };
 
 #endif

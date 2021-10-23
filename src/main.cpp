@@ -12,6 +12,7 @@ using namespace std;
 #include "Directional_Light.h"
 
 #include "Opening_Island.h"
+#include "Light_Mixing_Test.h"
 
 #include <curses.h>
 #include <iostream>
@@ -248,13 +249,13 @@ int main()
     shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.99);
     engine.add_light(p);
 
-    std::cout << "Creating opening island scene." << std::endl;
-    shared_ptr<Opening_Island> o = make_shared<Opening_Island>();
-    std::cout << "Loading island scene." << std::endl;
+    //std::cout << "Creating opening island scene." << std::endl;
+    //shared_ptr<Opening_Island> o = make_shared<Opening_Island>();
+    //std::cout << "Loading island scene." << std::endl;
     //engine.load_scene(o);
 
-    Palm_Tree tree;
-    engine.add_sprite(make_shared<Palm_Tree>(tree));
+    shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
+    engine.load_scene(lmt);
 
     engine.run();
 

@@ -105,34 +105,4 @@ void Engine::run()
         shared_ptr<Display_Frame_Message> dfm = make_shared<Display_Frame_Message>(frame);
         message_bus->post_message(dfm);
     }
-
-    static unsigned int frames;
-
-    // Keep track of number of frames until second elapses
-    long long now = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
-
-    if (now - last_count_time > 1000)
-    {
-        actual_frame_rate = frames;
-        frames = 0;
-
-        // Last run time
-        last_count_time = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
-    }
-
-    rendered_frame->add_string(1, 0, "FPS: " + std::to_string(actual_frame_rate));
-    rendered_frame->add_string(2, 0, "CURRENT DIMENSIONS: " + std::to_string(rendered_frame->get_width())
-                                     + "x" + std::to_string(rendered_frame->get_height()));
-    rendered_frame->add_string(3, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
-    rendered_frame->add_string(4, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
-    rendered_frame->add_string(5, 0, "CAMERA LOCATION: (" + std::to_string(x_camera_position) + ", "
-                                                          + std::to_string(y_camera_position) + ", "
-                                                          + std::to_string(z_camera_position) + ")");
-    rendered_frame->add_string(6, 0, "WILL TO LIVE: " + std::to_string(0));
-
-
-    frames++;
-
-    return;
-
 }

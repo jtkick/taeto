@@ -18,6 +18,8 @@ Render_System::Render_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bu
     frame_number = 0;
 
     logger->info("Done setting up render system.");
+
+    render_distance = 1000000000;
 }
 
 Render_System::~Render_System()
@@ -123,6 +125,8 @@ void Render_System::handle_message(shared_ptr<Message> message)
 
 void Render_System::render_frame(shared_ptr<Frame> frame)
 {
+    write_alpha_background(frame);
+
     // Initizlize counters
     drawn_sprites = 0;
 
@@ -138,13 +142,11 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
     // Find all sprites that are going to be drawn
     for (auto sprite_ptr = sprites.begin(); sprite_ptr != sprites.end(); sprite_ptr++)
     {
-        logger->error("rendering");
-
         // If beyond render distance, move on
-        if (camera_z_position - (*sprite_ptr)->get_z_pixel_position() < render_distance ||
+        if (camera_z_position - (*sprite_ptr)->get_z_pixel_position() > render_distance ||
             (*sprite_ptr)->get_z_pixel_position() >= camera_z_position)
         {
-            logger->error("not visible");
+            logger->info("Sprite out of visible range, not rendering.");
             (*sprite_ptr)->set_visible(false);
             continue;
         }
@@ -207,10 +209,13 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
             ((*sprite_ptr)->get_y_pixel_position() > bounding_box_bottom &&
              (*sprite_ptr)->get_y_pixel_position() + (*sprite_ptr)->get_height() > bounding_box_bottom))
         {
-            logger->error("outside bounding box");
+            logger->info("Sprite outside viewable area, not rendering.");
             (*sprite_ptr)->set_visible(false);
             continue;
         }
+
+        // Sprite must be visible then
+        (*sprite_ptr)->set_visible(true);
 
         // Keep track of how many sprites are being rendered
         drawn_sprites++;
@@ -293,22 +298,9 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
         }
     }
 
-    // Get milliseconds since epoch for saving when this frame was rendered
-    milliseconds time = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    update_fps();
 
-    // Add time of this frame
-    frame_times.push_back(time);
-
-    // Remove all values in vector that are more than 'averaging_time' milliseconds old
-    while(time - frame_times.front() > milliseconds(averaging_time))
-        frame_times.pop_front();
-
-    // Calculate current FPS
-    current_fps = frame_times.size() / (averaging_time / 1000);
-
-    frame->add_string(1, 0, "FPS: " + std::to_string(current_fps));
-
-
+    write_debug_info(frame);
 }
 
 
@@ -473,6 +465,14 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 
     }
 
+    update_fps();
+
+    write_debug_info(rendered_frame);
+}
+
+
+void Render_System::update_fps()
+{
     // Get milliseconds since epoch for saving when this frame was rendered
     milliseconds time = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
 
@@ -485,22 +485,8 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 
     // Calculate current FPS
     current_fps = frame_times.size() / (averaging_time / 1000);
-
-    // Print debug information if flag is true
-    rendered_frame->add_string(0, 0, "FPS: " + std::to_string(current_fps));
-    rendered_frame->add_string(1, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
-    rendered_frame->add_string(2, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
-    rendered_frame->add_string(3, 0, "CAMERA LOCATION: (" + std::to_string(camera_x_position) + ", "
-                                                          + std::to_string(camera_y_position) + ", "
-                                                          + std::to_string(camera_z_position) + ")");
-    rendered_frame->add_string(4, 0, "FRAME DIMENSIONS: " + std::to_string(rendered_frame->get_width()) + "x"
-                                                          + std::to_string(rendered_frame->get_height()));
-    rendered_frame->add_string(5, 0, "CURRENT FRAME: " + std::to_string(frame_number++));
-    rendered_frame->add_string(6, 0, "WILL TO LIVE: 1");
-
-    return;
-
 }
+
 
 void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
 {
@@ -532,6 +518,7 @@ void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
     }
 }
 
+
 void Render_System::write_color_bars(shared_ptr<Frame> rendered_frame)
 {
     int h = rendered_frame->get_height();
@@ -539,4 +526,22 @@ void Render_System::write_color_bars(shared_ptr<Frame> rendered_frame)
 
     int end_first_row = (int)((double)h * 0.7);
     int curr_col = 0;
+}
+
+
+void Render_System::write_debug_info(shared_ptr<Frame> rendered_frame)
+{
+    // Print debug information if flag is true
+    rendered_frame->add_string(0, 0, "FPS: " + std::to_string(current_fps));
+    rendered_frame->add_string(1, 0, "NUM SPRITES: " + std::to_string(sprites.size()));
+    rendered_frame->add_string(2, 0, "NUM LIGHTS: " + std::to_string(lights.size()));
+    rendered_frame->add_string(3, 0, "CAMERA LOCATION: (" + std::to_string(camera_x_position) + ", "
+                                                          + std::to_string(camera_y_position) + ", "
+                                                          + std::to_string(camera_z_position) + ")");
+    rendered_frame->add_string(4, 0, "FRAME DIMENSIONS: " + std::to_string(rendered_frame->get_width()) + "x"
+                                                          + std::to_string(rendered_frame->get_height()));
+    rendered_frame->add_string(5, 0, "CURRENT FRAME: " + std::to_string(frame_number++));
+    rendered_frame->add_string(6, 0, "WILL TO LIVE: 1");
+
+    return;
 }

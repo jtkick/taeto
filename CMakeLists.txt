@@ -1,20 +1,16 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(taeto)
 
-#if (NOT CMAKE_BUILD_TYPE)
-#  set (CMAKE_BUILD_TYPE Release)
-#endif()
+if (NOT CMAKE_BUILD_TYPE)
+  set (CMAKE_BUILD_TYPE Release)
+endif()
 
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Curses REQUIRED)
-
-if(NOT TARGET spdlog)
-    # Stand-alone build
-    find_package(spdlog REQUIRED)
-endif()
+find_package(spdlog REQUIRED)
 
 # Detect and add SFML
 #set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
@@ -33,6 +29,7 @@ include_directories("include"
                     "include/scene_layer"
                     "assets/lights/include"
                     "assets/sprites/include"
+                    "assets/scenes/include"
                     ${CURSES_INCLUDE_DIR})
 
 file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp")
