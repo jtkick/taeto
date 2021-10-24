@@ -61,6 +61,8 @@ class Sprite
         // If this sprite is entirely off screen, this determines if the animate() function is called
         bool animate_off_screen;
 
+        Frame current_frame;
+
         // Sprites that this sprite is made out of
         // Any transformation/translation of this sprite will be done to sub_sprites
         vector<Sprite*> sub_sprites;
@@ -191,7 +193,7 @@ class Sprite
 
         // Since the sprite allows fake scaling, we need a 'get_pixel()' method
         // instead of using the Frame directly, to handle the scaling
-        shared_ptr<Pixel> get_pixel(long int, long int);
+        Pixel& get_pixel(long int, long int);
 
         // Move sprite and sub-sprite given distance in pixels
         void move(long int, long int, long int);

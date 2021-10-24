@@ -55,7 +55,7 @@ void Display_System::display_frame(shared_ptr<Frame> frame)
     // It's even faster than what I was doing before
     std::string output_buffer = "";
 
-    shared_ptr<Pixel> current_pixel;
+    Pixel current_pixel;
 
     for (int h = 0; h < frame->get_height(); h++)
     {
@@ -73,19 +73,19 @@ void Display_System::display_frame(shared_ptr<Frame> frame)
             current_pixel = frame->get_pixel(h, w);
 
             // Add background color
-            const Color* c = current_pixel->get_background_color();
+            const Color* c = current_pixel.get_background_color();
             output_buffer += "\033[48;2;" + std::to_string((int)(c->get_red())) + ";" +
                                             std::to_string((int)(c->get_green())) + ";" +
                                             std::to_string((int)(c->get_blue())) + "m";
 
             // Add foreground color
-            c = current_pixel->get_foreground_color();
+            c = current_pixel.get_foreground_color();
             output_buffer += "\033[38;2;" + std::to_string((int)(c->get_red())) + ";" +
                                             std::to_string((int)(c->get_green())) + ";" +
                                             std::to_string((int)(c->get_blue())) + "m";
 
             // Add actual character
-            output_buffer += current_pixel->get_char();
+            output_buffer += current_pixel.get_char();
         }
     }
 

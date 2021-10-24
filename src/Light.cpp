@@ -7,7 +7,7 @@ Light::Light()
     y_position = 0;
     z_position = 0;
 }
-        
+
 // Constructor with location initialization
 Light::Light(long int x, long int y, long int z)
 {
@@ -15,7 +15,7 @@ Light::Light(long int x, long int y, long int z)
     y_position = y;
     z_position = z;
 }
-        
+
 // Destructor
 Light::~Light()
 {
@@ -28,7 +28,7 @@ Vector Light::get_vector(long int, long int, long int)
 {
 
 }
-        
+
 // Return what color the light is at the given location
 // Usually doesn't change with location
 Color Light::get_color(long int, long int, long int)
@@ -47,4 +47,11 @@ void Light::move(long int x_diff, long int y_diff, long int z_diff)
     x_position += x_diff;
     y_position += y_diff;
     z_position += z_diff;
+}
+
+void Light::place(long int x, long int y, long int z)
+{
+    x_position = x;
+    y_position = y;
+    z_position = z;
 }

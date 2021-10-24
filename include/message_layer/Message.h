@@ -1,7 +1,8 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-enum id_numbers { APPLY_FORCES,
+enum id_numbers { ANIMATE,
+                  APPLY_FORCES,
                   SPRITE_UPDATE,
                   LIGHT_UPDATE,
                   RENDER_FRAME,

@@ -20,7 +20,7 @@ class Scene : public Message_Bus_Entry
 
         virtual ~Scene();
 
-        void handle_message(shared_ptr<Message> message);
+        virtual void handle_message(shared_ptr<Message> message);
 
         virtual void load();
 };

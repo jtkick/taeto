@@ -4,10 +4,11 @@
 #include "Message.h"
 #include "Message_Bus.h"
 #include "Sprite_Update_Message.h"
+#include "Light_Update_Message.h"
 #include "Scene.h"
-#include "Palm_Tree.h"
 
 #include "White_Backdrop.h"
+#include "Spotlight.h"
 
 #include <memory>
 

@@ -276,7 +276,7 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
 
                 // Get pixel of interest
                 logger->error("Getting sprite pixel: (" + std::to_string(sprite_y) + ", " + std::to_string(sprite_x) + ")");
-                shared_ptr<Pixel> sprite_pixel = (*sprite_ptr)->get_pixel(sprite_y, sprite_x);
+                Pixel& sprite_pixel = (*sprite_ptr)->get_pixel(sprite_y, sprite_x);
 
                 // Map from relative to sprite to relative to camera
                 long int frame_y = (long int)((sprite_y - camera_y_position) * drawing_plane_distance / z_diff);
@@ -289,11 +289,11 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
                 logger->error("Frame y: " + std::to_string(frame_y));
                 logger->error("Frame x: " + std::to_string(frame_x));
 
-                shared_ptr<Pixel> frame_pixel = frame->get_pixel(frame_y, frame_x);
+                Pixel& frame_pixel = frame->get_pixel(frame_y, frame_x);
 
-                logger->error("Char: " + std::to_string(sprite_pixel->get_char()));
+                logger->error("Char: " + std::to_string(sprite_pixel.get_char()));
 
-                frame_pixel->set_char(sprite_pixel->get_char());
+                frame_pixel.set_char(sprite_pixel.get_char());
             }
         }
     }
@@ -326,17 +326,17 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
         for (int x = 0; x < w; x++)
         {
             // Get current pixel of frame
-            shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
+            Pixel& rendered_pixel = rendered_frame->get_pixel(y, x);
 
-            rendered_pixel->clear();
+            rendered_pixel.clear();
 
             if ( (x % 4 < 2) != (y % 2 < 1) )
             {
-                rendered_pixel->set_background_color(Color(255, 255, 255));
+                rendered_pixel.set_background_color(Color(255, 255, 255));
             }
             else
             {
-                rendered_pixel->set_background_color(Color(127, 127, 127));
+                rendered_pixel.set_background_color(Color(127, 127, 127));
             }
         }
     }
@@ -347,7 +347,7 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
         for (int x = 0; x < w; x++)
         {
             // Get current pixel of frame
-            shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
+            Pixel& rendered_pixel = rendered_frame->get_pixel(y, x);
 
             // Reset pixel
             //rendered_pixel->clear();
@@ -380,24 +380,24 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                      0 <= rel_y && rel_y < current_sprite->get_height())
                 {
                     // Get pixel of interest
-                    shared_ptr<Pixel> current_pixel = current_sprite->get_pixel(rel_y, rel_x);
+                    Pixel& current_pixel = current_sprite->get_pixel(rel_y, rel_x);
 
                     // Determine if pixel should be drawn
                     // If the foreground alpha channel is anything but 0, it will be drawn
-                    if (current_pixel->get_foreground_color()->get_alpha() != 0)
+                    if (current_pixel.get_foreground_color()->get_alpha() != 0)
                     {
                         // Write character to pixel
-                        rendered_pixel->set_char(current_pixel->get_char());
+                        rendered_pixel.set_char(current_pixel.get_char());
 
                         // TODO: THIS PROBABLY WON'T WORK FOR TRANSPARENT COLORS
                         // Write initial colors to pixel
-                        rendered_pixel->set_foreground_color(*(current_pixel->get_foreground_color()));
-                        rendered_pixel->set_background_color(*(current_pixel->get_background_color()));
+                        rendered_pixel.set_foreground_color(*(current_pixel.get_foreground_color()));
+                        rendered_pixel.set_background_color(*(current_pixel.get_background_color()));
 
                         // Handle dynamic lighting
                         if (current_sprite->get_respect_light_sources())
                         {
-                            Color c;
+                            Color c = Color(0, 0, 0);
 
                             // Calculate new color based on nearby light sources
                             // Iterate over all light sources known to the engine
@@ -410,13 +410,13 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                                 long int abs_z = current_sprite->get_z_pixel_position();
 
                                 // Light color at location
-                                c = current_light->get_color(abs_x, abs_y, abs_z);
+                                Color light_color = current_light->get_color(abs_x, abs_y, abs_z);
 
                                 // Compare normals to get light intensity
                                 if (current_sprite->get_use_normal_mapping())
                                 {
                                     // Get vectors
-                                    const Vector* pixel_normal = current_pixel->get_normal();
+                                    const Vector* pixel_normal = current_pixel.get_normal();
                                     const Vector light_vector = current_light->get_vector(abs_x, abs_y, abs_z);
 
                                     // Get vector components
@@ -434,25 +434,27 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                                     unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
 
                                     // Adjust light brightness accordingly
-                                    c.set_brightness(brightness);
+                                    light_color.set_brightness(brightness);
                                 }
 
-                                rendered_pixel->set_foreground_color(c * (*(rendered_pixel->get_foreground_color())));
-                                rendered_pixel->set_background_color(c * (*(rendered_pixel->get_background_color())));
+                                c += light_color;
                             }
+
+                            rendered_pixel.set_foreground_color(c * (*(current_pixel.get_foreground_color())));
+                            rendered_pixel.set_background_color(c * (*(current_pixel.get_background_color())));
                         }
                         else
                         {
                             // Write foreground color to pixel
-                            rendered_pixel->set_foreground_color(*(current_pixel->get_foreground_color()));
-                            rendered_pixel->set_background_color(*(current_pixel->get_background_color()));
+                            rendered_pixel.set_foreground_color(*(current_pixel.get_foreground_color()));
+                            rendered_pixel.set_background_color(*(current_pixel.get_background_color()));
                         }
 
                         // Write bold to pixel
-                        rendered_pixel->set_bold(current_pixel->get_bold());
+                        rendered_pixel.set_bold(current_pixel.get_bold());
 
                         // Write underline to pixel
-                        rendered_pixel->set_underline(current_pixel->get_underline());
+                        rendered_pixel.set_underline(current_pixel.get_underline());
                     }
 
                 }
@@ -502,17 +504,17 @@ void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
         for (int x = 0; x < w; x++)
         {
             // Get current pixel of frame
-            shared_ptr<Pixel> rendered_pixel = rendered_frame->get_pixel(y, x);
+            Pixel rendered_pixel = rendered_frame->get_pixel(y, x);
 
-            rendered_pixel->clear();
+            rendered_pixel.clear();
 
             if ( (x % 4 < 2) != (y % 2 < 1) )
             {
-                rendered_pixel->set_background_color(Color(255, 255, 255));
+                rendered_pixel.set_background_color(Color(255, 255, 255));
             }
             else
             {
-                rendered_pixel->set_background_color(Color(127, 127, 127));
+                rendered_pixel.set_background_color(Color(127, 127, 127));
             }
         }
     }

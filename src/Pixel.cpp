@@ -32,23 +32,23 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b)
     normal = Vector(0, 0, 1);
     collide = false;
 }
-        
+
 // Getters
 char Pixel::get_char() const
 {
     return c;
 }
-        
+
 const Color* Pixel::get_foreground_color() const
 {
     return &foreground_color;
 }
-        
+
 const Color* Pixel::get_background_color() const
 {
     return &background_color;
 }
-        
+
 bool Pixel::get_bold() const
 {
     return bold;
@@ -69,22 +69,22 @@ bool Pixel::get_collide() const
     return collide;
 }
 
-// Setters       
+// Setters
 void Pixel::set_char(char new_char)
 {
     c = new_char;
 }
-        
+
 void Pixel::set_foreground_color(Color color)
 {
     foreground_color = color;
 }
-        
+
 void Pixel::set_background_color(Color color)
 {
     background_color = color;
 }
-        
+
 void Pixel::set_bold(bool b)
 {
     bold = b;
@@ -118,7 +118,7 @@ void Pixel::clear()
     collide = false;
 }
 
-/*    
+/*
 bool operator == (const Pixel& p1, const Pixel& p2)
 {
     return (p1.get_char() == p2.get_char() &&
@@ -139,7 +139,7 @@ void Pixel::operator = (const Pixel &p)
     collide = p.get_collide();
 }
 
-// This function combines pixels, applying the right pixel 
+// This function combines pixels, applying the right pixel
 // onto the left pixel. Taking color alpha into account
 Pixel Pixel::operator & (const Pixel &p)
 {
@@ -150,24 +150,24 @@ Pixel Pixel::operator & (const Pixel &p)
     {
         // Write char
         new_pixel.set_char(p.get_char());
-        
+
         // Write foreground color
         Color c1 = *(this->get_foreground_color());
         Color c2 = *(p.get_foreground_color());
         this->set_foreground_color(c1 & c2);
-        
+
         // Write background color
         c1 = *(this->get_background_color());
         c2 = *(p.get_background_color());
         new_pixel.set_background_color(c1 & c2);
-        
+
         // Write bold
         new_pixel.set_bold(p.get_bold());
-        
+
         // Write underline
         new_pixel.set_underline(p.get_underline());
     }
-    
+
     return new_pixel;
 }
 
@@ -186,7 +186,7 @@ void Pixel::operator + (const Pixel &p)
         ; // no-op
     else
         throw "Cannot combine pixels: both characters defined.";
-        
+
     // Combine foreground color
     if (foreground_color >= 0 && p.get_foreground_color() < 0)
         ; // no-op
@@ -196,7 +196,7 @@ void Pixel::operator + (const Pixel &p)
         ; // no-op
     else
         throw "Cannot combine pixels: both foreground colors defined.";
-        
+
     // Combine background color
     if (background_color >= 0 && p.get_background_color() < 0)
         ; // no-op
@@ -206,7 +206,7 @@ void Pixel::operator + (const Pixel &p)
         ; // no-op
     else
         throw "Cannot combine pixels: both background colors defined.";
-        
+
     // Combine bold property
     if (bold >= 0 && p.get_bold() < 0)
         ; // no-op
@@ -216,6 +216,6 @@ void Pixel::operator + (const Pixel &p)
         ; // no-op
     else
         throw "Cannot combine pixels: both bold properties defined.";
-        
+
 }
 */

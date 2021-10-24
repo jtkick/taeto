@@ -19,7 +19,7 @@ class Frame
 
         // Pixels that frame is made up of
         // No longer vector of vectors of Pixels, now shared_ptr to pixels
-        vector<vector<shared_ptr<Pixel>>> pixels;
+        vector<vector<Pixel>> pixels;
 
         // Setup vector
         void init_pixels();
@@ -34,7 +34,7 @@ class Frame
         ~Frame();
 
         // Getters and setters
-        shared_ptr<Pixel> get_pixel(long int, long int);
+        Pixel& get_pixel(long int, long int);
 
         long unsigned int get_width();
 

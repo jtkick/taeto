@@ -1,0 +1,9 @@
+<map id="TCLAP::SwitchArg::combinedSwitchesMatch" name="TCLAP::SwitchArg::combinedSwitchesMatch">
+<area shape="rect" id="node2" href="$classTCLAP_1_1Arg.html#a0f4cda4e34213da82df040e162287c4b" title="Performs the special handling described by the Visitor. " alt="" coords="251,5,457,32"/>
+<area shape="rect" id="node4" href="$classTCLAP_1_1Arg.html#a0abd38f46dbf7d267078134a4817fbb2" title="The char used as a place holder when SwitchArgs are combined. " alt="" coords="274,56,434,83"/>
+<area shape="rect" id="node5" href="$classTCLAP_1_1Arg.html#aadef6ca7e40f5b3d3fd03186976aea7e" title="The delimiter that separates an argument flag/name from the value. " alt="" coords="279,107,429,133"/>
+<area shape="rect" id="node6" href="$classTCLAP_1_1Arg.html#af8e739295b0f75028e7bff6d670d97a1" title="TCLAP::Arg::flagStartString" alt="" coords="511,169,695,196"/>
+<area shape="rect" id="node7" href="$classTCLAP_1_1Arg.html#a1df2134870528b80f9f35347fef6fd14" title="TCLAP::Arg::nameStartString" alt="" coords="505,233,700,260"/>
+<area shape="rect" id="node8" href="$classTCLAP_1_1Arg.html#adf04c48b5e718098b0b8d9bcb28eb706" title="Returns a simple string representation of the argument. " alt="" coords="281,208,427,235"/>
+<area shape="rect" id="node3" href="$classTCLAP_1_1Visitor.html#a175c37e1cdaf8da483b90480995c4158" title="This method (to implemented by children) will be called when the visitor is visited. " alt="" coords="531,5,674,32"/>
+</map>
