@@ -4,7 +4,7 @@
 
 Message_Bus_Entry::Message_Bus_Entry()
 {
-    std::cout << "Calling message bus entry constructor" << std::endl;
+
 }
 
 Message_Bus_Entry::~Message_Bus_Entry()

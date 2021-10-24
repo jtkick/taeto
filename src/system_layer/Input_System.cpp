@@ -13,7 +13,8 @@ Input_System::Input_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus>
              {'e', false},
              {'a', false},
              {'s', false},
-             {'d', false} };
+             {'d', false},
+             {' ', false}};
 }
 
 Input_System::~Input_System()
@@ -28,6 +29,7 @@ void Input_System::handle_message(shared_ptr<Message> message)
     {
         case POLL_INPUTS:
         {
+            logger->info("Polling inputs...");
             poll_inputs();
         }
     }
@@ -35,12 +37,10 @@ void Input_System::handle_message(shared_ptr<Message> message)
 
 void Input_System::poll_inputs()
 {
-    logger->info("POLLING INPUTS");
-
     // Loop over each input keyboard key engine is watching
     for (int i = 0; i < keys.size(); i++)
     {
-        key_entry key = keys[i];
+        key_entry &key = keys[i];
 
         // Bro, fuck SFML
         sf::Keyboard::Key sf_key;
@@ -69,6 +69,12 @@ void Input_System::poll_inputs()
             case 'd':
                 sf_key = sf::Keyboard::D;
                 break;
+
+            case ' ':
+                sf_key = sf::Keyboard::Space;
+                break;
+
+
         }
 
         // Poll key

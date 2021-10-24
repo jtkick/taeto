@@ -4,6 +4,24 @@
 #include <thread>
 #include <chrono>
 
+void signal_callback_handler(int signum)
+{
+    // Go back to original terminal screen
+    std::cout << "\e[?1049l";
+
+    // Make cursor visible again
+    printf("\e[?25h");
+
+    // Turn character echo back on
+    struct termios t;
+    tcgetattr(0, &t);
+    t.c_lflag |= ECHO;
+    tcsetattr(0, TCSANOW, &t);
+
+    // Exit
+    exit(signum);
+}
+
 Display_System::Display_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> mb)
 {
     logger = l;
@@ -16,6 +34,15 @@ Display_System::Display_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_
     // Make cursor not visible
     printf("\e[?25l");
 
+    // Turn off character echo
+    struct termios t;
+    tcgetattr(0, &t);
+    t.c_lflag &= ~ECHO;
+    tcsetattr(0, TCSANOW, &t);
+
+    // Register function to be called when ctrl-c is sent
+    signal(SIGINT, signal_callback_handler);
+
     logger->error("Done setting up display system.");
 }
 
@@ -26,6 +53,12 @@ Display_System::~Display_System()
 
     // Make cursor visible again
     printf("\e[?25h");
+
+    // Turn character echo back on
+    struct termios t;
+    tcgetattr(0, &t);
+    t.c_lflag |= ECHO;
+    tcsetattr(0, TCSANOW, &t);
 }
 
 void Display_System::handle_message(shared_ptr<Message> message)

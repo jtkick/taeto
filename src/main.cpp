@@ -12,6 +12,7 @@ using namespace std;
 #include "Directional_Light.h"
 
 #include "Opening_Island.h"
+#include "Collision_Detection_Test.h"
 #include "Light_Mixing_Test.h"
 #include "Normal_Mapping_Test.h"
 
@@ -91,101 +92,48 @@ void main_character::handle_collision(shared_ptr<Sprite> sprite_ptr)
 }
 
 
-class Color_Test: public Sprite
+int main(int argc, char** argv)
 {
-    public:
-
-    Color_Test() {
-        x_position = 0;
-        y_position = 0;
-        z_position = 0;
-
-        height = 1;
-        width = 8;
-        Frame f = Frame(height, width);
-        f.set_chars({ R"(XXXXXXXXX)" });
-
-        Color r = Color(255, 0, 0);
-        Color o = Color(255, 127, 0);
-        Color y = Color(255, 255, 0);
-        Color g = Color(0, 255, 0);
-        Color b = Color(0, 255, 255);
-        Color i = Color(0, 127, 255);
-        Color v = Color(0, 0, 255);
-        Color w = Color(255, 255, 255);
-
-        f.set_foreground_colors({{ r, o, y, g, b, i, v, w }});
-
-        current_frame = f;
-    }
-
-    shared_ptr<Frame> get_current_frame()
-    {
-        return make_shared<Frame>(current_frame);
-    }
-};
-
-class Floor_Test: public Sprite
-{
-    public:
-        Floor_Test() {
-            x_position = -10;
-            y_position = 0;
-            z_position = 0;
-
-            height = 5;
-            width = 20;
-
-            respect_light_sources = false;
-            use_normal_mapping = false;
-
-            collide = true;
-
-            Frame f = Frame(height, width);
-            f.set_chars({ R"(XXXXXXXXXXXXXXXXXXXX)",
-                          R"(XXXXXXXXXXXXXXXXXXXX)",
-                          R"(XXXXXXXXXXXXXXXXXXXX)",
-                          R"(XXXXXXXXXXXXXXXXXXXX)",
-                          R"(XXXXXXXXXXXXXXXXXXXX)" });
-
-            Color r = Color(255, 0, 0);
-
-            f.set_foreground_colors({{ r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
-                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
-                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
-                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r },
-                                     { r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r }});
-            current_frame = f;
-        }
-
-        shared_ptr<Frame> get_current_frame() {
-            return make_shared<Frame>(current_frame);
-        }
-};
-
-
-int main()
-{
-    TCLAP::CmdLine cmd("Command description message", ' ', "0.9");
-
     Engine engine;
 
-    //Palm_tree tree;
-    //tree.move(0, 0, -10);
+    try
+    {
+        // Set description
+        TCLAP::CmdLine cmd("Taeto is a program designed to create ASCII animations in the terminal.", ' ', "0.9");
+
+        // Option to load test scenes
+        TCLAP::ValueArg<std::string> test_scene_arg("t", "test", "Test scene to load.", false, "", "string");
+        cmd.add(test_scene_arg);
+
+        // Parse arguments
+        cmd.parse(argc, argv);
+
+        // Load test scene
+        std::string test_scene_name = test_scene_arg.getValue();
+        if (test_scene_name == "collision_detection")
+        {
+            shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
+            engine.load_scene(cdt);
+        }
+        else if (test_scene_name == "normal_mapping")
+        {
+            shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
+            engine.load_scene(nmt);
+        }
+        else if (test_scene_name == "light_mixing")
+        {
+            shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
+            engine.load_scene(lmt);
+        }
+    }
+    catch (TCLAP::ArgException &e)
+    {
+        std::cerr << "Error: " << e.error() << " for arg " << e.argId() << std::endl;
+        throw "e";
+    }
 
     main_character person;
     person.move(0, 0, -10);
-
-    //Palm_tree more_trees[100];
-    //for (int i = 0; i < 100; i++)
-    //    engine.add_sprite(&more_trees[i]);
-
-    //ground1 g;
-    //g.move(0, 22, -1);
-
-    //engine.add_sprite(&g);
-
-    //engine.add_sprite(make_shared<Sprite>(tree));
 
     Floor_Test ft;
     ft.move(-5, 20, -10);
@@ -200,12 +148,6 @@ int main()
     //shared_ptr<Opening_Island> o = make_shared<Opening_Island>();
     //std::cout << "Loading island scene." << std::endl;
     //engine.load_scene(o);
-
-    //shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
-    //engine.load_scene(lmt);
-
-    shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
-    engine.load_scene(nmt);
 
 
     engine.run();

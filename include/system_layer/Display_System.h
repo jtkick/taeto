@@ -6,10 +6,13 @@
 #include "Message_Bus.h"
 #include "System.h"
 
+#include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <signal.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include <termios.h>
 
 using namespace std;
 
