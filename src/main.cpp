@@ -94,7 +94,14 @@ void main_character::handle_collision(shared_ptr<Sprite> sprite_ptr)
 
 int main(int argc, char** argv)
 {
-    Engine engine;
+    //shared_ptr<sf::Music> music = make_shared<sf::Music>();
+    //if (!music.openFromFile("/home/jared/Desktop/Dream Sweet in Sea Major - truncated.wav"))
+    //    exit(-1);
+    //music.setVolume(50);
+    //music.play();
+
+    // Test scene to load if any
+    std::string test_scene;
 
     try
     {
@@ -108,23 +115,8 @@ int main(int argc, char** argv)
         // Parse arguments
         cmd.parse(argc, argv);
 
-        // Load test scene
-        std::string test_scene_name = test_scene_arg.getValue();
-        if (test_scene_name == "collision_detection")
-        {
-            shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
-            engine.load_scene(cdt);
-        }
-        else if (test_scene_name == "normal_mapping")
-        {
-            shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
-            engine.load_scene(nmt);
-        }
-        else if (test_scene_name == "light_mixing")
-        {
-            shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
-            engine.load_scene(lmt);
-        }
+        // Get test scene to load
+        test_scene = test_scene_arg.getValue();
     }
     catch (TCLAP::ArgException &e)
     {
@@ -132,23 +124,42 @@ int main(int argc, char** argv)
         throw "e";
     }
 
+    Engine engine;
+
+    if (test_scene == "collision_detection")
+    {
+        shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
+        engine.load_scene(cdt);
+    }
+    else if (test_scene == "normal_mapping")
+    {
+        shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
+        engine.load_scene(nmt);
+    }
+    else if (test_scene == "light_mixing")
+    {
+        shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
+        engine.load_scene(lmt);
+    }
+
     main_character person;
     person.move(0, 0, -10);
-
-    Floor_Test ft;
-    ft.move(-5, 20, -10);
-    engine.add_sprite(make_shared<Floor_Test>(ft));
 
     engine.add_sprite(make_shared<main_character>(person));
 
     shared_ptr<Point_Light> p = make_shared<Point_Light>(Color(255, 255, 255), 0.9999);
     //engine.add_light(p);
 
-    //std::cout << "Creating opening island scene." << std::endl;
     //shared_ptr<Opening_Island> o = make_shared<Opening_Island>();
-    //std::cout << "Loading island scene." << std::endl;
     //engine.load_scene(o);
 
+/*
+    auto music = std::unique_ptr<sf::Music>(new sf::Music);
+    if (!music->openFromFile("/home/jared/Desktop/Dream Sweet in Sea Major - truncated.wav"))
+    {
+        std::cout << "ah" << std::endl;
+    }
+    music->play();*/
 
     engine.run();
 

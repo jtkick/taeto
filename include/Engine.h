@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 // Systems
+#include "Audio_System.h"
 #include "Input_System.h"
 #include "Display_System.h"
 #include "Render_System.h"
@@ -38,6 +39,9 @@ class Engine
     // Bus for notifying systems of messages
     shared_ptr<Message_Bus> message_bus;
 
+    // System to play sounds and music
+    shared_ptr<Audio_System> audio_system;
+    
     // System to poll any inputs
     shared_ptr<Input_System> input_system;
 

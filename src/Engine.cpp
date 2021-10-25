@@ -21,6 +21,7 @@ Engine::Engine()
 
     // Setup all engine systems
     logger->info("Constructing engine systems.");
+    audio_system = make_shared<Audio_System>(logger, message_bus);
     input_system = make_shared<Input_System>(logger, message_bus);
     render_system = make_shared<Render_System>(logger, message_bus);
     display_system = make_shared<Display_System>(logger, message_bus);
@@ -28,6 +29,7 @@ Engine::Engine()
 
     // Connect systems to message bus
     logger->info("Conencting systems to message bus.");
+    message_bus->add_system(audio_system);
     message_bus->add_system(input_system);
     message_bus->add_system(render_system);
     message_bus->add_system(display_system);
@@ -85,6 +87,8 @@ void Engine::run()
     struct winsize size;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
     shared_ptr<Frame> frame = make_shared<Frame>(size.ws_row, size.ws_col);
+
+    //sf::Music m;
 
     // Start rendering
     while (true)
