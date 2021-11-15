@@ -3,9 +3,10 @@
 
 #include "Message.h"
 #include "Message_Bus.h"
-#include "Render_Frame_Message.h"
 #include "Key_Update_Message.h"
 #include "Light_Update_Message.h"
+#include "Place_Camera_Message.h"
+#include "Render_Frame_Message.h"
 #include "Sprite_Update_Message.h"
 #include "System.h"
 #include "Sprite.h"

@@ -27,7 +27,7 @@ class Collision_Detection_Test : public Scene
 
         void handle_message(shared_ptr<Message>);
 
-        void load();
+        void load(int, int);
 };
 
 #endif

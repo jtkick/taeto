@@ -12,8 +12,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 find_package(Curses REQUIRED)
 find_package(spdlog REQUIRED)
 
-add_definitions(-D__UNIX_JACK__)
-
 # Detect and add SFML
 #set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 #Find any version 2.X of SFML
@@ -27,7 +25,6 @@ add_definitions(-D__UNIX_JACK__)
 include_directories("include"
                     "prerequisites/spdlog"
                     "prerequisites/tclap-1.2.4/include"
-                    "prerequisites/rtaudio-5.1.0"
                     "include/system_layer"
                     "include/message_layer"
                     "include/scene_layer"
@@ -36,8 +33,8 @@ include_directories("include"
                     "assets/scenes/include"
                     ${CURSES_INCLUDE_DIR})
 
-file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/rtaudio-5.1.0/RtAudio.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/*/src/**")
 
 add_executable(taeto ${SOURCES})
 
-target_link_libraries(taeto ncurses sfml-window sfml-audio spdlog::spdlog jack)
+target_link_libraries(taeto ncurses sfml-window sfml-audio spdlog::spdlog)

@@ -10,7 +10,7 @@ Normal_Mapping_Test::~Normal_Mapping_Test()
 
 }
 
-void Normal_Mapping_Test::load()
+void Normal_Mapping_Test::load(int window_height, int window_width)
 {
     // Load normal box
     nt = make_shared<Normal_Test>();

@@ -145,6 +145,11 @@ double Sprite::get_mass()
     return mass;
 }
 
+uint64_t Sprite::get_tags()
+{
+    return tags;
+}
+
 bool Sprite::get_collide()
 {
     return collide;
@@ -252,6 +257,11 @@ void Sprite::set_z_force(double z)
 void Sprite::set_mass(double m)
 {
     mass = m;
+}
+
+void Sprite::set_tags(uint64_t t)
+{
+    tags = t;
 }
 
 void Sprite::set_collide(bool c)

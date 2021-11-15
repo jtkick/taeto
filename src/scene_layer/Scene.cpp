@@ -16,7 +16,7 @@ void Scene::handle_message(shared_ptr<Message> message)
 
 }
 
-void Scene::load()
+void Scene::load(int window_height, int window_width)
 {
 
 }

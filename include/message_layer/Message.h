@@ -3,13 +3,14 @@
 
 enum id_numbers { ANIMATE,
                   APPLY_FORCES,
-                  SPRITE_UPDATE,
-                  LIGHT_UPDATE,
-                  RENDER_FRAME,
                   DISPLAY_FRAME,
+                  KEY_UPDATE,
+                  LIGHT_UPDATE,
                   MOVE_CAMERA,
+                  PLACE_CAMERA,
                   POLL_INPUTS,
-                  KEY_UPDATE};
+                  RENDER_FRAME,
+                  SPRITE_UPDATE };
 
 class Message
 {

@@ -10,7 +10,7 @@ Collision_Detection_Test::~Collision_Detection_Test()
 
 }
 
-void Collision_Detection_Test::load()
+void Collision_Detection_Test::load(int window_height, int window_width)
 {
     // Load stationary box
     stat_box = make_shared<Stationary_Box>();

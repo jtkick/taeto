@@ -10,7 +10,7 @@ Light_Mixing_Test::~Light_Mixing_Test()
 
 }
 
-void Light_Mixing_Test::load()
+void Light_Mixing_Test::load(int window_height, int window_width)
 {
     // Load backdrop
     shared_ptr<White_Backdrop> backdrop = make_shared<White_Backdrop>();

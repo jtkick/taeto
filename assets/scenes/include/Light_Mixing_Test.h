@@ -20,7 +20,7 @@ class Light_Mixing_Test : public Scene
 
         ~Light_Mixing_Test();
 
-        void load();
+        void load(int, int);
 };
 
 #endif

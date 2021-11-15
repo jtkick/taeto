@@ -42,6 +42,9 @@ class Sprite
         // Idk what the unit is, it doesn't matter, it's just a ratio with the forces
         double mass;
 
+        // Tags used by scenes to keep track of what an object is, like walls and floors
+        uint64_t tags;
+
         // True if this sprite should collide with any other sprite that also
         // has this member set to true
         bool collide;
@@ -125,6 +128,8 @@ class Sprite
 
         double get_mass();
 
+        uint64_t get_tags();
+
         bool get_collide();
 
         bool get_detect_collisions();
@@ -169,6 +174,8 @@ class Sprite
         void set_z_force(double);
 
         void set_mass(double);
+
+        void set_tags(uint64_t);
 
         void set_collide(bool);
 

@@ -12,8 +12,6 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include <thread>
 
-#include "RtAudio.h"
-
 #include <iostream>
 
 using namespace std;
@@ -27,8 +25,6 @@ class Audio_System: public System
     shared_ptr<Message_Bus> message_bus;
 
     shared_ptr<sf::Music> music_ptr;
-
-    RtAudio dac;
 
     public:
 

@@ -9,6 +9,12 @@
 
 Engine::Engine()
 {
+    // Get window dimensions
+    struct winsize size;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+    window_height = size.ws_row;
+    window_width = size.ws_col;
+
     // Create engine-wide logger
     logger = spdlog::basic_logger_mt("logger", "logs/log.txt");
 
@@ -78,15 +84,14 @@ void Engine::load_scene(shared_ptr<Scene> s)
     s->connect_to_logger(logger);
 
     // Now that scene is setup correctly, tell it to load all assets
-    s->load();
+    s->load(window_height, window_width);
 }
 
 void Engine::run()
 {
     // Create new frame
-    struct winsize size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-    shared_ptr<Frame> frame = make_shared<Frame>(size.ws_row, size.ws_col);
+
+    shared_ptr<Frame> frame = make_shared<Frame>(window_height, window_width);
 
     //sf::Music m;
 

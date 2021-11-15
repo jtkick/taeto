@@ -22,7 +22,7 @@ class Scene : public Message_Bus_Entry
 
         virtual void handle_message(shared_ptr<Message> message);
 
-        virtual void load();
+        virtual void load(int, int);
 };
 
 #endif

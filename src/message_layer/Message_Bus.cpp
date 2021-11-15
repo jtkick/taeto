@@ -22,6 +22,7 @@ void Message_Bus::post_message(std::shared_ptr<Message> message)
 {
     // Loop over all known systems and notify them
     logger->info("Posting message to all systems");
+    logger->debug("Number of systems known to message bus: " + std::to_string(systems.size()));
     for (auto it = systems.begin(); it != systems.end(); it++)
     {
         (*it)->handle_message(message);

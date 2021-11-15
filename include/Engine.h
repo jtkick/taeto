@@ -41,7 +41,7 @@ class Engine
 
     // System to play sounds and music
     shared_ptr<Audio_System> audio_system;
-    
+
     // System to poll any inputs
     shared_ptr<Input_System> input_system;
 
@@ -76,6 +76,10 @@ class Engine
 
     // If set to true, engine will display FPS in top left corner
     bool display_frame_rate;
+
+    // Keep screen size
+    int window_height;
+    int window_width;
 
     public:
 

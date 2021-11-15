@@ -54,6 +54,17 @@ void Render_System::handle_message(shared_ptr<Message> message)
         }
         break;
 
+        case PLACE_CAMERA:
+        {
+            logger->info("RECEIVED PLACE CAMERA MESSAGE");
+            // Keep track of light
+            shared_ptr<Place_Camera_Message> pcm = dynamic_pointer_cast<Place_Camera_Message>(message);
+            camera_x_position = pcm->get_x_position();
+            camera_y_position = pcm->get_y_position();
+            camera_z_position = pcm->get_z_position();
+        }
+        break;
+
         case RENDER_FRAME:
         {
             logger->info("Render frame message received.");
@@ -70,7 +81,7 @@ void Render_System::handle_message(shared_ptr<Message> message)
             logger->info("Render system received key update message.");
 
             shared_ptr<Key_Update_Message> kum = dynamic_pointer_cast<Key_Update_Message>(message);
-
+/*
             // Move camera based on key
             switch(kum->get_key())
             {
@@ -97,7 +108,7 @@ void Render_System::handle_message(shared_ptr<Message> message)
                 case 'e':
                     camera_z_position += 1;
                 break;
-            }
+            }*/
         }
         break;
     }
