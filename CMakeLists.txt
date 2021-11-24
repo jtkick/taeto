@@ -25,6 +25,7 @@ find_package(spdlog REQUIRED)
 include_directories("include"
                     "prerequisites/spdlog"
                     "prerequisites/tclap-1.2.4/include"
+                    "prerequisites/lodepng/include"
                     "include/system_layer"
                     "include/message_layer"
                     "include/scene_layer"
