@@ -30,6 +30,8 @@ class Frame
 
         Frame(unsigned long int, unsigned long int);
 
+        Frame(std::vector<std::vector<Pixel>>);
+
         // Destructor
         ~Frame();
 
@@ -80,6 +82,9 @@ class Frame
 
         // Write string to given location in frame
         void add_string(long int, long int, string);
+
+        // Export to string
+        std::string serialize();
 
         // Maps frame onto this frame wherever current frame has the given character
         void map(Frame f, char c);

@@ -326,6 +326,43 @@ bool Sprite::collides_with(shared_ptr<Sprite> sprite_ptr)
     return true;
 }
 
+void Sprite::serialize(std::filesystem::path filename, bool overwrite=false)
+{
+    // Create and open file
+    if (!overwrite)
+    {
+        if (std::filesystem::exists(filename))
+        {
+            throw "Kill yourself.";
+        }
+    }
+    std::ofstream file(filename);
+
+    // Loop over each frame
+    int i = 0;
+    for (auto it = frames.begin(); it != frames.end(); it++)
+    {
+        // Open map element
+        file << "{";
+
+        // Output frame name
+        file << "\"" << it->first << "\",";
+
+        // Add serialized frame
+        file << it->second.serialize();
+
+        // Close map element
+        file << "}";
+
+        // If not last frame, output comma
+        if (i++ != frames.size() - 1)
+        {
+            file << ",";
+        }
+        file << "\n";
+    }
+}
+
 Pixel& Sprite::get_pixel(long int rel_y, long int rel_x)
 {
     return current_frame.get_pixel(rel_y, rel_x);
@@ -347,6 +384,57 @@ void Sprite::move(long int x_diff, long int y_diff, long int z_diff)
     int i = 0;
     for (it = sub_sprites.begin(); it != sub_sprites.end(); it++, i++)
         (*it)->move(x_diff, y_diff, z_diff);
+
+}
+
+void Sprite::save(std::filesystem::path directory)
+{
+    // Make sure directory exists
+    if (std::filesystem::is_directory(directory))
+    {
+        // Make sure directory is empty
+        if (!std::filesystem::is_empty(directory))
+        {
+            throw "gtfo";
+        }
+    }
+    else
+    {
+        std::filesystem::create_directory(directory);
+    }
+
+    // Now that directory exists and is sure to be empty, start formatting and populating it
+    // Start with descriptor file
+    ofstream desc_file;
+    desc_file.open(directory.u8string() + "/description.txt");
+    if (desc_file)
+    {
+        desc_file << "version=1";
+        desc_file << "height=" + std::to_string(height);
+        desc_file << "width=" + std::to_string(width);
+        desc_file << "scaling_factor=" + std::to_string(scaling_factor);
+        desc_file << "mass=" + std::to_string(mass);
+        desc_file << "collide=" + std::to_string(collide);
+        desc_file << "detect_collisions=" + std::to_string(detect_collisions);
+        desc_file << "respect_light_sources=" + std::to_string(respect_light_sources);
+        desc_file << "use_normal_mapping=" + std::to_string(use_normal_mapping);
+        desc_file << "animate_off_screen=" + std::to_string(animate_off_screen);
+    }
+    else
+    {
+        throw "Don't make me kill myself.";
+    }
+
+    // Now export frames
+    for (auto const& frame: std::filesystem::directory_iterator{directory})
+    {
+        std::filesystem::path frame_dir = directory / frame;
+
+        // Create frame object
+        //std::unique_ptr<Frame> new_frame = std::make_unique<Frame>;
+
+
+    }
 
 }
 

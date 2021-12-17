@@ -6,8 +6,14 @@
 #include "Pixel.h"
 
 #include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <map>
 #include <memory>
 #include <vector>
+
+#include <iostream>
+
 
 class Sprite
 {
@@ -63,6 +69,9 @@ class Sprite
 
         // If this sprite is entirely off screen, this determines if the animate() function is called
         bool animate_off_screen;
+
+        // Dictionary of frames used by animate()
+        std::map<std::string, Frame> frames;
 
         Frame current_frame;
 
@@ -198,12 +207,18 @@ class Sprite
         // Returns true if sprite collides with given sprite
         bool collides_with(shared_ptr<Sprite>);
 
+        // Export Sprite to CSV file for importing in Taeto
+        void serialize(std::filesystem::path, bool);
+
         // Since the sprite allows fake scaling, we need a 'get_pixel()' method
         // instead of using the Frame directly, to handle the scaling
         Pixel& get_pixel(long int, long int);
 
         // Move sprite and sub-sprite given distance in pixels
         void move(long int, long int, long int);
+
+        // Saves sprite to given directory, for saving with PTSD
+        void save(std::filesystem::path);
 
         ////////////////////////////////////////////////////////////////////////
         ///                       CHILD SPRITE METHODS                       ///

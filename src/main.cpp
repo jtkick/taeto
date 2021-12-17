@@ -10,6 +10,8 @@ using namespace std;
 #include "Normal_Mapping_Test.h"
 #include "Test_Scene.h"
 
+#include "Zero.h"
+
 #include <tclap/CmdLine.h>
 
 int main(int argc, char** argv)
@@ -46,7 +48,15 @@ int main(int argc, char** argv)
         throw "e";
     }
 
+
+    // Test export
+    Zero z;
+    z.serialize("/home/jared/zero.csv", true);
+    return 0;
+
+
     Engine engine;
+
 
     if (test_scene == "collision_detection")
     {

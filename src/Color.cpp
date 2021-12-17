@@ -27,25 +27,25 @@ uint8_t q8_mul(uint8_t a, uint8_t b)
 {
     uint8_t result;
     uint16_t temp;
-    
+
     temp = (uint16_t)a * (uint16_t)b;
-    
+
     temp += K;
-    
+
     result = sat8(temp >> 8);
-    
+
     return result;
 }
 
 uint8_t q8_div(uint8_t a, uint8_t b)
 {
     int32_t temp = (int32_t)a << 8;
-    
+
     if ((temp >= 0 && b >= 0) || (temp < 0 && b < 0))
         temp += b / 2;
     else
         temp -= b / 2;
-        
+
     return (uint8_t)(temp / b);
 }
 
@@ -137,27 +137,27 @@ void Color::from_iterm(uint8_t i_color)
 
 // I literally cannot believe this function worked on the first try.
 // Lol, what a mess
-// This method takes this object's RGB color and returns the closest 
+// This method takes this object's RGB color and returns the closest
 // x-term color number
 uint8_t Color::to_iterm() const
 {
     int increments_length = 6;
     int increments[6] = { 0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff };
-    
+
     int closest_color[3] = { 0 };
-    
+
     for (int color = 0; color < 3; color++)
     {
         for (int i = 0; i < increments_length - 1; i++)
         {
             int smaller = increments[i];
             int bigger = increments[i+1];
-            
+
             if (smaller <= rgba[color] && rgba[color] <= bigger)
             {
                 int smaller_diff = abs(smaller - rgba[color]);
                 int bigger_diff = abs(bigger - rgba[color]);
-                
+
                 if (smaller_diff < bigger_diff)
                     closest_color[color] = smaller;
                 else
@@ -165,7 +165,7 @@ uint8_t Color::to_iterm() const
             }
         }
     }
-    
+
     // Find closest color in table
     int match_index;
     for (match_index = 0; match_index < 256; match_index++)
@@ -175,9 +175,9 @@ uint8_t Color::to_iterm() const
             closest_color[1] == COLOR_TABLE[match_index][1] &&
             closest_color[2] == COLOR_TABLE[match_index][2])
             break;
-            
+
     }
-    
+
     // If index is 256, there wasn't a match
     if (match_index != 256)
         return match_index;
@@ -200,18 +200,18 @@ Color Color::operator + (const Color &c)
 // Mix colors subtractively
 Color Color::operator & (const Color &c)
 {
-    
+
     // Try more sophisticated method, that takes alpha into account
     Color new_color;
-    
+
     float t_alpha = (float)(this->get_alpha()) / 255;
     float c_alpha = (float)(c.get_alpha()) / 255;
-    
+
     new_color.set_red(this->get_red() * t_alpha * (1 - c_alpha) + c.get_red() * c_alpha);
     new_color.set_green(this->get_green() * t_alpha * (1 - c_alpha) + c.get_green() * c_alpha);
     new_color.set_blue(this->get_blue() * t_alpha * (1 - c_alpha) + c.get_blue() * c_alpha);
     new_color.set_alpha((t_alpha * (1 - c_alpha) + c_alpha) * 255);
-        
+
     return new_color;
 }
 
@@ -223,11 +223,11 @@ Color Color::operator += (const Color &c)
 Color Color::operator * (const Color &c)
 {
     Color new_color;
-    
+
     new_color.set_red(q8_mul(rgba[RED_INDEX], c.get_red()));
     new_color.set_green(q8_mul(rgba[GREEN_INDEX], c.get_green()));
     new_color.set_blue(q8_mul(rgba[BLUE_INDEX], c.get_blue()));
-    
+
     return new_color;
 }
 /*
@@ -239,3 +239,11 @@ void Color::operator = (const Color &c)
     rgba[3] = c.get_alpha();
 
 }*/
+
+std::string Color::serialize()
+{
+    return "{" + std::to_string(rgba[RED_INDEX]) + ","
+               + std::to_string(rgba[GREEN_INDEX]) + ","
+               + std::to_string(rgba[BLUE_INDEX]) + ","
+               + std::to_string(rgba[ALPHA_INDEX]) + "}";
+}

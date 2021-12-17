@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <memory>
+#include <string>
 
 using namespace std;
 
@@ -26,8 +27,14 @@ class Pixel
         // Whether or not this 'pixel' should be printed in bold
         bool bold;
 
+        // Whether the char is italicized
+        bool italic;
+
         // Whether or not the 'pixel' is underlined
         bool underline;
+
+        // Whether the character has a line through it
+        bool strikethrough;
 
         // Normal vector
         Vector normal;
@@ -43,6 +50,8 @@ class Pixel
         Pixel(char);
 
         Pixel(char, Color, Color, bool);
+
+        Pixel(char, Color, Color, bool, bool, bool, bool, Vector);
 
         // Getters
         char get_char() const;
@@ -82,6 +91,9 @@ class Pixel
         void clear();
 
         //void operator + (const Pixel &p);
+
+        // Export to string
+        std::string serialize();
 };
 
 #endif

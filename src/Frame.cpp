@@ -19,6 +19,27 @@ Frame::Frame(unsigned long int h, unsigned long int w)
 
 }
 
+Frame::Frame(std::vector<std::vector<Pixel>> p)
+{
+    height = p.size();
+
+    // Ensure all rows are the same length
+    // I guess you can initialize with no height, just promise to be safe
+    if (height > 0)
+    {
+        width = p.at(0).size();
+        for (int i = 1; i < p.size(); i++)
+        {
+            if (p.at(i).size() != width)
+            {
+                throw "I will literally shit yourself.";
+            }
+        }
+    }
+
+    pixels = p;
+}
+
 // Destructor
 Frame::~Frame()
 {
@@ -154,4 +175,49 @@ void Frame::add_string(long int y, long int x, string str)
 
     for (int i = 0; i < str.length(); i++)
         pixels[y][x+i] = Pixel(str.at(i), white, black, false);
+}
+
+std::string Frame::serialize()
+{
+    std::string s = "";
+
+    // Open frame
+    s += "{";
+
+    // Open pixels vector
+    s += "{";
+
+    for (int i = 0; i < height; i++)
+    {
+        // Open row vector
+        s += "{";
+
+        for (int j = 0; j < width; j++)
+        {
+            // Add row pixels
+            s += pixels.at(i).at(j).serialize();
+
+            if (i != height - 1)
+            {
+                s += ",";
+            }
+        }
+
+        // Close row vector
+        s += "}";
+
+        if (i != height - 1)
+        {
+            s += ",";
+        }
+
+    }
+
+    // Close pixels vector
+    s += "}";
+
+    // Close frame
+    s += "}";
+
+    return s;
 }

@@ -42,7 +42,7 @@ char Vector::get_z_component() const
 void Vector::set_x_component(char c)
 {
     x = c;
-    
+
     if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
         set_magnitude(127);
 }
@@ -50,7 +50,7 @@ void Vector::set_x_component(char c)
 void Vector::set_y_component(char c)
 {
     y = c;
-    
+
     if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
         set_magnitude(127);
 }
@@ -58,7 +58,7 @@ void Vector::set_y_component(char c)
 void Vector::set_z_component(char c)
 {
     z = c;
-    
+
     if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
         set_magnitude(127);
 }
@@ -68,6 +68,11 @@ void Vector::set_all(char xc, char yc, char zc)
     x = xc;
     y = yc;
     z = zc;
+}
+
+std::string Vector::serialize()
+{
+    return "{" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "}";
 }
 
 void Vector::set_magnitude(char mag)
@@ -80,7 +85,7 @@ void Vector::set_magnitude(char mag)
 
     // Get current magnitude
     double factor = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) / mag;
-        
+
     // Normalize all components to this value
     x = (char)(x / factor);
     y = (char)(y / factor);

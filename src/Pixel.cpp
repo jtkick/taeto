@@ -6,7 +6,9 @@ Pixel::Pixel()
     foreground_color = Color(255, 255, 255, 255);
     background_color = Color(50, 50, 50, 0);
     bold = false;
+    italic = false;
     underline = false;
+    strikethrough = false;
     normal = Vector(0, 0, 1);
     collide = false;
 }
@@ -17,7 +19,9 @@ Pixel::Pixel(char character)
     foreground_color = Color(255, 255, 255, 255);
     background_color = Color(50, 50, 50, 0);
     bold = false;
+    italic = false;
     underline = false;
+    strikethrough = false;
     normal = Vector(0, 0, 1);
     collide = false;
 }
@@ -28,8 +32,23 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b)
     foreground_color = fc;
     background_color = bc;
     bold = b;
+    italic = false;
     underline = false;
+    strikethrough = false;
     normal = Vector(0, 0, 1);
+    collide = false;
+}
+
+Pixel::Pixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s, Vector n)
+{
+    c = ch;
+    foreground_color = fc;
+    background_color = bc;
+    bold = b;
+    italic = i;
+    underline = u;
+    strikethrough = s;
+    normal = n;
     collide = false;
 }
 
@@ -219,3 +238,40 @@ void Pixel::operator + (const Pixel &p)
 
 }
 */
+
+std::string Pixel::serialize()
+{
+    std::string s = "";
+
+    // Open pixel
+    s += "{";
+
+    // Add char
+    s += "\'" + std::to_string(c) + "\',";
+
+    // Add foreground color
+    s += foreground_color.serialize() + ",";
+
+    // Add background color
+    s += background_color.serialize() + ",";
+
+    // Add bold
+    s += std::to_string(bold) + ",";
+
+    // Add italic
+    s += std::to_string(italic) + ",";
+
+    // Add underline
+    s += std::to_string(underline) + ",";
+
+    // Add strikethrough
+    s += std::to_string(strikethrough) + ",";
+
+    // Add normal
+    s += normal.serialize();
+
+    // Close pixel
+    s += "}";
+
+    return s;
+}

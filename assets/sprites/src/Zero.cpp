@@ -33,6 +33,8 @@ Zero::Zero()
 
     current_frame = f;
 
+    frames.insert(std::make_pair("main_frame", f));
+
     respect_light_sources = false;
 }
 
