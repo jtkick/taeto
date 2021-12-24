@@ -15,6 +15,7 @@
 #include "Animate_Message.h"
 #include "Apply_Forces_Message.h"
 #include "Poll_Inputs_Message.h"
+#include "Pre_Render_Message.h"
 #include "Render_Frame_Message.h"
 #include "Sprite_Update_Message.h"
 #include "Light_Update_Message.h"

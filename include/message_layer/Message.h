@@ -9,6 +9,7 @@ enum id_numbers { ANIMATE,
                   MOVE_CAMERA,
                   PLACE_CAMERA,
                   POLL_INPUTS,
+                  PRE_RENDER,
                   RENDER_FRAME,
                   SPRITE_UPDATE };
 

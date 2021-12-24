@@ -10,7 +10,7 @@
 #include "Scene.h"
 
 #include "Zero.h"
-#include "Normal_Test.h"
+#include "Test_Box.h"
 #include "Directional_Light.h"
 
 #include <memory>
@@ -18,9 +18,6 @@
 class Test_Scene : public Scene
 {
     shared_ptr<Zero> zero;
-
-    const uint64_t FLOOR = 0x01;
-    const uint64_t WALL = 0x02;
 
     // Keys pressed
     bool w = false;

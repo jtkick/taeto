@@ -196,6 +196,8 @@ class Sprite
 
         void set_animate_off_screen(bool);
 
+        void set_current_frame(std::string);
+
         void set_time_physics_last_applied(long long);
 
         void set_visible(bool);

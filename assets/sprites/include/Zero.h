@@ -1,6 +1,9 @@
 #ifndef ZERO_H
 #define ZERO_H
 
+#define FLOOR_TAG 0x01
+#define WALL_TAG 0x02
+
 #include "Sprite.h"
 
 class Zero: public Sprite

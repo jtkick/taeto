@@ -289,6 +289,11 @@ void Sprite::set_animate_off_screen(bool aos)
     animate_off_screen = aos;
 }
 
+void Sprite::set_current_frame(std::string f)
+{
+    current_frame = frames[f];
+}
+
 void Sprite::set_time_physics_last_applied(long long tpla)
 {
     time_physics_last_applied = tpla;

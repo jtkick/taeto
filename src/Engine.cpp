@@ -110,6 +110,11 @@ void Engine::run()
         shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
         message_bus->post_message(afm);
 
+        // Tell all sprites and scenes that a frame is about to be rendered
+        logger->info("Posting Pre_Render_Message.");
+        shared_ptr<Pre_Render_Message> prm = make_shared<Pre_Render_Message>();
+        message_bus->post_message(prm);
+
         logger->info("Rendering new frame.");
         shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
         message_bus->post_message(rfm);
