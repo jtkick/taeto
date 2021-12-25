@@ -3,7 +3,6 @@
 
 #include "Message.h"
 #include "Message_Bus.h"
-#include "Key_Update_Message.h"
 #include "Place_Camera_Message.h"
 #include "Sprite_Update_Message.h"
 #include "Light_Update_Message.h"
@@ -15,15 +14,11 @@
 
 #include <memory>
 
+using namespace std::chrono;
+
 class Test_Scene : public Scene
 {
     shared_ptr<Zero> zero;
-
-    // Keys pressed
-    bool w = false;
-    bool a = false;
-    bool s = false;
-    bool d = false;
 
     public:
 

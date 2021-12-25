@@ -16,13 +16,13 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    
+    /*
     shared_ptr<sf::Music> music = make_shared<sf::Music>();
     if (!music->openFromFile("/home/jared/Desktop/Dream Sweet in Sea Major - truncated.wav"))
        exit(-1);
     music->setVolume(50);
     music->play();
-
+    */
 
     // Test scene to load if any
     std::string test_scene;
