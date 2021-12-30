@@ -36,7 +36,8 @@ class Input_System: public System
         // Read message from engine-wide message bus
         void handle_message(shared_ptr<Message>);
 
-    private:
+    //private:
+    public:
 
         // Polls any key the engine want to keep tabs on
         void poll_inputs();

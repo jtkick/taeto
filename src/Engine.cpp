@@ -95,6 +95,21 @@ void Engine::run()
 
     //sf::Music m;
 
+    std::shared_ptr<Frame> f = make_shared<Frame>(3, 6);
+    Color w = Color(255, 255, 255);
+    Color g = Color(43, 43, 43);
+    Color a = Color(255, 255, 255, 0);
+    f->set_chars({ R"(@@__@@)",
+                  R"(@( ')')",
+                  R"(@@@@@@)",});
+    f->set_foreground_colors( { { a, a, g, g, a, a },
+                               { a, g, g, g, g, g },
+                               { a, a, a, a, a, a } } );
+    f->set_background_colors( { { w, w, a, a, w, w },
+                               { w, w, w, w, w, w },
+                               { w, w, w, w, w, w } } );
+
+
     // Start rendering
     while (true)
     {
@@ -106,18 +121,18 @@ void Engine::run()
         shared_ptr<Animate_Message> am = make_shared<Animate_Message>();
         message_bus->post_message(am);
 
-        logger->info("Applying forces to sprites.");
-        shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
-        message_bus->post_message(afm);
+        //logger->info("Applying forces to sprites.");
+        //shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
+        //message_bus->post_message(afm);
+
+        logger->info("Rendering new frame.");
+        shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
+        message_bus->post_message(rfm);
 
         // Tell all sprites and scenes that a frame is about to be rendered
         logger->info("Posting Pre_Render_Message.");
         shared_ptr<Pre_Render_Message> prm = make_shared<Pre_Render_Message>();
         message_bus->post_message(prm);
-
-        logger->info("Rendering new frame.");
-        shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
-        message_bus->post_message(rfm);
 
         logger->info("Displaying frame.");
         shared_ptr<Display_Frame_Message> dfm = make_shared<Display_Frame_Message>(frame);

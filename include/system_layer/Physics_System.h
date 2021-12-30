@@ -36,7 +36,8 @@ class Physics_System: public System
     // These methods are for doing work in this system
     // They are private since all calls to do work should be done
     // using the message bus
-    private:
+    //private:
+    public:
 
         // Apply physics to all known sprites
         void apply_forces();

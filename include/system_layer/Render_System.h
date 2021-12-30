@@ -80,7 +80,8 @@ class Render_System: public System
     // These methods are for doing work in this system
     // They are private since all calls to do work should be done
     // using the message bus
-    private:
+    //private:
+    public:
 
         // Move camera to specified location
         void move_camera(long int, long int, long int);
