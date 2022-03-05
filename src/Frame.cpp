@@ -120,7 +120,7 @@ void Frame::set_chars(vector<string> chars)
         for (int j = 0; j < width; j++)
 
             // Write chars character to pixel at corresponding location
-            pixels[i][j].set_char(chars[i][j]);
+            pixels[i][j].c = chars[i][j];
 
 }
 
@@ -132,7 +132,7 @@ void Frame::set_foreground_colors(vector<vector<Color>> color_vector)
         for (int j = 0; j < color_vector[i].size(); j++)
 
             // Write color to character foreground
-            pixels[i][j].set_foreground_color(color_vector[i][j]);
+            pixels[i][j].foreground_color = color_vector[i][j];
 }
 
 // Set just the colors of all pixels in frame
@@ -143,7 +143,7 @@ void Frame::set_background_colors(vector<vector<Color>> color_vector)
         for (int j = 0; j < color_vector[i].size(); j++)
 
             // Write color to character foreground
-            pixels[i][j].set_background_color(color_vector[i][j]);
+            pixels[i][j].background_color = color_vector[i][j];
 }
 
 // Set just the bold parameter of all pixels in frame
@@ -159,7 +159,7 @@ void Frame::set_normals(vector<vector<Vector>> normals) // Ah yes, the vector<ve
 
         for (int j = 0; j < normals[i].size(); j++)
 
-            pixels[i][j].set_normal(normals[i][j]);
+            pixels[i][j].normal = normals[i][j];
 }
 
 // Set just the normal vector parameter of single pixel in frame
@@ -174,7 +174,12 @@ void Frame::add_string(long int y, long int x, string str)
     Color black = Color(0, 0, 0, 255);
 
     for (int i = 0; i < str.length(); i++)
-        pixels[y][x+i] = Pixel(str.at(i), white, black, false);
+    {
+        pixels[y][x+i].c = str.at(i);
+        pixels[y][x+i].foreground_color = { 255, 255, 255, 255 };
+        pixels[y][x+i].background_color = {   0,   0,   0, 255 };
+        pixels[y][x+i].bold = false;
+    }
 }
 
 std::string Frame::serialize()

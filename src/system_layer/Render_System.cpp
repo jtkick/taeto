@@ -1,5 +1,7 @@
 #include "Render_System.h"
 
+#include <iostream>
+
 Render_System::Render_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> m)
 {
     logger = l;
@@ -302,9 +304,9 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
 
                 Pixel& frame_pixel = frame->get_pixel(frame_y, frame_x);
 
-                logger->error("Char: " + std::to_string(sprite_pixel.get_char()));
+                logger->error("Char: " + std::to_string(sprite_pixel.c));
 
-                frame_pixel.set_char(sprite_pixel.get_char());
+                frame_pixel.c = sprite_pixel.c;
             }
         }
     }
@@ -324,33 +326,13 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
 // frame with them.
 void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 {
+    write_alpha_background(rendered_frame);
+
     int h = rendered_frame->get_height();
     int w = rendered_frame->get_width();
 
     double half_frame_height = (double)h / 2;
     double half_frame_width = (double)w / 2;
-
-    // For debugging, render transparency checkerboard
-    int size = 1;
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            // Get current pixel of frame
-            Pixel& rendered_pixel = rendered_frame->get_pixel(y, x);
-
-            rendered_pixel.clear();
-
-            if ( (x % 4 < 2) != (y % 2 < 1) )
-            {
-                rendered_pixel.set_background_color(Color(255, 255, 255));
-            }
-            else
-            {
-                rendered_pixel.set_background_color(Color(127, 127, 127));
-            }
-        }
-    }
 
     // Loop over each 'pixel' in frame
     for (int y = 0; y < h; y++)
@@ -391,19 +373,19 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                      0 <= rel_y && rel_y < current_sprite->get_height())
                 {
                     // Get pixel of interest
-                    Pixel& current_pixel = current_sprite->get_pixel(rel_y, rel_x);
+                    const Pixel& current_pixel = current_sprite->get_pixel(rel_y, rel_x);
 
                     // Determine if pixel should be drawn
                     // If the foreground alpha channel is anything but 0, it will be drawn
-                    if (current_pixel.get_foreground_color()->get_alpha() != 0)
+                    if (current_pixel.foreground_color.alpha != 0)
                     {
                         // Write character to pixel
-                        rendered_pixel.set_char(current_pixel.get_char());
+                        rendered_pixel.c = current_pixel.c;
 
                         // TODO: THIS PROBABLY WON'T WORK FOR TRANSPARENT COLORS
                         // Write initial colors to pixel
-                        rendered_pixel.set_foreground_color(*(current_pixel.get_foreground_color()));
-                        rendered_pixel.set_background_color(*(current_pixel.get_background_color()));
+                        rendered_pixel.foreground_color = current_pixel.foreground_color;
+                        rendered_pixel.background_color = current_pixel.background_color;
 
                         // Handle dynamic lighting
                         if (current_sprite->get_respect_light_sources())
@@ -427,13 +409,13 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                                 if (current_sprite->get_use_normal_mapping())
                                 {
                                     // Get vectors
-                                    const Vector* pixel_normal = current_pixel.get_normal();
+                                    const Vector& pixel_normal = current_pixel.normal;
                                     const Vector light_vector = current_light->get_vector(abs_x, abs_y, abs_z);
 
                                     // Get vector components
-                                    char x1 = pixel_normal->get_x_component();
-                                    char y1 = pixel_normal->get_y_component();
-                                    char z1 = pixel_normal->get_z_component();
+                                    char x1 = pixel_normal.get_x_component();
+                                    char y1 = pixel_normal.get_y_component();
+                                    char z1 = pixel_normal.get_z_component();
                                     char x2 = light_vector.get_x_component();
                                     char y2 = light_vector.get_y_component();
                                     char z2 = light_vector.get_z_component();
@@ -451,21 +433,21 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
                                 c += light_color;
                             }
 
-                            rendered_pixel.set_foreground_color(c * (*(current_pixel.get_foreground_color())));
-                            rendered_pixel.set_background_color(c * (*(current_pixel.get_background_color())));
+                            rendered_pixel.foreground_color = c * current_pixel.foreground_color;
+                            rendered_pixel.background_color = c * current_pixel.background_color;
                         }
                         else
                         {
                             // Write foreground color to pixel
-                            rendered_pixel.set_foreground_color(*(current_pixel.get_foreground_color()));
-                            rendered_pixel.set_background_color(*(current_pixel.get_background_color()));
+                            rendered_pixel.foreground_color = current_pixel.foreground_color;
+                            rendered_pixel.background_color = current_pixel.background_color;
                         }
 
                         // Write bold to pixel
-                        rendered_pixel.set_bold(current_pixel.get_bold());
+                        rendered_pixel.bold = current_pixel.bold;
 
                         // Write underline to pixel
-                        rendered_pixel.set_underline(current_pixel.get_underline());
+                        rendered_pixel.underline = current_pixel.underline;
                     }
 
                 }
@@ -481,6 +463,8 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
     update_fps();
 
     write_debug_info(rendered_frame);
+
+//    std::cout << "current fps: " << current_fps << std::endl;
 }
 
 
@@ -515,17 +499,17 @@ void Render_System::write_alpha_background(shared_ptr<Frame> rendered_frame)
         for (int x = 0; x < w; x++)
         {
             // Get current pixel of frame
-            Pixel rendered_pixel = rendered_frame->get_pixel(y, x);
+            Pixel& rendered_pixel = rendered_frame->get_pixel(y, x);
 
             rendered_pixel.clear();
 
             if ( (x % 4 < 2) != (y % 2 < 1) )
             {
-                rendered_pixel.set_background_color(Color(255, 255, 255));
+                rendered_pixel.background_color = Color(255, 255, 255);
             }
             else
             {
-                rendered_pixel.set_background_color(Color(127, 127, 127));
+                rendered_pixel.background_color = Color(127, 127, 127);
             }
         }
     }

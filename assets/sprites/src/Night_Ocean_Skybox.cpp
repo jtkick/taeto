@@ -20,7 +20,7 @@ Night_Ocean_Skybox::Night_Ocean_Skybox(int h, int w)
         for (int j = 0; j < width; j++)
         {
             Pixel& pixel = default_frame.get_pixel(i, j);
-            pixel.set_background_color(ocean_blue);
+            pixel.background_color = ocean_blue;
         }
     }
 

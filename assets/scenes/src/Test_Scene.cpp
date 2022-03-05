@@ -63,12 +63,12 @@ void Test_Scene::handle_message(shared_ptr<Message> message)
         case PRE_RENDER:
         {
             // Get camera offsets
-            int64_t x_offset = zero->get_x_speed() / 30000000000;
+            //int64_t x_offset = zero->get_x_speed() / 30000000000;
             int64_t y_position = zero->get_y_pixel_position() - 5;
 
             // Update camera position
             logger->info("POSTING PLACE CAMERA MESAAGE");
-            auto pcm = make_shared<Place_Camera_Message>(zero->get_x_pixel_position() + x_offset,
+            auto pcm = make_shared<Place_Camera_Message>(zero->get_x_pixel_position(),// + x_offset,
                                                          //y_position,
                                                          -10,
                                                          zero->get_z_pixel_position() + 10);

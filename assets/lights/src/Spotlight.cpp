@@ -25,9 +25,9 @@ Color Spotlight::get_color(long int x, long int y, long int z)
 
     Color new_color = color;
 
-    new_color.set_red(color.get_red() * pow(sqrt(fade), distance));
-    new_color.set_green(color.get_green() * pow(sqrt(fade), distance));
-    new_color.set_blue(color.get_blue() * pow(sqrt(fade), distance));
+    new_color.red = color.red * pow(sqrt(fade), distance);
+    new_color.green = color.green * pow(sqrt(fade), distance);
+    new_color.blue = color.blue * pow(sqrt(fade), distance);
 
     return new_color;
 }

@@ -52,78 +52,6 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s, Vector
     collide = false;
 }
 
-// Getters
-char Pixel::get_char() const
-{
-    return c;
-}
-
-const Color* Pixel::get_foreground_color() const
-{
-    return &foreground_color;
-}
-
-const Color* Pixel::get_background_color() const
-{
-    return &background_color;
-}
-
-bool Pixel::get_bold() const
-{
-    return bold;
-}
-
-bool Pixel::get_underline() const
-{
-    return underline;
-}
-
-const Vector* Pixel::get_normal() const
-{
-    return &normal;
-}
-
-bool Pixel::get_collide() const
-{
-    return collide;
-}
-
-// Setters
-void Pixel::set_char(char new_char)
-{
-    c = new_char;
-}
-
-void Pixel::set_foreground_color(Color color)
-{
-    foreground_color = color;
-}
-
-void Pixel::set_background_color(Color color)
-{
-    background_color = color;
-}
-
-void Pixel::set_bold(bool b)
-{
-    bold = b;
-}
-
-void Pixel::set_underline(bool b)
-{
-    underline = b;
-}
-
-void Pixel::set_normal(Vector v)
-{
-    normal = v;
-}
-
-void Pixel::set_collide(bool b)
-{
-    collide = b;
-}
-
 // Helper functions
 // Reset values to default
 void Pixel::clear()
@@ -149,13 +77,13 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 
 void Pixel::operator = (const Pixel &p)
 {
-    c = p.get_char();
-    foreground_color = *(p.get_foreground_color());
-    background_color = *(p.get_background_color());
-    bold = p.get_bold();
-    underline = p.get_underline();
-    normal = *(p.get_normal());
-    collide = p.get_collide();
+    c = p.c;
+    foreground_color = p.foreground_color;
+    background_color = p.background_color;
+    bold = p.bold;
+    underline = p.underline;
+    normal = p.normal;
+    collide = p.collide;
 }
 
 // This function combines pixels, applying the right pixel
@@ -165,26 +93,22 @@ Pixel Pixel::operator & (const Pixel &p)
     Pixel new_pixel;
 
     // Only combine if foreground color is not fully transparent
-    if ((p.get_foreground_color())->get_alpha() != 0)
+    if (p.foreground_color.alpha != 0)
     {
         // Write char
-        new_pixel.set_char(p.get_char());
+        new_pixel.c = p.c;
 
         // Write foreground color
-        Color c1 = *(this->get_foreground_color());
-        Color c2 = *(p.get_foreground_color());
-        this->set_foreground_color(c1 & c2);
+        new_pixel.foreground_color = foreground_color & p.foreground_color;
 
         // Write background color
-        c1 = *(this->get_background_color());
-        c2 = *(p.get_background_color());
-        new_pixel.set_background_color(c1 & c2);
+        new_pixel.background_color = background_color & p.background_color;
 
         // Write bold
-        new_pixel.set_bold(p.get_bold());
+        new_pixel.bold = p.bold;
 
         // Write underline
-        new_pixel.set_underline(p.get_underline());
+        new_pixel.underline = p.underline;
     }
 
     return new_pixel;

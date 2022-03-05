@@ -12,7 +12,7 @@ using namespace std;
 
 class Pixel
 {
-    private:
+    public:
 
         // Actual character to print
         char c;
@@ -52,7 +52,7 @@ class Pixel
         Pixel(char, Color, Color, bool);
 
         Pixel(char, Color, Color, bool, bool, bool, bool, Vector);
-
+/*
         // Getters
         char get_char() const;
 
@@ -82,6 +82,7 @@ class Pixel
         void set_normal(Vector);
 
         void set_collide(bool);
+*/
 
         Pixel operator & (const Pixel &p);
 
@@ -94,6 +95,7 @@ class Pixel
 
         // Export to string
         std::string serialize();
+
 };
 
 #endif

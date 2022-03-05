@@ -24,7 +24,7 @@ void Test_Box::set_color(Color c)
     vector<vector<Color>> color_vector;
 
     // Dull color
-    Color dc = Color(c.get_red() / 2, c.get_green() / 2, c.get_blue() / 2);
+    Color dc = Color(c.red / 2, c.green / 2, c.blue / 2);
 
     for (int y = 0; y < height; y++)
     {

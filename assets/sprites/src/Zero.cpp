@@ -45,6 +45,7 @@ Zero::Zero()
 
 
     respect_light_sources = true;
+    use_normal_mapping = false;
 
     jump_timer = DEFAULT_JUMP_TIME;
 }

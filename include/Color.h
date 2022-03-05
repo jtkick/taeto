@@ -1,18 +1,34 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#define RED_INDEX 0
+#define GREEN_INDEX 1
+#define BLUE_INDEX 2
+#define ALPHA_INDEX 3
+
 #include <cstdint>
 #include <cstdlib>
 #include <string>
 
 class Color
 {
-    private:
+    public:
 
-        uint8_t rgba[4] = { 255 };
+        // Literally what the fuck?
+        // This entire class is cursed
+        //uint8_t rgba[4] = { 255 };
+        uint8_t red = 255;
+        uint8_t green = 255;
+        uint8_t blue = 255;
+        uint8_t alpha = 255;
 
         // Since iterm colors don't follow a strict rule,
         // we're just going to use a lookup table for going back to RGB
+
+        // I swear, if it was this that was hurting performance so much,
+        // I'm literally going to commit a hate crime against my computer
+        // WHO TF THOUGHT THIS WAS A GOOD IDEA?!?!?!?!?!??!?
+        /*
         int COLOR_TABLE[256][3] = {
             // 8-bit, RGB hex
             // Primary 3-bit (8 colors). Unique representation!
@@ -278,7 +294,7 @@ class Color
             { 0xda, 0xda, 0xda },
             { 0xe4, 0xe4, 0xe4 },
             { 0xee, 0xee, 0xee },
-        };
+        };*/
 
     public:
 
@@ -288,6 +304,7 @@ class Color
 
         Color(uint8_t, uint8_t, uint8_t, uint8_t);
 
+/*
         uint8_t get_red() const;
 
         uint8_t get_green() const;
@@ -303,14 +320,14 @@ class Color
         void set_blue(uint8_t);
 
         void set_alpha(uint8_t);
-
+*/
         void set_all(uint8_t, uint8_t, uint8_t, uint8_t);
 
         void set_brightness(uint8_t);
 
-        void from_iterm(uint8_t);
+//        void from_iterm(uint8_t);
 
-        uint8_t to_iterm() const;
+//        uint8_t to_iterm() const;
 
         Color operator * (const Color&);
 

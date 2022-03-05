@@ -80,7 +80,7 @@ void Display_System::handle_message(shared_ptr<Message> message)
 
             shared_ptr<Display_Frame_Message> dfm = dynamic_pointer_cast<Display_Frame_Message>(message);
 
-            display_frame(dfm->get_frame());
+            display_frame_old(dfm->get_frame());
         }
         break;
     }
@@ -134,43 +134,43 @@ void Display_System::display_frame(shared_ptr<Frame> frame)
             current_pixel = frame->get_pixel(h, w);
 
             // Get background color
-            const Color* c = current_pixel.get_background_color();
+            Color& c = current_pixel.background_color;
 
             // BG red
-            temp = std::to_string((int)(c->get_red()));
+            temp = std::to_string((int)(c.red));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_RED_OFFSET, 3, temp);
 
             // BG green
-            temp = std::to_string((int)(c->get_green()));
+            temp = std::to_string((int)(c.green));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_GREEN_OFFSET, 3, temp);
 
             // BG blue
-            temp = std::to_string((int)(c->get_blue()));
+            temp = std::to_string((int)(c.blue));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_BLUE_OFFSET, 3, temp);
 
             // Get foreground color
-            c = current_pixel.get_foreground_color();
+            c = current_pixel.foreground_color;
 
             // FG red
-            temp = std::to_string((int)(c->get_red()));
+            temp = std::to_string((int)(c.red));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_RED_OFFSET, 3, temp);
 
             // FG green
-            temp = std::to_string((int)(c->get_green()));
+            temp = std::to_string((int)(c.green));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_GREEN_OFFSET, 3, temp);
 
             // FG blue
-            temp = std::to_string((int)(c->get_blue()));
+            temp = std::to_string((int)(c.blue));
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_BLUE_OFFSET, 3, temp);
 
             // Add actual character
-            output_buffer.at(pixel_start + CHAR_OFFSET) = current_pixel.get_char();
+            output_buffer.at(pixel_start + CHAR_OFFSET) = current_pixel.c;
         }
     }
 
@@ -195,7 +195,7 @@ void Display_System::display_frame_old(shared_ptr<Frame> frame)
     // It's even faster than what I was doing before
     std::string output_buffer = "";
 
-    Pixel current_pixel;
+    //const Pixel& current_pixel;
 
     for (int h = 0; h < frame->get_height(); h++)
     {
@@ -210,22 +210,22 @@ void Display_System::display_frame_old(shared_ptr<Frame> frame)
                 break;
 
             // Get pixel in question
-            current_pixel = frame->get_pixel(h, w);
+            Pixel& current_pixel = frame->get_pixel(h, w);
 
             // Add background color
-            const Color* c = current_pixel.get_background_color();
-            output_buffer += "\033[48;2;" + std::to_string((int)(c->get_red())) + ";" +
-                                            std::to_string((int)(c->get_green())) + ";" +
-                                            std::to_string((int)(c->get_blue())) + "m";
+            Color& c = current_pixel.background_color;
+            output_buffer += "\033[48;2;" + std::to_string((int)(c.red)) + ";" +
+                                            std::to_string((int)(c.green)) + ";" +
+                                            std::to_string((int)(c.blue)) + "m";
 
             // Add foreground color
-            c = current_pixel.get_foreground_color();
-            output_buffer += "\033[38;2;" + std::to_string((int)(c->get_red())) + ";" +
-                                            std::to_string((int)(c->get_green())) + ";" +
-                                            std::to_string((int)(c->get_blue())) + "m";
+            c = current_pixel.foreground_color;
+            output_buffer += "\033[38;2;" + std::to_string((int)(c.red)) + ";" +
+                                            std::to_string((int)(c.green)) + ";" +
+                                            std::to_string((int)(c.blue)) + "m";
 
             // Add actual character
-            output_buffer += current_pixel.get_char();
+            output_buffer += current_pixel.c;
         }
     }
 

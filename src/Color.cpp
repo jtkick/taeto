@@ -1,12 +1,5 @@
 #include "Color.h"
 
-#include <iostream>
-
-#define RED_INDEX 0
-#define GREEN_INDEX 1
-#define BLUE_INDEX 2
-#define ALPHA_INDEX 3
-
 #define K (1 << (8 - 1))
 
 //////////////////////////////////////
@@ -54,22 +47,23 @@ Color::Color(void)
 
 }
 
-Color::Color(uint8_t red, uint8_t green, uint8_t blue)
+Color::Color(uint8_t r, uint8_t g, uint8_t b)
 {
-    rgba[RED_INDEX]   = red;
-    rgba[GREEN_INDEX] = green;
-    rgba[BLUE_INDEX]  = blue;
-    rgba[ALPHA_INDEX] = 255;
+    red   = r;
+    green = g;
+    blue  = b;
+    alpha = 255;
 }
 
-Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-    rgba[RED_INDEX]   = red;
-    rgba[GREEN_INDEX] = green;
-    rgba[BLUE_INDEX]  = blue;
-    rgba[ALPHA_INDEX] = alpha;
+    red   = r;
+    green = g;
+    blue  = b;
+    alpha = a;
 }
 
+/*
 uint8_t Color::get_red() const
 {
     return rgba[RED_INDEX];
@@ -109,22 +103,25 @@ void Color::set_alpha(uint8_t alpha)
 {
     rgba[ALPHA_INDEX] = alpha;
 }
+*/
 
 void Color::set_all(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-    rgba[RED_INDEX] = r;
-    rgba[GREEN_INDEX] = g;
-    rgba[BLUE_INDEX] = b;
-    rgba[ALPHA_INDEX] = a;
+    red = r;
+    green = g;
+    blue = b;
+    alpha = a;
 }
 
 void Color::set_brightness(uint8_t brightness)
 {
     // Scale all colors
-    for (int i = 0; i < 3; i++)
-        rgba[i] = q8_mul(rgba[i], brightness);
+    red = q8_mul(red, brightness);
+    green = q8_mul(green, brightness);
+    blue = q8_mul(blue, brightness);
 }
 
+/*
 void Color::from_iterm(uint8_t i_color)
 {
     // Pull RGB values from lookup table
@@ -183,18 +180,22 @@ uint8_t Color::to_iterm() const
         return match_index;
     else
     {
-        std::cout << "Couldn't find color in table.\n";
         throw "Couldn't find color in table.";
     }
 }
+*/
 
 // Mix colors additively
 Color Color::operator + (const Color &c)
 {
-    for (int i = 0; i < 4; i++)
-        this->rgba[i] = this->rgba[i] + c.rgba[i] < 255 ? this->rgba[i] + c.rgba[i] : 255;
+    Color new_color;
 
-    return *this;
+    new_color.red = red + c.red < 255 ? red + c.red : 255;
+    new_color.green = green + c.green < 255 ? green + c.green : 255;
+    new_color.blue = blue + c.blue < 255 ? blue + c.blue : 255;
+    new_color.alpha = alpha + c.alpha < 255 ? alpha + c.alpha : 255;
+
+    return new_color;
 }
 
 // Mix colors subtractively
@@ -204,29 +205,34 @@ Color Color::operator & (const Color &c)
     // Try more sophisticated method, that takes alpha into account
     Color new_color;
 
-    float t_alpha = (float)(this->get_alpha()) / 255;
-    float c_alpha = (float)(c.get_alpha()) / 255;
+    float t_alpha = (float)(alpha) / 255;
+    float c_alpha = (float)(c.alpha) / 255;
 
-    new_color.set_red(this->get_red() * t_alpha * (1 - c_alpha) + c.get_red() * c_alpha);
-    new_color.set_green(this->get_green() * t_alpha * (1 - c_alpha) + c.get_green() * c_alpha);
-    new_color.set_blue(this->get_blue() * t_alpha * (1 - c_alpha) + c.get_blue() * c_alpha);
-    new_color.set_alpha((t_alpha * (1 - c_alpha) + c_alpha) * 255);
+    new_color.red = red * t_alpha * (1 - c_alpha) + c.red * c_alpha;
+    new_color.green = green * t_alpha * (1 - c_alpha) + c.green * c_alpha;
+    new_color.blue = blue * t_alpha * (1 - c_alpha) + c.blue * c_alpha;
+    new_color.alpha = (t_alpha * (1 - c_alpha) + c_alpha) * 255;
 
     return new_color;
 }
 
 Color Color::operator += (const Color &c)
 {
-    return *this + c;
+    red = red + c.red < 255 ? red + c.red : 255;
+    green = green + c.green < 255 ? green + c.green : 255;
+    blue = blue + c.blue < 255 ? blue + c.blue : 255;
+    alpha = alpha + c.alpha < 255 ? alpha + c.alpha : 255;
+
+    return *this;
 }
 
 Color Color::operator * (const Color &c)
 {
     Color new_color;
 
-    new_color.set_red(q8_mul(rgba[RED_INDEX], c.get_red()));
-    new_color.set_green(q8_mul(rgba[GREEN_INDEX], c.get_green()));
-    new_color.set_blue(q8_mul(rgba[BLUE_INDEX], c.get_blue()));
+    new_color.red = q8_mul(red, c.red);
+    new_color.green = q8_mul(green, c.green);
+    new_color.blue = q8_mul(blue, c.blue);
 
     return new_color;
 }
@@ -242,8 +248,8 @@ void Color::operator = (const Color &c)
 
 std::string Color::serialize()
 {
-    return "{" + std::to_string(rgba[RED_INDEX]) + ","
-               + std::to_string(rgba[GREEN_INDEX]) + ","
-               + std::to_string(rgba[BLUE_INDEX]) + ","
-               + std::to_string(rgba[ALPHA_INDEX]) + "}";
+    return "{" + std::to_string(red) + ","
+               + std::to_string(green) + ","
+               + std::to_string(blue) + ","
+               + std::to_string(alpha) + "}";
 }
