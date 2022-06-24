@@ -23,23 +23,28 @@ Engine::Engine()
 
     // Create message bus
     logger->info("Constructing message bus.");
-    message_bus = make_shared<Message_Bus>(logger);
+    message_bus = Message_Bus(logger);
 
     // Setup all engine systems
     logger->info("Constructing engine systems.");
-    audio_system = make_shared<Audio_System>(logger, message_bus);
-    input_system = make_shared<Input_System>(logger, message_bus);
-    render_system = make_shared<Render_System>(logger, message_bus);
-    display_system = make_shared<Display_System>(logger, message_bus);
-    physics_system = make_shared<Physics_System>(logger, message_bus);
+    audio_system = Audio_System(logger, message_bus);
+    input_system = Input_System(logger, message_bus);
+    render_system = Render_System(logger, message_bus);
+    display_system = Display_System(logger, message_bus);
+    physics_system = Physics_System(logger, message_bus);
+    // audio_system = make_shared<Audio_System>(logger, message_bus);
+    // input_system = make_shared<Input_System>(logger, message_bus);
+    // render_system = make_shared<Render_System>(logger, message_bus);
+    // display_system = make_shared<Display_System>(logger, message_bus);
+    // physics_system = make_shared<Physics_System>(logger, message_bus);
 
     // Connect systems to message bus
     logger->info("Conencting systems to message bus.");
-    message_bus->add_system(audio_system);
-    message_bus->add_system(input_system);
-    message_bus->add_system(render_system);
-    message_bus->add_system(display_system);
-    message_bus->add_system(physics_system);
+    message_bus.add_system(std::make_shared<Audio_System>(audio_system));
+    message_bus.add_system(std::make_shared<Input_System>(input_system));
+    message_bus.add_system(std::make_shared<Render_System>(render_system));
+    message_bus.add_system(std::make_shared<Display_System>(display_system));
+    message_bus.add_system(std::make_shared<Physics_System>(physics_system));
 
     logger->error("Done setting up engine.");
 }
@@ -57,7 +62,7 @@ void Engine::add_light(shared_ptr<Light> l)
     shared_ptr<Light_Update_Message> lum = make_shared<Light_Update_Message>(l);
 
     // Post message
-    message_bus->post_message(lum);
+    message_bus.post_message(lum);
 }
 
 void Engine::add_sprite(shared_ptr<Sprite> s)
@@ -68,7 +73,7 @@ void Engine::add_sprite(shared_ptr<Sprite> s)
     shared_ptr<Sprite_Update_Message> sum = make_shared<Sprite_Update_Message>(s);
 
     // Post message
-    message_bus->post_message(sum);
+    message_bus.post_message(sum);
 }
 
 void Engine::load_scene(shared_ptr<Scene> s)
@@ -77,10 +82,10 @@ void Engine::load_scene(shared_ptr<Scene> s)
 
     // Connect engine to scene
     scenes.push_back(s);
-    message_bus->add_system(s);
+    message_bus.add_system(s);
 
     // Connect scene to engine
-    s->connect_to_bus(message_bus);
+    s->connect_to_bus(std::make_shared<Message_bus>(&message_bus));
     s->connect_to_logger(logger);
 
     // Now that scene is setup correctly, tell it to load all assets
@@ -115,27 +120,27 @@ void Engine::run()
     {
         logger->info("Polling inputs.");
         shared_ptr<Poll_Inputs_Message> pim = make_shared<Poll_Inputs_Message>();
-        message_bus->post_message(pim);
+        message_bus.post_message(pim);
 
         logger->info("Telling scenes to animate.");
         shared_ptr<Animate_Message> am = make_shared<Animate_Message>();
-        message_bus->post_message(am);
+        message_bus.post_message(am);
 
         logger->info("Applying forces to sprites.");
         shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
-        message_bus->post_message(afm);
+        message_bus.post_message(afm);
 
         logger->info("Rendering new frame.");
         shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);
-        message_bus->post_message(rfm);
+        message_bus.post_message(rfm);
 
         // Tell all sprites and scenes that a frame is about to be rendered
         logger->info("Posting Pre_Render_Message.");
         shared_ptr<Pre_Render_Message> prm = make_shared<Pre_Render_Message>();
-        message_bus->post_message(prm);
+        message_bus.post_message(prm);
 
         logger->info("Displaying frame.");
         shared_ptr<Display_Frame_Message> dfm = make_shared<Display_Frame_Message>(frame);
-        message_bus->post_message(dfm);
+        message_bus.post_message(dfm);
     }
 }

@@ -38,22 +38,22 @@ class Engine
     std::shared_ptr<spdlog::logger> logger;
 
     // Bus for notifying systems of messages
-    shared_ptr<Message_Bus> message_bus;
+    Message_Bus message_bus;
 
     // System to play sounds and music
-    shared_ptr<Audio_System> audio_system;
+    Audio_System audio_system;
 
     // System to poll any inputs
-    shared_ptr<Input_System> input_system;
+    Input_System input_system;
 
     // System to render new frames
-    shared_ptr<Render_System> render_system;
+    Render_System render_system;
 
     // System for output to screen
-    shared_ptr<Display_System> display_system;
+    Display_System display_system;
 
     // System for applying physics and detecting collisions
-    shared_ptr<Physics_System> physics_system;
+    Physics_System physics_system;
 
     // Currently loaded scenes
     vector<shared_ptr<Scene>> scenes;

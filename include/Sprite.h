@@ -17,7 +17,7 @@
 
 class Sprite
 {
-    protected:
+    public:
 
         // Position on screen relative to origin
         // Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
