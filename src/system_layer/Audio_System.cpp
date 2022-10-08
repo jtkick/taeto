@@ -1,5 +1,10 @@
 #include "Audio_System.h"
 
+Audio_System::Audio_System()
+{
+
+}
+
 Audio_System::Audio_System(shared_ptr<spdlog::logger> l,
                            shared_ptr<Message_Bus> mb)
 {

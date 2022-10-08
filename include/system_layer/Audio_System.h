@@ -28,6 +28,8 @@ class Audio_System: public System
 
     public:
 
+        Audio_System();
+
         Audio_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         ~Audio_System(void);

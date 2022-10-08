@@ -69,6 +69,8 @@ class Render_System: public System
     public:
 
         // Contructor
+        Render_System();
+
         Render_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         // Destructor

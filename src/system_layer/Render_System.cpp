@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+Render_System::Render_System()
+{
+    
+}
+
 Render_System::Render_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> m)
 {
     logger = l;

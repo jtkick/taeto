@@ -29,6 +29,8 @@ class Input_System: public System
 
     public:
 
+        Input_System();
+
         Input_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         ~Input_System(void);

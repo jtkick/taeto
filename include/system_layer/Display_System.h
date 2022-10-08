@@ -87,6 +87,8 @@ class Display_System: public System
 
     public:
 
+        Display_System();
+
         Display_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         ~Display_System(void);

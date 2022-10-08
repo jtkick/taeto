@@ -23,6 +23,8 @@ class Message_Bus
 
     public:
 
+        Message_Bus();
+
         Message_Bus(std::shared_ptr<spdlog::logger>);
 
         ~Message_Bus();

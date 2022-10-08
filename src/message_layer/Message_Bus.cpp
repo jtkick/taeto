@@ -1,6 +1,11 @@
 #include "Message_Bus.h"
 #include "System.h"
 
+Message_Bus::Message_Bus()
+{
+    
+}
+
 Message_Bus::Message_Bus(std::shared_ptr<spdlog::logger> l)
 {
     logger = l;

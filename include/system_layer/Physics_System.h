@@ -25,6 +25,8 @@ class Physics_System: public System
     public:
 
         // Contructor
+        Physics_System();
+
         Physics_System(shared_ptr<spdlog::logger>, shared_ptr<Message_Bus>);
 
         // Destructor

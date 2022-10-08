@@ -1,5 +1,10 @@
 #include "Physics_System.h"
 
+Physics_System::Physics_System()
+{
+
+}
+
 Physics_System::Physics_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> mb)
 {
     logger = l;
@@ -80,14 +85,14 @@ void Physics_System::detect_collisions()
     // I JUST WANT RUDIMENTARY COLISION DETECTION, SO JUST DO THE BASICS NOW
 
     // Compile list of sprites that will collide
-    logger->info("Compiling list of sprites that collide");
+    logger->debug("Compiling list of sprites that collide");
     vector<shared_ptr<Sprite>> sprites_that_collide;
     for (auto sprite_pp = sprites.begin(); sprite_pp != sprites.end(); sprite_pp++)
         if ((*sprite_pp)->get_collide())
             sprites_that_collide.push_back((*sprite_pp));
 
     // Check each sprite
-    logger->info("Checking for collisions");
+    logger->debug("Checking for collisions");
     for (auto sprite_pp = sprites.begin(); sprite_pp != sprites.end(); sprite_pp++)
     {
         shared_ptr<Sprite> sprite_ptr = (*sprite_pp);
@@ -95,7 +100,7 @@ void Physics_System::detect_collisions()
         // Only check if detect collisions is true
         if (sprite_ptr->get_detect_collisions())
         {
-            logger->info("Found sprite that wants to see collisions");
+            logger->debug("Found sprite that wants to see collisions");
 
             // Check collisions against every other sprite
             for (auto other_sprite_pp = sprites_that_collide.begin(); other_sprite_pp != sprites_that_collide.end(); other_sprite_pp++)
@@ -108,17 +113,17 @@ void Physics_System::detect_collisions()
                     // Notify if they collide
                     if (sprite_ptr->collides_with(other_sprite_ptr))
                     {
-                        logger->error("COLLISION");
+                        logger->debug("COLLISION");
                         sprite_ptr->handle_collision(other_sprite_ptr);
                     }
                     else
                     {
-                        logger->info("doesn't collide");
+                        logger->debug("doesn't collide");
                     }
                 }
                 else
                 {
-                    logger->info("same sprite");
+                    logger->debug("same sprite");
                 }
             }
         }

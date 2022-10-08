@@ -38,7 +38,7 @@ class Engine
     std::shared_ptr<spdlog::logger> logger;
 
     // Bus for notifying systems of messages
-    Message_Bus message_bus;
+    std::shared_ptr<Message_Bus> message_bus;
 
     // System to play sounds and music
     Audio_System audio_system;

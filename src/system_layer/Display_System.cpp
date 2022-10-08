@@ -23,6 +23,11 @@ void signal_callback_handler(int signum)
     exit(signum);
 }
 
+Display_System::Display_System()
+{
+
+}
+
 Display_System::Display_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> mb)
 {
     logger = l;
