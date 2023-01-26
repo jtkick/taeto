@@ -11,6 +11,7 @@
 #include "System.h"
 #include "Sprite.h"
 #include "Light.h"
+#include "pre_lighting_pass_frame.h"
 
 #include <chrono>
 #include <deque>
@@ -93,6 +94,12 @@ class Render_System: public System
 
         // Old way of doing it for testing
         void render_frame_old(shared_ptr<Frame>);
+
+        // Renders frame with additional data for doing a lighting pass
+        void render_albedo_frame(PreLightingPassFrame&);
+
+        // Applies lighting to a frame that has been rendered
+        void lighting_pass(PreLightingPassFrame&, PreLightingPassFrame&);
 
         // Update current FPS
         void update_fps();

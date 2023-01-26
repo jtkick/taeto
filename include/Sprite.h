@@ -203,6 +203,12 @@ class Sprite
         void set_visible(bool);
 
         ////////////////////////////////////////////////////////////////////////
+        ///                           OPERATORS                              ///
+        ////////////////////////////////////////////////////////////////////////
+
+        bool operator < (const Sprite& other);
+
+        ////////////////////////////////////////////////////////////////////////
         ///                         HELPER METHODS                           ///
         ////////////////////////////////////////////////////////////////////////
 
@@ -214,7 +220,7 @@ class Sprite
 
         // Since the sprite allows fake scaling, we need a 'get_pixel()' method
         // instead of using the Frame directly, to handle the scaling
-        Pixel& get_pixel(long int, long int);
+        const Pixel& get_pixel(long int, long int);
 
         // Move sprite and sub-sprite given distance in pixels
         void move(long int, long int, long int);

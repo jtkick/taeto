@@ -4,7 +4,7 @@
 
 Render_System::Render_System()
 {
-    
+
 }
 
 Render_System::Render_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> m)
@@ -49,6 +49,8 @@ void Render_System::handle_message(shared_ptr<Message> message)
 
             // Keep track of sprite
             sprites.push_back(sum->get_sprite());
+
+            // TODO: SORT SPRITES BY Z-POSITION, CLOSEST TO CAMERA FIRST
 
         }
         break;
@@ -294,7 +296,7 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
 
                 // Get pixel of interest
                 logger->error("Getting sprite pixel: (" + std::to_string(sprite_y) + ", " + std::to_string(sprite_x) + ")");
-                Pixel& sprite_pixel = (*sprite_ptr)->get_pixel(sprite_y, sprite_x);
+                const Pixel& sprite_pixel = (*sprite_ptr)->get_pixel(sprite_y, sprite_x);
 
                 // Map from relative to sprite to relative to camera
                 long int frame_y = (long int)((sprite_y - camera_y_position) * drawing_plane_distance / z_diff);
@@ -322,13 +324,11 @@ void Render_System::render_frame(shared_ptr<Frame> frame)
 }
 
 
-
-/////////////////////////////////////
-////      OLD RENDER METHOD      ////
-/////////////////////////////////////
-
-// This method iterates over all sprites known to the engine, and renders a
-// frame with them.
+/**
+ * Render a PixelFrame with all known objects in the engine. Uses a ray-casting type method and deferred lighting.
+ *
+ * @param rendered_frame Frame to write rendered pixels to.
+*/
 void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 {
     write_alpha_background(rendered_frame);
@@ -350,13 +350,9 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
             // Reset pixel
             //rendered_pixel->clear();
 
-            // Loop over each sprite, and write to current frame
-            //vector<Sprite*>::iterator sprite;
-            //for (sprite = sprites.begin(); sprite != sprites.end(); sprite++)
-            for (int sprite_num = 0, size = sprites.size(); sprite_num < size; sprite_num++)
+            // Render each sprite at a time
+            for (shared_ptr<Sprite> current_sprite : sprites)
             {
-                shared_ptr<Sprite> current_sprite = sprites[sprite_num];
-
                 // Get distance between sprite and camera
                 double z_diff = camera_z_position - current_sprite->get_z_pixel_position();
 
@@ -471,6 +467,191 @@ void Render_System::render_frame_old(shared_ptr<Frame> rendered_frame)
 
 //    std::cout << "current fps: " << current_fps << std::endl;
 }
+
+void Render_System::render_albedo_frame(PreLightingPassFrame& rendered_frame)
+{
+    // Get height and width for quick reference
+    int h = rendered_frame.get_height();
+    int w = rendered_frame.get_width();
+
+    double half_frame_height = (double)h / 2;
+    double half_frame_width = (double)w / 2;
+
+    // Loop over each 'pixel' in frame
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            // Get current vector of pixels for this frame
+            vector<PreLightingPassPixel> rendered_pixel_vector = rendered_frame.at(y, x);
+            unsigned int rendered_pixel_vector_index = 0;
+
+            // Render each sprite at a time
+            for (shared_ptr<Sprite> current_sprite : sprites)
+            {
+                // Get distance between sprite and camera
+                double z_diff = camera_z_position - current_sprite->get_z_pixel_position();
+
+                // Make sure sprite is at least in front of the camera
+                // Also handle case where z-diff is 0 to prevent divide by zero error
+                if (z_diff <= 0) continue;
+
+                // Map frame position to sprite plane position
+                double abs_y = (((y - half_frame_height) * z_diff) / drawing_plane_distance) + camera_y_position;
+                double abs_x = (((x - half_frame_width) * z_diff) / drawing_plane_distance) + camera_x_position;
+
+                // Map to relative to sprite origin
+                double rel_y = abs_y - current_sprite->get_y_pixel_position();
+                double rel_x = abs_x - current_sprite->get_x_pixel_position();
+
+                // If pixel overlaps with sprite
+                if ( 0 <= rel_x && rel_x < current_sprite->get_width() &&
+                     0 <= rel_y && rel_y < current_sprite->get_height())
+                {
+                    // Get pixel of interest
+                    const Pixel& current_pixel = current_sprite->get_pixel(rel_y, rel_x);
+
+                    // Determine if pixel should be drawn
+                    // If the foreground alpha channel is anything but 0, it will be drawn
+                    if (current_pixel.foreground_color.alpha != 0)
+                    {
+                        // Pixel will be drawn, so get the pixel to draw to in the rendered frame
+                        PreLightingPassPixel& rendered_pixel = rendered_pixel_vector.at(rendered_pixel_vector_index++);
+
+                        // Write character to pixel
+                        rendered_pixel.pixel = current_pixel;
+
+                        // TODO: WRITE LIGHT TAGS TO PIXEL SO DYNAMIC LIGHTING OPERATES CORRECTLY
+
+                        // If the pixel background is fully opaque, we're done rendering this pixel, so jump to the end
+                        // of the pixel rendering loop
+                        if (current_pixel.background_color.alpha == 255)
+                            goto pixel_finished;
+
+                    }
+                }
+            }
+
+            // Done rendering pixel
+            pixel_finished:;
+
+        }
+    }
+}
+
+void Render_System::lighting_pass(PreLightingPassFrame& albedo_frame, PreLightingPassFrame& lit_frame)
+{
+    // Get height and width for quick reference
+    int h = albedo_frame.get_height();
+    int w = albedo_frame.get_width();
+
+    // Quick dimensions check
+    if (lit_frame.get_height() != h || lit_frame.get_width() != w)
+        throw "insert exception here";
+
+    // Loop over each 'pixel' in frame
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            // Get current vector of pixels for this frame
+            vector<PreLightingPassPixel> albedo_pixel_vector = albedo_frame.at(y, x);
+            vector<PreLightingPassPixel> lit_pixel_vector = lit_frame.at(y, x);
+
+            // Start lighting from the back and move forward
+            for (int i = 0; i < albedo_pixel_vector.size(); ++i)
+            {
+                // Get pixel references
+                PreLightingPassPixel& albedo_pixel = albedo_pixel_vector.at(i);
+                PreLightingPassPixel& lit_pixel = lit_pixel_vector.at(i);
+
+                // Combined color of all light sources on this point
+                Color c = Color(0, 0, 0);
+
+                // Get light from each light source
+                for (std::shared_ptr<Light> light : lights)
+                {
+                    // Light color at this pixel location
+                    Color light_color = light->get_color(albedo_pixel.x_pos, albedo_pixel.y_pos, albedo_pixel.z_pos);
+
+                    // Get light vector and pixel normal
+                    const Vector& pixel_normal = albedo_pixel.pixel.normal;
+                    const Vector light_vector = light->get_vector(albedo_pixel.x_pos,
+                                                                  albedo_pixel.y_pos,
+                                                                  albedo_pixel.z_pos);
+
+                    // TODO: PUT THIS IN A VECTOR OPERATOR METHOD
+                    // Get vector components
+                    char x1 = pixel_normal.get_x_component();
+                    char y1 = pixel_normal.get_y_component();
+                    char z1 = pixel_normal.get_z_component();
+                    char x2 = light_vector.get_x_component();
+                    char y2 = light_vector.get_y_component();
+                    char z2 = light_vector.get_z_component();
+
+                    // Calculate angle between the two
+                    float angle = acos((x1 * x2 + y1 * y2 + z1 * z2) /
+                                       (sqrt(pow(x1, 2) + pow(y1, 2) + pow(z1, 2)) *
+                                        sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2))));
+
+                    // Scale from 0 to pi, to between 0 and 255
+                    unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
+
+                    // Adjust light brightness accordingly
+                    light_color.set_brightness(brightness);
+
+                    // Add light to accumulated pixel light
+                    c += light_color;
+                }
+
+                // Apply light to pixel colors
+                lit_pixel.pixel.foreground_color = c * albedo_pixel.pixel.foreground_color;
+                lit_pixel.pixel.background_color = c * albedo_pixel.pixel.background_color;
+
+                // Write bold to pixel
+                lit_pixel.pixel.bold = albedo_pixel.pixel.bold;
+
+                // Write underline to pixel
+                lit_pixel.pixel.underline = albedo_pixel.pixel.underline;
+
+                // If pixel is opaque, the rest won't be drawn at all, so don't bother with lighting them
+                if (albedo_pixel.pixel.background_color.alpha == 255)
+                    break;
+            }
+        }
+    }
+}
+
+// void flatten()
+// {
+//     // Get height and width for quick reference
+//     int h = albedo_frame->get_height();
+//     int w = albedo_frame->get_width();
+//
+//     // Quick dimensions check
+//     if (lit_frame.get_height() != h || lit_frame.get_width() != w)
+//         throw "insert exception here";
+//
+//     // Loop over each 'pixel' in frame
+//     for (int y = 0; y < h; y++)
+//     {
+//         for (int x = 0; x < w; x++)
+//         {
+//             // Get current vector of pixels for this frame
+//             vector<PreLightingPassPixel> albedo_pixel_vector = albedo_frame.at(y, x);
+//             unsigned int albedo_pixel_vector_index = 0;
+//
+//             // Find final opaque pixel, which is where we will start the lighting pass and move backward
+//             for (int i = 0; i < albedo_pixel_vector.size(); ++i)
+//                 if (albedo_pixel_vector.at(i).background_color.alpha == 255)
+//                     albedo_pixel_vector_index = i;
+//
+//             // Start lighting from the back and move forward
+//             for (; albedo_pixel_vector_index >= 0; --albedo_pixel_vector_index)
+//             {
+//
+//             }
+// }
 
 
 void Render_System::update_fps()

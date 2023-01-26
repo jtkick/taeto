@@ -26,6 +26,8 @@ include_directories("include"
                     "prerequisites/tclap-1.2.4/include"
                     "prerequisites/lodepng/include"
                     "include/system_layer"
+                    "include/system_layer/render_system"
+                    "include/system_layer/render_system/frames"
                     "include/message_layer"
                     "include/scene_layer"
                     "assets/lights/include"
@@ -33,7 +35,7 @@ include_directories("include"
                     "assets/scenes/include"
                     ${CURSES_INCLUDE_DIR})
 
-file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/*/src/**")
+file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "src/*/*/*.cpp" "src/*/*/*/*.cpp" "src/*/*/*/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/*/src/**")
 
 add_executable(taeto ${SOURCES})
 

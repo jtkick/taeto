@@ -123,13 +123,17 @@ void Engine::run()
         shared_ptr<Poll_Inputs_Message> pim = make_shared<Poll_Inputs_Message>();
         message_bus->post_message(pim);
 
+        logger->info("Applying forces to sprites.");
+        shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
+        message_bus->post_message(afm);
+
         logger->info("Telling scenes to animate.");
         shared_ptr<Animate_Message> am = make_shared<Animate_Message>();
         message_bus->post_message(am);
 
-        logger->info("Applying forces to sprites.");
-        shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
-        message_bus->post_message(afm);
+        // logger->info("Applying forces to sprites.");
+        // shared_ptr<Apply_Forces_Message> afm = make_shared<Apply_Forces_Message>();
+        // message_bus->post_message(afm);
 
         logger->info("Rendering new frame.");
         shared_ptr<Render_Frame_Message> rfm = make_shared<Render_Frame_Message>(frame);

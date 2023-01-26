@@ -305,6 +305,15 @@ void Sprite::set_visible(bool v)
 }
 
 ////////////////////////////////////////////////////////////////////////
+///                           OPERATORS                              ///
+////////////////////////////////////////////////////////////////////////
+
+bool Sprite::operator < (const Sprite& other)
+{
+    return (z_position < other.z_position);
+}
+
+////////////////////////////////////////////////////////////////////////
 ///                         HELPER METHODS                           ///
 ////////////////////////////////////////////////////////////////////////
 
@@ -368,7 +377,7 @@ void Sprite::serialize(std::filesystem::path filename, bool overwrite=false)
     }
 }
 
-Pixel& Sprite::get_pixel(long int rel_y, long int rel_x)
+const Pixel& Sprite::get_pixel(long int rel_y, long int rel_x)
 {
     return current_frame.get_pixel(rel_y, rel_x);
     //return get_current_frame()->get_pixel((long int)(rel_y),// / scaling_factor),
