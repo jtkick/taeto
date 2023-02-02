@@ -22,7 +22,11 @@ void Collision_Detection_Test::load(int window_height, int window_width)
     mov_box->move(40, -mov_box->get_height()/2, -10);
     message_bus->post_message(make_shared<Sprite_Update_Message>(mov_box));
 
-
+    // Add light
+    Color c(255, 255, 255);
+    Vector v(0, 0, 127);
+    shared_ptr<Directional_Light> dl = make_shared<Directional_Light>(c, v);
+    message_bus->post_message(make_shared<Light_Update_Message>(dl));
 }
 
 void Collision_Detection_Test::handle_message(shared_ptr<Message> message)

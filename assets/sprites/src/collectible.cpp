@@ -150,52 +150,5 @@ void Zero::handle_message(shared_ptr<Message> message)
             last_animate_call = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
         }
         break;
-        
-        case KEY_UPDATE:
-        {
-            //logger->info("TEST SCENE RECEIVED KEY UPDATE");
-
-            shared_ptr<Key_Update_Message> kum = dynamic_pointer_cast<Key_Update_Message>(message);
-
-            // Move camera based on key
-            switch(kum->get_key())
-            {
-                case ' ':
-                    space = kum->is_pressed();
-                break;
-
-                case 'w':
-                    w = kum->is_pressed();
-                break;
-
-                case 'a':
-                    a = kum->is_pressed();
-                break;
-
-                case 's':
-                    s = kum->is_pressed();
-                break;
-
-                case 'd':
-                    d = kum->is_pressed();
-                break;
-
-                // Use 'q' to reset Zero's position
-                case 'q':
-                    if (kum->is_pressed());
-                    {
-                        set_x_pixel_position(0);
-                        set_y_pixel_position(-10);
-                    }
-                break;
-
-            }
-        }
-        break;
     }
-}
-
-void Zero::add_collide_object(shared_ptr<Sprite> c)
-{
-    collide_objects.push_back(c);
 }

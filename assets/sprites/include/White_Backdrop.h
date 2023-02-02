@@ -11,7 +11,6 @@ class White_Backdrop: public Sprite
 
         White_Backdrop();
 
-        shared_ptr<Frame> get_current_frame();
 };
 
 #endif

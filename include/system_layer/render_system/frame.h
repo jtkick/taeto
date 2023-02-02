@@ -25,7 +25,7 @@ class NewFrame
          *
          * @return The height of the frame.
          */
-        unsigned int get_height()
+        unsigned int get_height() const
         {
             return height;
         }
@@ -36,7 +36,7 @@ class NewFrame
          *
          * @return The width of the frame.
          */
-        unsigned int get_width()
+        unsigned int get_width() const
         {
             return width;
         }

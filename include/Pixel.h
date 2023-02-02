@@ -86,7 +86,7 @@ class Pixel
 
         Pixel operator & (const Pixel &p);
 
-        void operator = (const Pixel &p);
+        // void operator = (const Pixel &p);
 
         // Reset to default values
         void clear();

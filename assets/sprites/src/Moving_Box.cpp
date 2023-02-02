@@ -26,14 +26,14 @@ Moving_Box::Moving_Box()
     Vector dl = Vector(-90, 90, 90);
     Vector dr = Vector(90, 90, 90);
 
-    current_frame.set_normals({{ ul,  u, u, u, u, u, u, u, u, u, u, u, u, u, u, ur},
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               { dl,  d, d, d, d, d, d, d, d, d, d, d, d, d, d, dr}});
+    current_frame.set_normals({{ ul, ul, u, u, u, u, u, u, u, u, u, u, u, u, ur, ur},
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                               { dl, dl, d, d, d, d, d, d, d, d, d, d, d, d, dr, dr}});
 
     set_color(Color(0, 255, 0));
 
@@ -60,6 +60,10 @@ void Moving_Box::set_color(Color c)
 void Moving_Box::handle_collision(shared_ptr<Sprite> sprite_ptr)
 {
     set_color(Color(255, 0, 0));
+
+    for (int y = 0; y < current_frame.get_height(); ++y)
+        for (int x = 0; x < current_frame.get_width(); ++x)
+            current_frame.get_pixel(y, x).foreground_color = Color(255, 0, 0);
 
     // Move right
     while (this->collides_with(sprite_ptr))

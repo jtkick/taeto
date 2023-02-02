@@ -19,6 +19,13 @@ PreLightingPassFrame::PreLightingPassFrame(unsigned long int h, unsigned long in
     // values = vector(h, vector<PreLightingPassPixel>(w));
     values = vector(h, vector(w, vector<PreLightingPassPixel>(max_pixel_depth)));
 
+    // Set each pixel stack's size to prevent constant resizing
+    // for (vector<vector<PreLightingPassPixel>> row : values)
+    //     for (vector<PreLightingPassPixel> pixel_stack : row)
+    //         pixel_stack.reserve(max_pixel_depth);
+
+    // TODO: MAKE SURE RENDER SYSTEM DOESN'T GO OVER THE END OF THE PIXEL STACK
+
 }
 
 // Destructor

@@ -18,9 +18,3 @@ White_Backdrop::White_Backdrop()
     std::vector<std::vector<Color>> colors(height, std::vector<Color>(width, Color(255, 255, 255)));
     current_frame.set_background_colors(colors);
 }
-
-shared_ptr<Frame> White_Backdrop::get_current_frame()
-{
-
-    return make_shared<Frame>(current_frame);
-}

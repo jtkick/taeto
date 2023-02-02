@@ -34,5 +34,5 @@ Color Spotlight::get_color(long int x, long int y, long int z)
 
 Vector Spotlight::get_vector(long int x, long int y, long int z)
 {
-
+    return Vector(0, 0, 127);
 }

@@ -75,16 +75,16 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 }
 */
 
-void Pixel::operator = (const Pixel &p)
-{
-    c = p.c;
-    foreground_color = p.foreground_color;
-    background_color = p.background_color;
-    bold = p.bold;
-    underline = p.underline;
-    normal = p.normal;
-    collide = p.collide;
-}
+// void Pixel::operator = (const Pixel &p)
+// {
+//     c = p.c;
+//     foreground_color = p.foreground_color;
+//     background_color = p.background_color;
+//     bold = p.bold;
+//     underline = p.underline;
+//     normal = p.normal;
+//     collide = p.collide;
+// }
 
 // This function combines pixels, applying the right pixel
 // onto the left pixel. Taking color alpha into account

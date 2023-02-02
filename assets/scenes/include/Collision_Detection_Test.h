@@ -5,10 +5,12 @@
 #include "Message_Bus.h"
 #include "Sprite_Update_Message.h"
 #include "Key_Update_Message.h"
+#include "Light_Update_Message.h"
 #include "Scene.h"
 
 #include "Moving_Box.h"
 #include "Stationary_Box.h"
+#include "Directional_Light.h"
 
 #include <memory>
 

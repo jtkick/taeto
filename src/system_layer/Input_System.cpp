@@ -2,7 +2,7 @@
 
 Input_System::Input_System()
 {
-    
+
 }
 
 Input_System::Input_System(shared_ptr<spdlog::logger> l, shared_ptr<Message_Bus> mb)

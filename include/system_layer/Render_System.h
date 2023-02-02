@@ -90,16 +90,10 @@ class Render_System: public System
         void move_camera(long int, long int, long int);
 
         // Used to render new frame
-        void render_frame(shared_ptr<Frame>);
+        void render_frame(Frame&);
 
-        // Old way of doing it for testing
-        void render_frame_old(shared_ptr<Frame>);
-
-        // Renders frame with additional data for doing a lighting pass
-        void render_albedo_frame(PreLightingPassFrame&);
-
-        // Applies lighting to a frame that has been rendered
-        void lighting_pass(PreLightingPassFrame&, PreLightingPassFrame&);
+        // Render frame by drawing each sprite instead of ray casting (work in progress)
+        void render_frame_by_drawing(shared_ptr<Frame>);
 
         // Update current FPS
         void update_fps();

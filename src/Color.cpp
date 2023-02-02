@@ -198,6 +198,17 @@ Color Color::operator + (const Color &c)
     return new_color;
 }
 
+Color Color::operator - (const Color &c)
+{
+    Color r(0, 0, 0, 255);
+    r.alpha = 255 - q8_mul((255 - alpha), (255 - c.alpha));
+    r.red = q8_div(q8_mul(c.red, c.red), r.alpha) + q8_div(q8_mul(q8_mul(red, alpha), (255 - c.alpha)), r.alpha);
+    r.green = q8_div(q8_mul(c.green, c.alpha), r.alpha) + q8_div(q8_mul(q8_mul(green, alpha), (255 - c.alpha)), r.alpha);
+    r.blue = q8_div(q8_mul(c.blue, c.alpha), r.alpha) + q8_div(q8_mul(q8_mul(blue, alpha), (255 - c.alpha)), r.alpha);
+
+    return r;
+}
+
 // Mix colors subtractively
 Color Color::operator & (const Color &c)
 {
@@ -226,6 +237,20 @@ Color Color::operator += (const Color &c)
     return *this;
 }
 
+Color Color::operator -= (const Color &c)
+{
+    Color r(0, 0, 0, 255);
+    r.alpha = 255 - q8_mul((255 - c.alpha), (255 - alpha));
+    r.red = q8_div(q8_mul(c.red, c.red), r.alpha) + q8_div(q8_mul(q8_mul(red, alpha), (255 - c.alpha)), r.alpha);
+    r.green = q8_div(q8_mul(c.green, c.alpha), r.alpha) + q8_div(q8_mul(q8_mul(green, alpha), (255 - c.alpha)), r.alpha);
+    r.blue = q8_div(q8_mul(c.blue, c.alpha), r.alpha) + q8_div(q8_mul(q8_mul(blue, alpha), (255 - c.alpha)), r.alpha);
+
+    // Copy values
+    *this = r;
+
+    return r;
+}
+
 Color Color::operator * (const Color &c)
 {
     Color new_color;
@@ -233,6 +258,7 @@ Color Color::operator * (const Color &c)
     new_color.red = q8_mul(red, c.red);
     new_color.green = q8_mul(green, c.green);
     new_color.blue = q8_mul(blue, c.blue);
+    new_color.alpha = alpha;
 
     return new_color;
 }

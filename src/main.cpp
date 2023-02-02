@@ -7,6 +7,7 @@ using namespace std;
 #include "Opening_Island.h"
 #include "Collision_Detection_Test.h"
 #include "Light_Mixing_Test.h"
+#include "LightFilterTest.h"
 #include "Normal_Mapping_Test.h"
 #include "Test_Scene.h"
 
@@ -81,6 +82,11 @@ int main(int argc, char** argv)
     {
         shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
         engine.load_scene(lmt);
+    }
+    else if (test_scene == "light_filter")
+    {
+        shared_ptr<LightFilterTest> lft = make_shared<LightFilterTest>();
+        engine.load_scene(lft);
     }
     else
     {
