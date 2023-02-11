@@ -2,20 +2,17 @@
 
 using namespace std;
 
-#include "Engine.h"
+#include "engine.h"
 
-#include "Opening_Island.h"
-#include "Collision_Detection_Test.h"
-#include "Light_Mixing_Test.h"
-#include "LightFilterTest.h"
-#include "Normal_Mapping_Test.h"
-#include "Test_Scene.h"
-
-
-#include "char_frame.h"
+#include "assets/scenes/opening_island.h"
+#include "assets/scenes/collision_detection_test.h"
+#include "assets/scenes/light_mixing_test.h"
+#include "assets/scenes/light_filter_test.h"
+#include "assets/scenes/normal_mapping_test.h"
+#include "assets/scenes/test_scene.h"
 
 
-#include "Zero.h"
+#include "assets/objects/zero.h"
 
 #include <tclap/CmdLine.h>
 
