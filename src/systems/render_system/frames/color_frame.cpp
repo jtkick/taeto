@@ -1,9 +1,14 @@
-#include "color_frame.h"
+#include "systems/render_system/color_frame.hpp"
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
-// Constructors
+#include "components/color.h"
+
+namespace taeto
+{
+
 ColorFrame::ColorFrame()
 {
 
@@ -16,7 +21,7 @@ ColorFrame::ColorFrame(unsigned long int h, unsigned long int w)
     width = w;
 
     // Initialize vectors with default values
-    values = vector(h, vector<uint8_t>(w));
+    values = std::vector(h, std::vector<taeto::Color>(w));
 }
 
 ColorFrame::ColorFrame(std::string path)
@@ -33,7 +38,7 @@ ColorFrame::ColorFrame(std::string path)
     for (int i = 0; i < height; ++i)
     {
         // New row
-        vector<uint8_t> row = vector<uint8_t>();
+        std::vector<taeto::Color> row = std::vector<taeto::Color>();
 
         for (int j = 0; j < width; ++j)
         {
@@ -41,7 +46,7 @@ ColorFrame::ColorFrame(std::string path)
             int pixel_index = i*width*4 + j*4;
 
             // Get color values
-            c = Color();
+            taeto::Color c = taeto::Color();
             c.red = image.at(pixel_index);
             c.green = image.at(pixel_index+1);
             c.blue = image.at(pixel_index+2);
@@ -55,15 +60,14 @@ ColorFrame::ColorFrame(std::string path)
     }
 }
 
-// Destructor
 ColorFrame::~ColorFrame()
 {
 
 }
 
-uint8_t& ColorFrame::at(long int y, long int x)
+taeto::Color& ColorFrame::at(long int y, long int x)
 {
-    return NewFrame::at<uint8_t>(values, y, x);
+    return NewFrame::at<taeto::Color>(values, y, x);
 }
 
 unsigned int ColorFrame::get_width()
@@ -83,7 +87,7 @@ void ColorFrame::combine(ColorFrame f,
                         bool tile_x = false,
                         bool normalize = true)
 {
-    values = NewFrame::combine<uint8_t>(
+    values = NewFrame::combine<taeto::Color>(
         values,
         height,
         width,
@@ -100,71 +104,77 @@ void ColorFrame::combine(ColorFrame f,
 
 void ColorFrame::print()
 {
-    std::cout << "{";
+    throw "not implemented";
 
-    for (int i = 0; i < height; ++i)
-    {
-        std::cout << "{";
-        for (int j = 0; j < width; ++j)
-        {
-            std::cout << unsigned(values.at(i).at(j));
-            if (j != width - 1) std::cout << ", ";
-        }
-        std::cout << "}";
-
-        if (i != height - 1) std::cout << "," << std::endl << " ";
-    }
-
-    std::cout << "}";
+    // std::cout << "{";
+    //
+    // for (int i = 0; i < height; ++i)
+    // {
+    //     std::cout << "{";
+    //     for (int j = 0; j < width; ++j)
+    //     {
+    //         std::cout << values.at(i).at(j);
+    //         if (j != width - 1) std::cout << ", ";
+    //     }
+    //     std::cout << "}";
+    //
+    //     if (i != height - 1) std::cout << "," << std::endl << " ";
+    // }
+    //
+    // std::cout << "}";
 }
 
 std::string ColorFrame::serialize()
 {
-    std::string s = "";
-
-    // Open frame
-    s += "{";
-
-    // Open pixels vector
-    s += "{";
-
-    for (int i = 0; i < height; i++)
-    {
-        // Open row vector
-        s += "{";
-
-        for (int j = 0; j < width; j++)
-        {
-            // Add row values
-            s += std::to_string(values.at(i).at(j));
-
-            if (i != height - 1)
-            {
-                s += ",";
-            }
-        }
-
-        // Close row vector
-        s += "}";
-
-        if (i != height - 1)
-        {
-            s += ",";
-        }
-
-    }
-
-    // Close pixels vector
-    s += "}";
-
-    // Close frame
-    s += "}";
-
-    return s;
+    throw "not implemented";
+    //
+    // std::string s = "";
+    //
+    // // Open frame
+    // s += "{";
+    //
+    // // Open pixels vector
+    // s += "{";
+    //
+    // for (int i = 0; i < height; i++)
+    // {
+    //     // Open row vector
+    //     s += "{";
+    //
+    //     for (int j = 0; j < width; j++)
+    //     {
+    //         // Add row values
+    //         s += std::to_string(values.at(i, j));
+    //
+    //         if (i != height - 1)
+    //         {
+    //             s += ",";
+    //         }
+    //     }
+    //
+    //     // Close row vector
+    //     s += "}";
+    //
+    //     if (i != height - 1)
+    //     {
+    //         s += ",";
+    //     }
+    //
+    // }
+    //
+    // // Close pixels vector
+    // s += "}";
+    //
+    // // Close frame
+    // s += "}";
+    //
+    // return s;
 }
 
-Sprite ColorFrame::to_sprite()
+taeto::Sprite ColorFrame::to_sprite()
 {
     // Create sprite of this size
-    
+
 }
+
+}   // namespace taeto

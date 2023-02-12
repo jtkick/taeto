@@ -1,5 +1,5 @@
-#ifndef RENDER_SYSTEM_H
-#define RENDER_SYSTEM_H
+#ifndef SYSTEMS_RENDER_SYSTEM_H_
+#define SYSTEMS_RENDER_SYSTEM_H_
 
 #include <chrono>
 #include <deque>
@@ -8,14 +8,14 @@
 
 #include "spdlog/spdlog.h"
 
-#include "systems/system.h"
+#include "systems/system.hpp"
 #include "components/sprite.h"
 #include "components/light.h"
 
 namespace taeto
 {
 
-class RenderSystem: public System
+class RenderSystem : public System
 {
 public:
     RenderSystem();
@@ -24,71 +24,80 @@ public:
 
     ~RenderSystem();
 
-    // Move camera to specified location
+    /**
+     * Move the camera to the given location in the game world.
+     *
+     * @param camera_z_position The camera's location on the z-axis.
+     * @param camera_y_position The camera's location on the y-axis.
+     * @param camera_x_position The camera's location on the x-axis.
+     */
     void move_camera(long int, long int, long int);
 
-    // Used to render new frame
-    void render_frame(Frame&);
+    /**
+     * Render a PixelFrame with all known objects in the engine. Uses a ray-casting type method and deferred lighting.
+     *
+     * @param rendered_frame Frame to write rendered pixels to.
+    */
+    void render_frame(taeto::Frame&);
 
-    // Render frame by drawing each sprite instead of ray casting (work in progress)
-    void render_frame_by_drawing(std::shared_ptr<Frame>);
+    /**
+     * Render a PixelFrame with all known objects in the engine. Draws sprites one at a time.
+     * CURRENTLY A WORK IN PROGRESS, HAS WEIRD ARTIFACTS AND PROBABLY CRASHES
+     *
+     * @param rendered_frame Frame to write rendered pixels to.
+    */
+    void render_frame_by_drawing(taeto::Frame&);
 
-    // Update current FPS
+    /**
+     * Caclculates the current frames-per-second of the Rendering System.
+     */
     void update_fps();
 
-    // Write alternating white and grey pattern to frame
-    void write_alpha_background(std::shared_ptr<Frame>);
-
-    // Write old-school tv test screen bars to frame
-    void write_color_bars(std::shared_ptr<Frame>);
-
-    // Write info for debugging to frame after rendering
-    void write_debug_info(std::shared_ptr<Frame>);
+    /**
+     * Writes debugging information to the rendered frame in the top-left corner.
+     *
+     * @param rendered_frame Frame to write the information to.
+     */
+    void write_debug_info(taeto::Frame&);
 
 private:
     // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger;
+    std::shared_ptr<spdlog::logger> logger_;
 
-    // Message bus for posting messages
-    std::shared_ptr<Message_Bus> message_bus;
+    // Currently loaded skybox
+    // taeto::Skybox skybox_;
 
     // Sprites to be rendered
-    std::vector<std::shared_ptr<taeto::Sprite>> sprites;
+    std::vector<std::shared_ptr<taeto::Sprite>> sprites_;
 
     // Light sources
-    std::vector<std::shared_ptr<taeto::Light>> lights;
-
-    // Current frame rate of render system
-    // List of times each frame was rendered
-    std::deque<std::chrono::milliseconds> frame_times;
-
-    // Amount of time in milliseconds to average in order to determine FPS
-    unsigned int averaging_time = 1000;
-
-    // Member to store current FPS
-    unsigned int current_fps;
+    std::vector<std::shared_ptr<taeto::Light>> lights_;
 
     // Camera position
-    long int camera_x_position;
-    long int camera_y_position;
-    long int camera_z_position;
+    long int camera_x_position_;
+    long int camera_y_position_;
+    long int camera_z_position_;
 
     // Distance of drawing frame from camera
-    unsigned int drawing_plane_distance;
+    unsigned int focal_length_;
 
     // Number of tiles away from camera that sprites will be rendered
-    unsigned int render_distance;
+    unsigned int render_distance_;
 
     // If set to true, engine information is added to top-left of frame
-    bool display_debug_info;
+    bool display_debug_info_;
 
     // Number of sprites rendered in the last frame
-    unsigned int drawn_sprites;
+    unsigned int drawn_sprites_;
 
     // Keep track of frame number for debugging
-    unsigned long long frame_number;
+    unsigned long long frame_number_;
+
+    // Current frames-per-second
+    std::deque<std::chrono::milliseconds> frame_times_;
+    unsigned long current_fps_;
 };
 
 }   // namespace taeto
 
-#endif
+#endif  // SYSTEMS_RENDER_SYSTEM_H_

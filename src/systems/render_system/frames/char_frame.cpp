@@ -1,9 +1,11 @@
-#include "char_frame.h"
+#include "systems/render_system/char_frame.hpp"
 
 #include <fstream>
 #include <iostream>
 
-// Constructors
+namespace taeto
+{
+
 CharFrame::CharFrame()
 {
 
@@ -16,7 +18,7 @@ CharFrame::CharFrame(unsigned long int h, unsigned long int w)
     width = w;
 
     // Initialize vectors with default values
-    values = vector(h, vector<uint8_t>(w));
+    values = std::vector(h, std::vector<uint8_t>(w));
 }
 
 CharFrame::CharFrame(std::string path)
@@ -38,12 +40,12 @@ CharFrame::CharFrame(std::string path)
     for (int i = 0; i < height; ++i)
     {
         // New row
-        vector<uint8_t> row = vector<uint8_t>();
+        std::vector<uint8_t> row = std::vector<uint8_t>();
 
         for (int j = 0; j < width; ++j)
         {
             // Get RGBA values for pixel
-            vector<unsigned char> rgb = vector<unsigned char>((image.begin() + i*width*4 + j*4),
+            std::vector<unsigned char> rgb = std::vector<unsigned char>((image.begin() + i*width*4 + j*4),
                                                               (image.begin() + i*width*4 + j*4) + 3);
 
             // Just ignore the alpha channel because who cares
@@ -59,7 +61,6 @@ CharFrame::CharFrame(std::string path)
     }
 }
 
-// Destructor
 CharFrame::~CharFrame()
 {
 
@@ -166,3 +167,5 @@ std::string CharFrame::serialize()
 
     return s;
 }
+
+}   // namespace taeto

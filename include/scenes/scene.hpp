@@ -7,7 +7,6 @@ namespace taeto
 class Scene
 {
 public:
-
     Scene();
 
     virtual ~Scene();

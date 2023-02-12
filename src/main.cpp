@@ -2,17 +2,16 @@
 
 using namespace std;
 
-#include "engine.h"
+#include "engine.hpp"
 
-#include "assets/scenes/opening_island.h"
-#include "assets/scenes/collision_detection_test.h"
-#include "assets/scenes/light_mixing_test.h"
-#include "assets/scenes/light_filter_test.h"
-#include "assets/scenes/normal_mapping_test.h"
-#include "assets/scenes/test_scene.h"
+// #include "assets/scenes/opening_island.h"
+// #include "assets/scenes/collision_detection_test.h"
+// #include "assets/scenes/light_mixing_test.h"
+// #include "assets/scenes/light_filter_test.h"
+// #include "assets/scenes/normal_mapping_test.h"
+// #include "assets/scenes/test_scene.h"
 
-
-#include "assets/objects/zero.h"
+// #include "assets/objects/zero.h"
 
 #include <tclap/CmdLine.h>
 
@@ -62,38 +61,38 @@ int main(int argc, char** argv)
     //return 0;
 
 
-    Engine engine;
+    taeto::Engine engine;
 
 
-    if (test_scene == "collision_detection")
-    {
-        shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
-        engine.load_scene(cdt);
-    }
-    else if (test_scene == "normal_mapping")
-    {
-        shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
-        engine.load_scene(nmt);
-    }
-    else if (test_scene == "light_mixing")
-    {
-        shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
-        engine.load_scene(lmt);
-    }
-    else if (test_scene == "light_filter")
-    {
-        shared_ptr<LightFilterTest> lft = make_shared<LightFilterTest>();
-        engine.load_scene(lft);
-    }
-    else
-    {
-        // Load opening island
-        //shared_ptr<Opening_Island> oi = make_shared<Opening_Island>();
-        //engine.load_scene(oi);
-
-        shared_ptr<Test_Scene> ts = make_shared<Test_Scene>();
-        engine.load_scene(ts);
-    }
+    // if (test_scene == "collision_detection")
+    // {
+    //     shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
+    //     engine.load_scene(cdt);
+    // }
+    // else if (test_scene == "normal_mapping")
+    // {
+    //     shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
+    //     engine.load_scene(nmt);
+    // }
+    // else if (test_scene == "light_mixing")
+    // {
+    //     shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
+    //     engine.load_scene(lmt);
+    // }
+    // else if (test_scene == "light_filter")
+    // {
+    //     shared_ptr<LightFilterTest> lft = make_shared<LightFilterTest>();
+    //     engine.load_scene(lft);
+    // }
+    // else
+    // {
+    //     // Load opening island
+    //     //shared_ptr<Opening_Island> oi = make_shared<Opening_Island>();
+    //     //engine.load_scene(oi);
+    //
+    //     shared_ptr<Test_Scene> ts = make_shared<Test_Scene>();
+    //     engine.load_scene(ts);
+    // }
 
     engine.run();
 

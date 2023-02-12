@@ -3,6 +3,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include <memory>
+
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
@@ -48,19 +50,19 @@ Engine::~Engine()
     endwin();
 }
 
-void Engine::add_light(shared_ptr<Light> l)
+void Engine::add_light(std::shared_ptr<Light> l)
 {
     logger_->error("Adding light to engine.");
     throw "not implemented";
 }
 
-void Engine::add_sprite(shared_ptr<Sprite> s)
+void Engine::add_sprite(std::shared_ptr<Sprite> s)
 {
     logger_->error("Adding sprite to engine.");
     throw "not implemented";
 }
 
-void Engine::load_scene(shared_ptr<Scene> s)
+void Engine::load_scene(std::shared_ptr<Scene> s)
 {
     logger_->info("Adding scene to engine.");
 
@@ -77,7 +79,7 @@ void Engine::load_scene(shared_ptr<Scene> s)
 void Engine::run()
 {
     // Create new frame for rendering and displaying game world
-    shared_ptr<Frame> frame = make_shared<Frame>(window_height_, window_width_);
+    taeto::Frame frame = taeto::Frame(window_height_, window_width_);
 
     // Start rendering
     while (true)

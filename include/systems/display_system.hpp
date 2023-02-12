@@ -44,8 +44,8 @@ public:
     ~DisplaySystem();
 
     // Write entire frame to stdout
-    void display_frame(std::shared_ptr<Frame>);
-    void display_frame_old(std::shared_ptr<Frame>);
+    void display_frame(taeto::Frame&);
+    void display_frame_old(taeto::Frame&);
 
 private:
     // Resize output buffer

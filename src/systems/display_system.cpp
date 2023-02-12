@@ -1,4 +1,4 @@
-#include "display_system.h"
+#include "systems/display_system.hpp"
 
 #include <cstdlib>
 #include <signal.h>
@@ -12,7 +12,6 @@
 #include "components/color.h"
 #include "components/pixel.h"
 #include "components/frame.h"
-#include "systems/system.h"
 
 void signal_callback_handler(int signum)
 {
@@ -44,8 +43,6 @@ DisplaySystem::DisplaySystem(std::shared_ptr<spdlog::logger> l)
 {
     logger = l;
 
-    message_bus = mb;
-
     // Open alternate terminal screen
     std::cout << "\e[?1049h";
 
@@ -65,10 +62,6 @@ DisplaySystem::DisplaySystem(std::shared_ptr<spdlog::logger> l)
     std::cout << "\033]0;Taeto\007";
 
     logger->error("Done setting up display system.");
-
-    // TEMPORARY
-    display_loop = 0;
-
 }
 
 DisplaySystem::~DisplaySystem()
@@ -86,27 +79,27 @@ DisplaySystem::~DisplaySystem()
     tcsetattr(0, TCSANOW, &t);
 }
 
-void DisplaySystem::display_frame(std::shared_ptr<Frame> frame)
+void DisplaySystem::display_frame(taeto::Frame &frame)
 {
     // First, resize buffer if wrong size
-    if (frame->get_height() != height || frame->get_width() != width)
+    if (frame.get_height() != height || frame.get_width() != width)
     {
-        resize(frame->get_height(), frame->get_width());
+        resize(frame.get_height(), frame.get_width());
     }
 
     Pixel current_pixel;
 
-    for (int h = 0; h < frame->get_height(); h++)
+    for (int h = 0; h < frame.get_height(); h++)
     {
-        for (int w = 0; w < frame->get_width(); w++)
+        for (int w = 0; w < frame.get_width(); w++)
         {
             // Don't output last character
-            if (h == frame->get_height() - 1 &&
-                w == frame->get_width() - 1)
+            if (h == frame.get_height() - 1 &&
+                w == frame.get_width() - 1)
                 break;
 
             // Get pixel in question
-            current_pixel = frame->get_pixel(h, w);
+            current_pixel = frame.get_pixel(h, w);
 
             // Location of start of this pixel in string
             unsigned int pixel_start = TOTAL_PIXEL_STRING_LENGTH * ((h*width) + w);
@@ -124,7 +117,7 @@ void DisplaySystem::display_frame(std::shared_ptr<Frame> frame)
             output_buffer.replace(pixel_start + X_LOC_OFFSET, 4, temp);
 
             // Get pixel to display
-            current_pixel = frame->get_pixel(h, w);
+            current_pixel = frame.get_pixel(h, w);
 
             // Get background color
             Color& c = current_pixel.background_color;
@@ -179,24 +172,24 @@ void DisplaySystem::display_frame(std::shared_ptr<Frame> frame)
 
 
 
-void DisplaySystem::display_frame_old(std::shared_ptr<Frame> frame)
+void DisplaySystem::display_frame_old(taeto::Frame &frame)
 {
     output_buffer = "";
 
-    for (int h = 0; h < frame->get_height(); h++)
+    for (int h = 0; h < frame.get_height(); h++)
     {
-        for (int w = 0; w < frame->get_width(); w++)
+        for (int w = 0; w < frame.get_width(); w++)
         {
             // Move to current column and row
             output_buffer += "\033[" + std::to_string(h+1) + ";" + std::to_string(w+1) + "H";
 
             // Don't output last character
-            if (h == frame->get_height() - 1 &&
-                w == frame->get_width() - 1)
+            if (h == frame.get_height() - 1 &&
+                w == frame.get_width() - 1)
                 break;
 
             // Get pixel in question
-            Pixel& current_pixel = frame->get_pixel(h, w);
+            Pixel& current_pixel = frame.get_pixel(h, w);
 
             // Add background color
             Color& c = current_pixel.background_color;

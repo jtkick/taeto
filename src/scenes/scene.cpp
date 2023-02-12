@@ -1,4 +1,4 @@
-#include "scene.hpp"
+#include "scenes/scene.hpp"
 
 namespace taeto
 {
@@ -12,7 +12,6 @@ Scene::~Scene()
 {
 
 }
-
 
 void Scene::load(int window_height, int window_width)
 {
