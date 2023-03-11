@@ -9,6 +9,8 @@ namespace taeto
 Sprite::Sprite(void)
 {
     // Set all default values
+    plane_orientation_ = 'Z';
+
     x_position = 0;
     y_position = 0;
     z_position = 0;
@@ -39,8 +41,7 @@ Sprite::Sprite(void)
     animate_off_screen = false;
 
     time_physics_last_applied =
-        std::chrono::duration_cast<std::chrono::milliseconds>
-        (
+        std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         ).count();
 

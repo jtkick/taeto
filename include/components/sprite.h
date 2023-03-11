@@ -19,6 +19,11 @@ class Sprite
 {
     public:
 
+        // Define which plane the object will be drawn on
+        // Object will almost always be on plane Z, walls on plane Y, and
+        // floors and ceilings on plane X
+        char plane_orientation_;
+
         // Position on screen relative to origin
         // Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
         // This allows for positions and speeds that aren't tied to frame rate
