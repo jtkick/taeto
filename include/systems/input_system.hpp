@@ -1,9 +1,11 @@
 #ifndef SYSTEMS_INPUT_SYSTEM_H_
 #define SYSTEMS_INPUT_SYSTEM_H_
 
+#include <map>
 #include <memory>
 #include <vector>
 
+#include <SFML/Window/Keyboard.hpp>
 #include "spdlog/spdlog.h"
 
 #include "systems/system.hpp"
@@ -23,6 +25,9 @@ public:
 
     ~InputSystem();
 
+    // Returns reference to an input button boolean
+    std::shared_ptr<bool> get_button_reference(int);
+
     // Polls any key the engine want to keep tabs on
     void poll_inputs();
 
@@ -30,8 +35,14 @@ private:
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger;
 
-    // Keys engine will keep an eye on
-    std::vector<key_entry> keys;
+    // Axes to watch
+    std::map<int, int32_t> axes_ = { };
+
+    // Buttons to watch
+    std::map<int, sf::Keyboard::Key> buttons_ = { };
+    std::map<int, std::shared_ptr<bool>> mapped_buttons_ = { };
+
+
 };
 
 }   // namespace taeto

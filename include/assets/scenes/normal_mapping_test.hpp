@@ -1,12 +1,12 @@
 #ifndef ASSETS_SCENES_NORMAL_MAPPING_TEST_H_
 #define ASSETS_SCENES_NORMAL_MAPPING_TEST_H_
 
+#include <chrono>
 #include <memory>
 
-#include "assets/lights/point_light.h"
-#include "assets/objects/normal_test.h"
-#include "message_layer/Message.h"
-#include "scenes/scene.h"
+#include "assets/lights/point_light.hpp"
+#include "assets/objects/normal_test.hpp"
+#include "scenes/scene.hpp"
 
 namespace taeto
 {
@@ -18,9 +18,9 @@ public:
 
     ~NormalMappingTest();
 
-    void handle_message(shared_ptr<Message>);
+    void animate();
 
-    void load(int, int);
+    void load();
 
 private:
     int distance_ = 50;
@@ -29,9 +29,13 @@ private:
 
     float current_degree_ = 0.0;
 
-    shared_ptr<NormalTest> nt_;
+    std::chrono::milliseconds last_animate_;
 
-    shared_ptr<PointLight> pl_;
+    std::chrono::milliseconds stopwatch_;
+
+    // Assets
+    std::shared_ptr<taeto::NormalTest> nt_;
+    std::shared_ptr<taeto::PointLight> pl_;
 };
 
 }   // namespace taeto

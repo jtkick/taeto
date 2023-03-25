@@ -13,16 +13,16 @@ class PointLight: public Light
 public:
     PointLight();
 
-    PointLight(Color, float);
+    PointLight(taeto::Color, float);
 
-    inline Color get_color(long int, long int, long int);
+    inline taeto::Color get_color(long int, long int, long int);
 
-    inline Vector get_vector(long int, long int, long int);
+    inline taeto::Vector get_vector(long int, long int, long int);
 
 private:
-    Color color_;
+    taeto::Color color_;
 
-    Vector vector_;
+    double fade_;
 };
 
 }   // namespace taeto

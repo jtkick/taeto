@@ -1,4 +1,4 @@
-#include "assets/lights/spotlight.h"
+#include "assets/lights/spotlight.hpp"
 
 #include <cmath>
 
@@ -10,19 +10,19 @@ namespace taeto
 
 Spotlight::Spotlight()
 {
-    color_ = Color(255, 255, 255, 255);
+    color_ = taeto::Color(255, 255, 255, 255);
     fade_ = 0.8;
     radius_ = 30;
 }
 
-Spotlight::Spotlight(Color c, float f, int i)
+Spotlight::Spotlight(taeto::Color c, float f, int i)
 {
     color_ = c;
     fade_ = f;
     radius_ = i;
 }
 
-inline Color Spotlight::get_color(long int x, long int y, long int z)
+inline taeto::Color Spotlight::get_color(long int x, long int y, long int z)
 {
     // Get distance between points
     // Multiply y difference by two since characters are about twice as tall
@@ -33,27 +33,27 @@ inline Color Spotlight::get_color(long int x, long int y, long int z)
     // that axis
     long int distance = sqrt(
         (x_position - x) * (x_position - x) +
-        (2.5 * (y_position - y) * (2.5 * (y_position - y))
-    ) - radius;
+        (2.5 * (y_position - y)) * (2.5 * (y_position - y))
+    ) - radius_;
 
     // For sanity's sake
     if (distance < 0)
         distance = 0;
 
     // Construct new color based on the distance
-    Color new_color = Color(
-        red = color_.red * pow(sqrt(fade), distance);
-        green = color_.green * pow(sqrt(fade), distance);
-        blue = color_.blue * pow(sqrt(fade), distance);
+    taeto::Color new_color = taeto::Color(
+        color_.red * pow(sqrt(fade_), distance),
+        color_.green * pow(sqrt(fade_), distance),
+        color_.blue * pow(sqrt(fade_), distance)
     );
 
     return new_color;
 }
 
-inline Vector Spotlight::get_vector(long int x, long int y, long int z)
+inline taeto::Vector Spotlight::get_vector(long int x, long int y, long int z)
 {
     // For now, spotlights point directly into the frame
-    return Vector(0, 0, 127);
+    return taeto::Vector(0, 0, 127);
 }
 
 }   // namespace taeto

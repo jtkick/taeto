@@ -1,4 +1,4 @@
-#include "white_backdrop.h"
+#include "assets/objects/white_backdrop.hpp"
 
 #include "components/color.h"
 #include "components/frame.h"

@@ -17,15 +17,22 @@ InputSystem::InputSystem(std::shared_ptr<spdlog::logger> l)
 {
     logger = l;
 
-    // I'm probably gonna regret this, but let's just hard-code which
-    // keys the input system will poll for game input
-    keys = { {'q', false},
-             {'w', false},
-             {'e', false},
-             {'a', false},
-             {'s', false},
-             {'d', false},
-             {' ', false}};
+    // TODO: MAKE THIS VARIABLE
+    buttons_ = {{0, sf::Keyboard::A},
+                {1, sf::Keyboard::W},
+                {2, sf::Keyboard::S},
+                {3, sf::Keyboard::D},
+                {4, sf::Keyboard::Q},
+                {5, sf::Keyboard::E},
+                {6, sf::Keyboard::Space}};
+
+    mapped_buttons_ = {{0, std::make_shared<bool>(false)},
+                       {1, std::make_shared<bool>(false)},
+                       {2, std::make_shared<bool>(false)},
+                       {3, std::make_shared<bool>(false)},
+                       {4, std::make_shared<bool>(false)},
+                       {5, std::make_shared<bool>(false)},
+                       {6, std::make_shared<bool>(false)}};
 }
 
 InputSystem::~InputSystem()
@@ -33,55 +40,16 @@ InputSystem::~InputSystem()
 
 }
 
+std::shared_ptr<bool> InputSystem::get_button_reference(int id)
+{
+    return mapped_buttons_[id];
+}
+
 void InputSystem::poll_inputs()
 {
-    // Loop over each input keyboard key engine is watching
-    for (int i = 0; i < keys.size(); i++)
-    {
-        key_entry &key = keys[i];
-
-        sf::Keyboard::Key sf_key;
-        switch (key.key)
-        {
-            case 'q':
-                sf_key = sf::Keyboard::Q;
-                break;
-
-            case 'w':
-                sf_key = sf::Keyboard::W;
-                break;
-
-            case 'e':
-                sf_key = sf::Keyboard::E;
-                break;
-
-            case 'a':
-                sf_key = sf::Keyboard::A;
-                break;
-
-            case 's':
-                sf_key = sf::Keyboard::S;
-                break;
-
-            case 'd':
-                sf_key = sf::Keyboard::D;
-                break;
-
-            case ' ':
-                sf_key = sf::Keyboard::Space;
-                break;
-        }
-
-        // Poll key
-        bool key_pressed = sf::Keyboard::isKeyPressed(sf_key);
-
-        // If key is different from last time
-        if (key_pressed != key.pressed)
-        {
-            // Update entry
-            key.pressed = key_pressed;
-        }
-    }
+    // New poll method
+    for (auto const& [key, val] : buttons_)
+        *(mapped_buttons_[key]) = sf::Keyboard::isKeyPressed(val);
 }
 
 }   // namespace taeto

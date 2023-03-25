@@ -53,6 +53,7 @@ Frame::~Frame()
 // Init pixels vectors
 void Frame::init_pixels()
 {
+    pixels.clear();
     for (int i = 0; i < height; i++)
     {
         std::vector<Pixel> row;
@@ -174,10 +175,14 @@ void set_normal(unsigned long int, unsigned long int, Vector normal)
 
 void Frame::add_string(long int y, long int x, std::string str)
 {
+    // Don't even try if string would be off the frame
+    if (y >= height)
+        return;
+
     Color white = Color(255, 255, 255, 255);
     Color black = Color(0, 0, 0, 255);
 
-    for (int i = 0; i < str.length(); i++)
+    for (int i = 0; i < str.length() && i < width; i++)
     {
         pixels[y][x+i].c = str.at(i);
         pixels[y][x+i].foreground_color = { 255, 255, 255, 255 };

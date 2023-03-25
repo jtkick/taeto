@@ -328,15 +328,15 @@ bool Sprite::collides_with(std::shared_ptr<Sprite> sprite_ptr)
 {
     // Do rough collision detection
     // x locations don't overlap
-    if ((this->get_x_pixel_position() > sprite_ptr->get_x_pixel_position() + sprite_ptr->get_width()) ||
-        (this->get_x_pixel_position() + this->get_width() - 1 < sprite_ptr->get_x_pixel_position()))
+    if ((this->get_x_pixel_position() >= sprite_ptr->get_x_pixel_position() + sprite_ptr->get_width()) ||
+        (this->get_x_pixel_position() + this->get_width() - 1 <= sprite_ptr->get_x_pixel_position()))
         return false;
 
     // y locations don't overlap
-    if ((this->get_y_pixel_position() > sprite_ptr->get_y_pixel_position() + sprite_ptr->get_height()) ||
-        (this->get_y_pixel_position() + this->get_height() - 1 < sprite_ptr->get_y_pixel_position()))
+    if ((this->get_y_pixel_position() >= sprite_ptr->get_y_pixel_position() + sprite_ptr->get_height()) ||
+        (this->get_y_pixel_position() + this->get_height() - 1 <= sprite_ptr->get_y_pixel_position()))
         return false;
-
+        
     // Different z-plane
     if (this->get_z_pixel_position() != sprite_ptr->get_z_pixel_position())
         return false;

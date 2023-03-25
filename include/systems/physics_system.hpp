@@ -21,17 +21,14 @@ public:
     ~PhysicsSystem();
 
     // Apply physics to all known sprites
-    void apply_forces();
+    void apply_forces(std::vector<std::weak_ptr<taeto::Sprite>>&);
 
     // Detect collisions and notify respective sprites
-    void detect_collisions();
+    void detect_collisions(std::vector<std::weak_ptr<taeto::Sprite>>&);
 
 private:
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger;
-
-    // Sprites known to engine
-    std::vector<std::shared_ptr<taeto::Sprite>> sprites;
 };
 
 }   // namespace taeto

@@ -1,4 +1,4 @@
-#include "normal_test.h"
+#include "assets/objects/normal_test.hpp"
 
 #include "components/color.h"
 #include "components/frame.h"
@@ -19,27 +19,27 @@ NormalTest::NormalTest()
     respect_light_sources = true;
     use_normal_mapping = true;
 
-    Frame f = Frame(height, width);
+    taeto::Frame f = taeto::Frame(height, width);
 
-    Vector v = Vector(0, 0, 120);
+    taeto::Vector v = taeto::Vector(0, 0, 120);
 
-    Vector u = Vector(0, -90, 90);
-    Vector r = Vector(90, 0, 90);
-    Vector d = Vector(0, 90, 90);
-    Vector l = Vector(-90, 0, 90);
+    taeto::Vector u = taeto::Vector(0, -90, 90);
+    taeto::Vector r = taeto::Vector(90, 0, 90);
+    taeto::Vector d = taeto::Vector(0, 90, 90);
+    taeto::Vector l = taeto::Vector(-90, 0, 90);
 
-    Vector ul = Vector(-90, -90, 90);
-    Vector ur = Vector(90, -90, 90);
-    Vector dl = Vector(-90, 90, 90);
-    Vector dr = Vector(90, 90, 90);
+    taeto::Vector ul = taeto::Vector(-90, -90, 90);
+    taeto::Vector ur = taeto::Vector(90, -90, 90);
+    taeto::Vector dl = taeto::Vector(-90, 90, 90);
+    taeto::Vector dr = taeto::Vector(90, 90, 90);
 
-    Color c = Color(255, 255, 255);
+    taeto::Color c = taeto::Color(255, 255, 255);
 
-    vector<vector<Color>> color_vector;
+    std::vector<std::vector<taeto::Color>> color_vector;
 
     for (int i = 0; i < height; i++)
     {
-        vector<Color> row;
+        std::vector<taeto::Color> row;
         for (int j = 0; j < width; j++)
         {
             row.push_back(c);

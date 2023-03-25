@@ -13,7 +13,12 @@ Scene::~Scene()
 
 }
 
-void Scene::load(int window_height, int window_width)
+void Scene::animate()
+{
+
+}
+
+void Scene::load()
 {
 
 }

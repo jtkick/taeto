@@ -17,6 +17,7 @@ include_directories("include"
                     "prerequisites/lodepng/include"
                     ${CURSES_INCLUDE_DIR})
 
+# TODO: FIX THIS
 file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "src/*/*/*.cpp" "src/*/*/*/*.cpp" "src/*/*/*/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/*/src/**")
 
 add_executable(taeto ${SOURCES})

@@ -1,4 +1,4 @@
-#include "stationary_box.h"
+#include "assets/objects/stationary_box.hpp"
 
 #include <vector>
 
@@ -30,14 +30,14 @@ StationaryBox::StationaryBox()
     taeto::Vector dl = taeto::Vector(-90, 90, 90);
     taeto::Vector dr = taeto::Vector(90, 90, 90);
 
-    current_frame.set_normals({{ ul,  u, u, u, u, u, u, u, u, u, u, u, u, u, u, ur},
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               {  l,  v, v, v, v, v, v, v, v, v, v, v, v, v, v, r },
-                               { dl,  d, d, d, d, d, d, d, d, d, d, d, d, d, d, dr}});
+    current_frame.set_normals({{ ul,  ul, u, u, u, u, u, u, u, u, u, u, u, u, ur, ur},
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               {  l,  l,  v, v, v, v, v, v, v, v, v, v, v, v, r,  r },
+                               { dl,  dl, d, d, d, d, d, d, d, d, d, d, d, d, dr, dr}});
 
     set_color(taeto::Color(64, 64, 64));
 

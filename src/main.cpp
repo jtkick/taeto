@@ -5,10 +5,10 @@ using namespace std;
 #include "engine.hpp"
 
 // #include "assets/scenes/opening_island.h"
-// #include "assets/scenes/collision_detection_test.h"
-// #include "assets/scenes/light_mixing_test.h"
+#include "assets/scenes/collision_detection_test.hpp"
+#include "assets/scenes/light_mixing_test.hpp"
 // #include "assets/scenes/light_filter_test.h"
-// #include "assets/scenes/normal_mapping_test.h"
+#include "assets/scenes/normal_mapping_test.hpp"
 // #include "assets/scenes/test_scene.h"
 
 // #include "assets/objects/zero.h"
@@ -61,24 +61,16 @@ int main(int argc, char** argv)
     //return 0;
 
 
-    taeto::Engine engine;
+    // taeto::Engine engine;
 
 
-    // if (test_scene == "collision_detection")
-    // {
-    //     shared_ptr<Collision_Detection_Test> cdt = make_shared<Collision_Detection_Test>();
-    //     engine.load_scene(cdt);
-    // }
-    // else if (test_scene == "normal_mapping")
-    // {
-    //     shared_ptr<Normal_Mapping_Test> nmt = make_shared<Normal_Mapping_Test>();
-    //     engine.load_scene(nmt);
-    // }
-    // else if (test_scene == "light_mixing")
-    // {
-    //     shared_ptr<Light_Mixing_Test> lmt = make_shared<Light_Mixing_Test>();
-    //     engine.load_scene(lmt);
-    // }
+    if (test_scene == "collision_detection")
+        taeto::load_scene(std::make_shared<taeto::CollisionDetectionTest>());
+    else if (test_scene == "normal_mapping")
+        taeto::load_scene(std::make_shared<taeto::NormalMappingTest>());
+    else if (test_scene == "light_mixing")
+        taeto::load_scene(std::make_shared<taeto::LightMixingTest>());
+
     // else if (test_scene == "light_filter")
     // {
     //     shared_ptr<LightFilterTest> lft = make_shared<LightFilterTest>();
@@ -94,7 +86,7 @@ int main(int argc, char** argv)
     //     engine.load_scene(ts);
     // }
 
-    engine.run();
+    taeto::run();
 
     // CharFrame f = CharFrame("/home/jared/load_png_test.png");
     //

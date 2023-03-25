@@ -9,9 +9,11 @@ class Scene
 public:
     Scene();
 
-    virtual ~Scene();
+    ~Scene();
 
-    virtual void load(int, int);
+    virtual void animate();
+
+    virtual void load();
 };
 
 }   // namespace taeto

@@ -1,4 +1,4 @@
-#include "light_filter.h"
+#include "assets/objects/light_filter.hpp"
 
 #include "components/color.h"
 #include "components/frame.h"
