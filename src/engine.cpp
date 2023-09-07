@@ -12,6 +12,8 @@
 #include "components/camera.hpp"
 #include "components/light.h"
 #include "components/sprite.h"
+#include "frames/display_pixel_frame.h"
+#include "frames/render_pixel_frame.h"
 #include "scenes/scene.hpp"
 #include "systems/audio_system.hpp"
 #include "systems/input_system.hpp"
@@ -104,19 +106,16 @@ void run()
     int window_width_ = size.ws_col;
 
     // Create new frame for rendering and displaying game world
-    taeto::Frame frame = taeto::Frame(window_height_, window_width_);
+    taeto::DisplayPixelFrame frame(window_height_, window_width_);
 
     // Start rendering
     while (true)
     {
-        // Update frame size if window size changed
+        // Update frame sizes if window size changed
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
         int window_height_ = size.ws_row;
         int window_width_ = size.ws_col;
-        if (frame.get_height() != window_height_)
-            frame.set_height(window_height_);
-        if (frame.get_width() != window_width_)
-            frame.set_width(window_width_);
+        frame.resize(window_height, window_width);
 
         ////////////////////////////////////////////////////////////////
         ////                       INPUT STEP                       ////

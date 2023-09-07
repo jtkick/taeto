@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_COLOR_H_
-#define COMPONENTS_COLOR_H_
+#ifndef COMPONENTS_COLOR_HPP_
+#define COMPONENTS_COLOR_HPP_
 
 #include <cstdint>
 #include <cstdlib>
@@ -277,49 +277,47 @@ namespace taeto
 
 class Color
 {
-    public:
+public:
+    uint8_t red = 255;
+    uint8_t green = 255;
+    uint8_t blue = 255;
+    uint8_t alpha = 255;
 
-        uint8_t red = 255;
-        uint8_t green = 255;
-        uint8_t blue = 255;
-        uint8_t alpha = 255;
+public:
+    Color();
 
-    public:
+    Color(uint8_t, uint8_t, uint8_t);
 
-        Color();
+    Color(uint8_t, uint8_t, uint8_t, uint8_t);
 
-        Color(uint8_t, uint8_t, uint8_t);
+    void set_all(uint8_t, uint8_t, uint8_t, uint8_t);
 
-        Color(uint8_t, uint8_t, uint8_t, uint8_t);
-
-        void set_all(uint8_t, uint8_t, uint8_t, uint8_t);
-
-        void set_brightness(uint8_t);
+    void set_brightness(uint8_t);
 
 //        void from_iterm(uint8_t);
 
 //        uint8_t to_iterm() const;
 
-        Color operator * (const Color&);
+    Color operator * (const Color&);
 
-        // Additive color addition
-        Color operator + (const Color&);
+    // Additive color addition
+    Color operator + (const Color&);
 
-        Color operator - (const Color&);
+    Color operator - (const Color&);
 
-        // Subtractive color addition
-        Color operator & (const Color&);
+    // Subtractive color addition
+    Color operator & (const Color&);
 
-        Color operator += (const Color&);
+    Color operator += (const Color&);
 
-        Color operator -= (const Color&);
+    Color operator -= (const Color&);
 
-        void operator = (const Color&);
+    void operator = (const Color&);
 
-        std::string serialize();
+    std::string serialize();
 
 };
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_COLOR_H_
+#endif  // COMPONENTS_COLOR_HPP_

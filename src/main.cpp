@@ -9,6 +9,7 @@ using namespace std;
 #include "assets/scenes/light_mixing_test.hpp"
 // #include "assets/scenes/light_filter_test.h"
 #include "assets/scenes/normal_mapping_test.hpp"
+#include "assets/scenes/sprite_orientation_test.hpp"
 // #include "assets/scenes/test_scene.h"
 
 // #include "assets/objects/zero.h"
@@ -70,6 +71,8 @@ int main(int argc, char** argv)
         taeto::load_scene(std::make_shared<taeto::NormalMappingTest>());
     else if (test_scene == "light_mixing")
         taeto::load_scene(std::make_shared<taeto::LightMixingTest>());
+    else if (test_scene == "sprite_orientation")
+        taeto::load_scene(std::make_shared<taeto::SpriteOrientationTest>());
 
     // else if (test_scene == "light_filter")
     // {

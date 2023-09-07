@@ -2,23 +2,20 @@
 
 #include <vector>
 
-#include "components/color.h"
-#include "components/frame.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/render_pixel.hpp"
+#include "frames/render_pixel_frame.hpp"
+#include "components/vector.hpp"
 
 namespace taeto
 {
 
 MovingBox::MovingBox()
 {
-    height = 8;
-    width = 16;
+    int height = 8;
+    int width = 16;
 
-    x_position = 0;
-    y_position = 0;
-    z_position = 0;
-
-    current_frame = taeto::Frame(height, width);
+    current_frame_ = taeto::RenderPixelFrame(height, width);
 
     collide = true;
     detect_collisions = true;
@@ -35,32 +32,31 @@ MovingBox::MovingBox()
     taeto::Vector dl = taeto::Vector(-90, 90, 90);
     taeto::Vector dr = taeto::Vector(90, 90, 90);
 
-    current_frame.set_normals({{ ul, ul, u, u, u, u, u, u, u, u, u, u, u, u, ur, ur},
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
-                               { dl, dl, d, d, d, d, d, d, d, d, d, d, d, d, dr, dr}});
+    for (int i = 0; i < current_frame_.height(); ++i)
+    {
+        for (int j = 0; j < current_frame_.width(); ++j)
+        {
+
+        }
+    }
+
+    current_frame_.set_normals({{ ul, ul, u, u, u, u, u, u, u, u, u, u, u, u, ur, ur},
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                {  l,  l, v, v, v, v, v, v, v, v, v, v, v, v,  r, r },
+                                { dl, dl, d, d, d, d, d, d, d, d, d, d, d, d, dr, dr}});
 
     set_color(taeto::Color(0, 255, 0));
 }
 
 void MovingBox::set_color(taeto::Color c)
 {
-    std::vector<std::vector<taeto::Color>> color_vector;
-
-    for (int i = 0; i < height; i++)
-    {
-        std::vector<taeto::Color> row;
-        for (int j = 0; j < width; j++)
-            row.push_back(c);
-
-        color_vector.push_back(row);
-    }
-
-    current_frame.set_background_colors(color_vector);
+    for (int i = 0; i < current_frame_.height(); ++i)
+        for (int j = 0; j < current_frame_.width(); ++j)
+            current_frame_.at(i, j).background_color = c;
 }
 
 void MovingBox::handle_collision(std::shared_ptr<Sprite> sprite_ptr)
@@ -74,6 +70,21 @@ void MovingBox::handle_collision(std::shared_ptr<Sprite> sprite_ptr)
     // Move right
     while (this->collides_with(sprite_ptr))
         this->move(1, 0, 0);
+}
+
+unsigned long int MovingBox::height()
+{
+    return current_frame_.height();
+}
+
+unsigned long int MovingBox::width()
+{
+    return current_frame_.width();
+}
+
+RenderPixel& pixel_at(unsigned long int y, unsigned long int x)
+{
+    return current_frame_.at(y, x);
 }
 
 }   // namespace taeto

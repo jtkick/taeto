@@ -1,23 +1,26 @@
-#ifndef ASSETS_LIGHTS_DIRECTIONAL_LIGHT_H_
-#define ASSETS_LIGHTS_DIRECTIONAL_LIGHT_H_
+#ifndef ASSETS_LIGHTS_DIRECTIONAL_LIGHT_HPP_
+#define ASSETS_LIGHTS_DIRECTIONAL_LIGHT_HPP_
 
-#include "components/color.h"
-#include "components/light.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/vector.hpp"
+#include "object/i_light.hpp"
+#include "object/object.hpp"
 
 namespace taeto
 {
 
-class DirectionalLight: public Light
+class DirectionalLight: public Object, public ILight
 {
 public:
     DirectionalLight();
 
     DirectionalLight(taeto::Color, taeto::Vector);
 
-    inline taeto::Color get_color(long int, long int, long int);
+    inline taeto::Color light_color(
+        unsigned long int, unsigned long int, unsigned long int);
 
-    inline taeto::Vector get_vector(long int, long int, long int);
+    inline taeto::Vector light_vector(
+        unsigned long int, unsigned long int, unsigned long int);
 
 private:
     taeto::Color color_;
@@ -27,4 +30,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // ASSETS_LIGHTS_DIRECTIONAL_LIGHT_H_
+#endif  // ASSETS_LIGHTS_DIRECTIONAL_LIGHT_HPP_

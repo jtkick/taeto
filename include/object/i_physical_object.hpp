@@ -1,13 +1,17 @@
-#ifndef COMPONENTS_OBJECT_I_RENDERABLE_H_
-#define COMPONENTS_OBJECT_I_RENDERABLE_H_
+#ifndef COMPONENTS_OBJECT_I_PHYSICAL_OBJECT_H_
+#define COMPONENTS_OBJECT_I_PHYSICAL_OBJECT_H_
+
+#include <memory>
+
+#include "object/object.hpp"
 
 namespace taeto
 {
 
-class IRenderable
+class IPhysicalObject
 {
 public:
-    virtual bool collides_with(shared_ptr<Object> sprite_ptr);
+    virtual bool on_collision(std::shared_ptr<taeto::Object> sprite_ptr);
 
 protected:
     // Speeds on each individual axis
@@ -22,8 +26,8 @@ protected:
 
     // Mass of the object; in relation to the forces on the object
 
-}
+};
 
 }   // namespace taeto
 
-#endif COMPONENTS_OBJECT_I_PHYSICAL_OBJECT_H_
+#endif  // COMPONENTS_OBJECT_I_PHYSICAL_OBJECT_H_

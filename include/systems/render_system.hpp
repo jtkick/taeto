@@ -4,12 +4,15 @@
 #include <chrono>
 #include <deque>
 #include <memory>
+#include <tuple>
 #include <vector>
 
 #include "spdlog/spdlog.h"
 
 #include "components/camera.hpp"
 #include "components/light.h"
+#include "components/pixel.h"
+#include "components/position.hpp"
 #include "components/sprite.h"
 #include "systems/system.hpp"
 
@@ -52,6 +55,10 @@ public:
     );
 
 private:
+    // First rendered frame: pixels before lighting applied with additional data
+    typedef std::vector<std::vector<std::vector<std::tuple<
+        taeto::Pixel, taeto::Position>>>> AlbedoFrame;
+
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger_;
 

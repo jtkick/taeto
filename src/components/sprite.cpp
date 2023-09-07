@@ -69,6 +69,11 @@ Sprite::~Sprite(void)
 ///                             GETTERS                              ///
 ////////////////////////////////////////////////////////////////////////
 
+char Sprite::get_plane_orientation()
+{
+    return plane_orientation_;
+}
+
 int32_t Sprite::get_x_pixel_position()
 {
     // Top 32 bits are pixel position
@@ -195,6 +200,11 @@ bool Sprite::get_visible()
 ////////////////////////////////////////////////////////////////////////
 ///                             SETTERS                              ///
 ////////////////////////////////////////////////////////////////////////
+
+void Sprite::set_plane_orientation(char c)
+{
+    plane_orientation_ = c;
+}
 
 void Sprite::set_x_pixel_position(int32_t x)
 {
@@ -336,7 +346,7 @@ bool Sprite::collides_with(std::shared_ptr<Sprite> sprite_ptr)
     if ((this->get_y_pixel_position() >= sprite_ptr->get_y_pixel_position() + sprite_ptr->get_height()) ||
         (this->get_y_pixel_position() + this->get_height() - 1 <= sprite_ptr->get_y_pixel_position()))
         return false;
-        
+
     // Different z-plane
     if (this->get_z_pixel_position() != sprite_ptr->get_z_pixel_position())
         return false;

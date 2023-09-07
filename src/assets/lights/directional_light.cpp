@@ -1,7 +1,7 @@
 #include "assets/lights/directional_light.hpp"
 
-#include "components/color.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/vector.hpp"
 
 namespace taeto
 {
@@ -18,12 +18,14 @@ DirectionalLight::DirectionalLight(taeto::Color c, taeto::Vector v)
     vector_ = v;
 }
 
-inline taeto::Color DirectionalLight::get_color(long int x, long int y, long int z)
+inline taeto::Color DirectionalLight::light_color(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
     return color_;
 }
 
-inline taeto::Vector DirectionalLight::get_vector(long int x, long int y, long int z)
+inline taeto::Vector DirectionalLight::light_vector(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
     return vector_;
 }

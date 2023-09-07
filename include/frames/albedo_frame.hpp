@@ -1,5 +1,5 @@
-#ifndef SYSTEMS_RENDER_SYSTEM_FRAMES_CHAR_FRAME_H_
-#define SYSTEMS_RENDER_SYSTEM_FRAMES_CHAR_FRAME_H_
+#ifndef SYSTEMS_RENDER_SYSTEM_FRAMES_ALBEDO_FRAME_H_
+#define SYSTEMS_RENDER_SYSTEM_FRAMES_ALBEDO_FRAME_H_
 
 #include <algorithm>
 #include <array>
@@ -12,18 +12,18 @@
 namespace taeto
 {
 
-class CharFrame : NewFrame
+class AlbedoFrame : NewFrame
 {
 public:
-    CharFrame();
+    AlbedoFrame();
 
-    CharFrame(unsigned long int, unsigned long int);
+    AlbedoFrame(unsigned long int, unsigned long int);
 
-    CharFrame(std::vector<std::vector<uint8_t>>);
+    AlbedoFrame(std::vector<std::vector<uint8_t>>);
 
-    CharFrame(std::string);
+    AlbedoFrame(std::string);
 
-    ~CharFrame();
+    ~AlbedoFrame();
 
     uint8_t& at(long int y, long int x);
 
@@ -34,7 +34,7 @@ public:
     // Helper methods
 
     // Combine the values of each frame at the given location and return result
-    void combine(CharFrame, unsigned int, unsigned int, bool, bool, bool);
+    void combine(AlbedoFrame, unsigned int, unsigned int, bool, bool, bool);
 
     void print();
 

@@ -1,35 +1,37 @@
-#include "components/pixel.h"
+#include "components/render_pixel.hpp"
 
 namespace taeto
 {
 
-Pixel::Pixel()
+RenderPixel::RenderPixel()
 {
     c = ' ';
-    foreground_color = Color(255, 255, 255, 255);
-    background_color = Color(50, 50, 50, 0);
+    foreground_color = taeto::Color(255, 255, 255, 255);
+    background_color = taeto::Color(50, 50, 50, 0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
-    normal = Vector(0, 0, 1);
+    normal = taeto::Vector(0, 0, 1);
+    specularity = 0;
     collide = false;
 }
 
-Pixel::Pixel(char character)
+RenderPixel::RenderPixel(char character)
 {
     c = character;
-    foreground_color = Color(255, 255, 255, 255);
-    background_color = Color(50, 50, 50, 0);
+    foreground_color = taeto::Color(255, 255, 255, 255);
+    background_color = taeto::Color(50, 50, 50, 0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
-    normal = Vector(0, 0, 1);
+    normal = taeto::Vector(0, 0, 1);
+    specularity = 0;
     collide = false;
 }
 
-Pixel::Pixel(char ch, Color fc, Color bc, bool b)
+RenderPixel::RenderPixel(char ch, taeto::Color fc, taeto::Color bc, bool b)
 {
     c = ch;
     foreground_color = fc;
@@ -38,11 +40,22 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b)
     italic = false;
     underline = false;
     strikethrough = false;
-    normal = Vector(0, 0, 1);
+    normal = taeto::Vector(0, 0, 1);
+    specularity = 0;
     collide = false;
 }
 
-Pixel::Pixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s, Vector n)
+RenderPixel::RenderPixel(
+    char ch,
+    taeto::Color fc,
+    taeto::Color bc,
+    bool b,
+    bool i,
+    bool u,
+    bool s,
+    taeto::Vector n,
+    uint8_t sp,
+    bool c)
 {
     c = ch;
     foreground_color = fc;
@@ -52,19 +65,23 @@ Pixel::Pixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s, Vector
     underline = u;
     strikethrough = s;
     normal = n;
-    collide = false;
+    specularity = sp;
+    collide = c;
 }
 
 // Helper functions
 // Reset values to default
-void Pixel::clear()
+void RenderPixel::clear()
 {
     c = ' ';
     foreground_color.set_all(255, 255, 255, 255);
     background_color.set_all(0, 0, 0, 0);
     bold = false;
+    italic = false;
     underline = false;
+    strikethrough = false;
     normal.set_all(0, 0, 127);
+    specularity = 0;
     collide = false;
 }
 
@@ -78,7 +95,7 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 }
 */
 
-// void Pixel::operator = (const Pixel &p)
+// void RenderPixel::operator = (const Pixel &p)
 // {
 //     c = p.c;
 //     foreground_color = p.foreground_color;
@@ -91,9 +108,9 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 
 // This function combines pixels, applying the right pixel
 // onto the left pixel. Taking color alpha into account
-Pixel Pixel::operator & (const Pixel &p)
+taeto::Pixel RenderPixel::operator & (const taeto::Pixel &p)
 {
-    Pixel new_pixel;
+    taeto::Pixel new_pixel;
 
     // Only combine if foreground color is not fully transparent
     if (p.foreground_color.alpha != 0)
@@ -121,7 +138,7 @@ Pixel Pixel::operator & (const Pixel &p)
 // If both pixels have the same property defined, it is undefined behavior
 // and the function will throw an error
 /*
-void Pixel::operator + (const Pixel &p)
+void RenderPixel::operator + (const RenderPixel &p)
 {
     // Combine char
     if (c >= 0 && p.get_char() < 0)
@@ -166,7 +183,9 @@ void Pixel::operator + (const Pixel &p)
 }
 */
 
-std::string Pixel::serialize()
+
+// TODO: UPDATE THIS
+std::string RenderPixel::serialize()
 {
     std::string s = "";
 

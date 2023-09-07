@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "components/color.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/vector.hpp"
 
 namespace taeto
 {
@@ -22,7 +22,8 @@ Spotlight::Spotlight(taeto::Color c, float f, int i)
     radius_ = i;
 }
 
-inline taeto::Color Spotlight::get_color(long int x, long int y, long int z)
+inline taeto::Color Spotlight::light_color(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
     // Get distance between points
     // Multiply y difference by two since characters are about twice as tall
@@ -32,8 +33,8 @@ inline taeto::Color Spotlight::get_color(long int x, long int y, long int z)
     // As a spotlight, z distance has no effect, since it goes on forever on
     // that axis
     long int distance = sqrt(
-        (x_position - x) * (x_position - x) +
-        (2.5 * (y_position - y)) * (2.5 * (y_position - y))
+        (x_position_ - x) * (x_position_ - x) +
+        (2.5 * (y_position_ - y)) * (2.5 * (y_position_ - y))
     ) - radius_;
 
     // For sanity's sake
@@ -50,7 +51,8 @@ inline taeto::Color Spotlight::get_color(long int x, long int y, long int z)
     return new_color;
 }
 
-inline taeto::Vector Spotlight::get_vector(long int x, long int y, long int z)
+inline taeto::Vector Spotlight::light_vector(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
     // For now, spotlights point directly into the frame
     return taeto::Vector(0, 0, 127);

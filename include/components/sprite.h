@@ -1,9 +1,6 @@
 #ifndef COMPONENTS_SPRITE_H_
 #define COMPONENTS_SPRITE_H_
 
-#include "frame.h"
-#include "pixel.h"
-
 #include <chrono>
 #include <filesystem>
 #include <map>
@@ -75,15 +72,6 @@ class Sprite
         // If this sprite is entirely off screen, this determines if the animate() function is called
         bool animate_off_screen;
 
-        // Dictionary of frames used by animate()
-        std::map<std::string, Frame> frames;
-
-        Frame current_frame;
-
-        // Sprites that this sprite is made out of
-        // Any transformation/translation of this sprite will be done to sub_sprites
-        std::vector<Sprite*> sub_sprites;
-
     // Members used by the engine, should not be changed manually
     private:
 
@@ -110,6 +98,8 @@ class Sprite
         ////////////////////////////////////////////////////////////////////////
         ///                             GETTERS                              ///
         ////////////////////////////////////////////////////////////////////////
+        char get_plane_orientation();
+
         int32_t get_x_pixel_position();
 
         int32_t get_y_pixel_position();
@@ -161,6 +151,8 @@ class Sprite
         ////////////////////////////////////////////////////////////////////////
         ///                             SETTERS                              ///
         ////////////////////////////////////////////////////////////////////////
+        void set_plane_orientation(char);
+
         void set_x_pixel_position(int32_t);
 
         void set_y_pixel_position(int32_t);

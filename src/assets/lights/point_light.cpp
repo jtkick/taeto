@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "components/color.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/vector.hpp"
 
 namespace taeto
 {
@@ -20,15 +20,16 @@ PointLight::PointLight(taeto::Color c, float f)
     fade_ = f;
 }
 
-inline taeto::Color PointLight::get_color(long int x, long int y, long int z)
+inline taeto::Color PointLight::light_color(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
     // Get distance between points
     // Multiply y difference by two plus a bit since characters are about twice
     // as tall as they are wide
     long int distance = sqrt(
-        (x_position - x) * (x_position - x) +
-        (2.5 * (y_position - y)) * (2.5 * (y_position - y)) +
-        (z_position - z) * (z_position - z));
+        (x_position_ - x) * (x_position_ - x) +
+        (2.5 * (y_position_ - y)) * (2.5 * (y_position_ - y)) +
+        (z_position_ - z) * (z_position_ - z));
 
     // Construct new color based on the distance
     taeto::Color new_color = taeto::Color(
@@ -40,9 +41,10 @@ inline taeto::Color PointLight::get_color(long int x, long int y, long int z)
     return new_color;
 }
 
-inline taeto::Vector PointLight::get_vector(long int x, long int y, long int z)
+inline taeto::Vector PointLight::light_vector(
+    unsigned long int x, unsigned long int y, unsigned long int z)
 {
-    return taeto::Vector(x_position - x, y_position - y, z_position - z);
+    return taeto::Vector(x_position_ - x, y_position_ - y, z_position_ - z);
 }
 
 }   // namespace taeto

@@ -3,19 +3,31 @@
 
 #include <memory>
 
-#include "components/sprite.h"
+#include "components/render_pixel.hpp"
+#include "object/i_physical_object.hpp"
+#include "object/i_renderable.hpp"
+#include "object/object.hpp"
 
 namespace taeto
 {
 
-class MovingBox: public Sprite
+class MovingBox: public Object, public IRenderable, public IPhysicalObject
 {
 public:
     MovingBox();
 
-    void handle_collision(std::shared_ptr<Sprite>);
+    bool on_collision(std::shared_ptr<taeto::Object>) override;
 
     void set_color(taeto::Color);
+
+    unsigned long int height() override;
+
+    unsigned long int width() override;
+
+    taeto::RenderPixel& pixel_at(unsigned long int, unsigned long int);
+
+private:
+    taeto::RenderPixelFrame current_frame_;
 };
 
 }   // namespace taeto

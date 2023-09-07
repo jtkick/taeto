@@ -1,23 +1,26 @@
 #ifndef ASSETS_LIGHTS_SPOTLIGHT_H
 #define ASSETS_LIGHTS_SPOTLIGHT_H
 
-#include "components/color.h"
-#include "components/light.h"
-#include "components/vector.h"
+#include "components/color.hpp"
+#include "components/vector.hpp"
+#include "object/i_light.hpp"
+#include "object/object.hpp"
 
 namespace taeto
 {
 
-class Spotlight: public Light
+class Spotlight: public Object, public ILight
 {
 public:
     Spotlight();
 
     Spotlight(taeto::Color, float, int);
 
-    inline taeto::Color get_color(long int, long int, long int);
+    inline taeto::Color light_color(
+        unsigned long int, unsigned long int, unsigned long int);
 
-    inline taeto::Vector get_vector(long int, long int, long int);
+    inline taeto::Vector light_vector(
+        unsigned long int, unsigned long int, unsigned long int);
 
 private:
     taeto::Color color_;

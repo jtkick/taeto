@@ -6,6 +6,7 @@
 #include "spdlog/spdlog.h"
 
 #include "components/frame.h"
+#include "components/position.hpp"
 
 namespace taeto
 {
@@ -193,6 +194,9 @@ bool comp(std::shared_ptr<Sprite> a, std::shared_ptr<Sprite> b) { return !(a->z_
 //     write_debug_info(frame);
 // }
 
+
+
+
 void RenderSystem::render_frame(
     taeto::Frame &rendered_frame,
     taeto::Camera &camera,
@@ -217,8 +221,8 @@ void RenderSystem::render_frame(
         {
             // Vector for rendered pixels before they're combined into a single
             // displayed pixel
-            static std::vector<taeto::Pixel> pixel_stack =
-                std::vector<taeto::Pixel>();
+            static std::vector<std::tuple<taeto::Pixel, double>> pixel_stack =
+                std::vector<std::tuple<taeto::Pixel, double>>();
             pixel_stack.clear();
 
             // TODO: MAKE SURE SPRITE AND LIGHT POINTERS AREN'T DEAD
@@ -238,26 +242,70 @@ void RenderSystem::render_frame(
                 // Make sure sprite is at least in front of the camera and
                 // within rendering distance
                 // Also handle case where z-diff is 0 to prevent divide by zero error
-                if (z_diff <= 0 || z_diff > render_distance_)
-                    continue;
+                // if (z_diff <= 0 || z_diff > render_distance_)
+                //     continue;
+
+                // Get sprite pixel of interest depending on orientation plane
+                // We're going to be very literal to keep things straight
+                char plane_orientation =
+                    current_sprite->get_plane_orientation();
+                int dp_y = y - half_frame_height;
+                int dp_x = x - half_frame_width;
+                double sprite_z = 0.0;
+                double sprite_y = 0.0;
+                double sprite_x = 0.0;
+                if (plane_orientation == 'Z')
+                {
+                    double z_diff = camera.get_z_pixel_position() -
+                        current_sprite->get_z_pixel_position();
+                    double sprite_y =
+                        (((dp_y * z_diff) /
+                          camera.get_focal_length()) +
+                         camera.get_y_pixel_position()) -
+                        current_sprite->get_y_pixel_position();
+                    double sprite_x =
+                        (((dp_x * z_diff) /
+                          camera.get_focal_length()) +
+                         camera.get_x_pixel_position()) -
+                        current_sprite->get_x_pixel_position();
+                }
+                else if (plane_orientation == 'Y')
+                {
+                    double y_diff = camera.get_y_pixel_position() -
+                        current_sprite->get_y_pixel_position();
+                    double sprite_y =
+                        (((dp_y * y_diff) /
+                          camera.get_focal_length()) +
+                         camera.get_z_pixel_position()) -
+                        current_sprite->get_z_pixel_position();
+                    double sprite_x =
+                        (((dp_x * y_diff) /
+                          camera.get_focal_length()) +
+                         camera.get_x_pixel_position()) -
+                        current_sprite->get_z_pixel_position();
+                }
 
                 // Map frame position to sprite plane position
                 double abs_z = current_sprite->get_z_pixel_position();
                 double abs_y = (((y - half_frame_height) * z_diff) / camera.get_focal_length()) + camera.get_y_pixel_position();
                 double abs_x = (((x - half_frame_width) * z_diff) / camera.get_focal_length()) + camera.get_x_pixel_position();
 
+                // Get distance to camera
+                double distance_to_camera =
+                    std::sqrt(abs_z * abs_z + abs_y * abs_y + abs_x * abs_x);
+
                 // Map to relative to sprite origin
                 double rel_y = abs_y - current_sprite->get_y_pixel_position();
                 double rel_x = abs_x - current_sprite->get_x_pixel_position();
 
                 // If pixel doesn't overlap with sprite, move on to next pixel
-                if ( rel_x < 0 || rel_x >= current_sprite->get_width() ||
-                     rel_y < 0 || rel_y >= current_sprite->get_height())
+                if (sprite_x < 0 || sprite_x >= current_sprite->get_width() ||
+                    sprite_y < 0 || sprite_y >= current_sprite->get_height())
                      continue;
 
                 // Get pixel of interest
                 taeto::Pixel current_pixel =
-                    current_sprite->get_pixel(rel_y, rel_x);
+                    current_sprite->get_pixel(sprite_y, sprite_x);
 
                 // Determine if pixel should be drawn
                 // If the foreground alpha channel is anything but 0, it will be drawn
@@ -309,7 +357,7 @@ void RenderSystem::render_frame(
                 current_pixel.background_color = current_pixel.background_color * received_light;
 
                 // Add pixel to stack for combining into rendered pixel
-                pixel_stack.push_back(current_pixel);
+                pixel_stack.push_back({current_pixel, distance_to_camera});
 
                 // If this sprite's pixel is fully opaque, we're done rendering this pixel
                 if (current_pixel.background_color.alpha == 255)
@@ -332,7 +380,7 @@ void RenderSystem::render_frame(
             // I SAY "FUCK IT"
 
             // Pixel is officially finished rendering, write to final frame
-            rendered_frame.get_pixel(y, x) = pixel_stack.at(0);
+            rendered_frame.get_pixel(y, x) = std::get<0>(pixel_stack.at(0));
             continue;
 
 
@@ -340,12 +388,14 @@ void RenderSystem::render_frame(
 
 
             // Now that we have all the rendered pixels, combine them together
-            taeto::Pixel rendered_pixel = pixel_stack.at(pixel_stack.size() - 1);
+            taeto::Pixel rendered_pixel =
+                std::get<0>(pixel_stack.at(pixel_stack.size() - 1));
             for (int i = pixel_stack.size() - 2; i >= 0; --i)
             {
                 // Get new background color
-                taeto::Color bg = rendered_pixel.background_color & pixel_stack.at(i).background_color;
-                rendered_pixel = pixel_stack.at(i);
+                taeto::Color bg = rendered_pixel.background_color &
+                    std::get<0>(pixel_stack.at(i)).background_color;
+                rendered_pixel = std::get<0>(pixel_stack.at(i));
                 rendered_pixel.background_color = bg;
             }
 

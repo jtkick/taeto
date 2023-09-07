@@ -1,7 +1,7 @@
 #include "assets/objects/white_backdrop.hpp"
 
 #include "components/color.h"
-#include "components/frame.h"
+#include "components/render_pixel_frame.h"
 
 namespace taeto
 {
@@ -19,13 +19,11 @@ WhiteBackdrop::WhiteBackdrop()
 
     respect_light_sources = true;
 
-    current_frame = taeto::Frame(height, width);
-
-    std::vector<std::vector<taeto::Color>> colors(
-        height,
-        std::vector<taeto::Color>(width, Color(255, 255, 255))
-    );
-    current_frame.set_background_colors(colors);
+    current_frame = taeto::RenderPixelFrame(height, width);
+    for (int i = 0; i < current_frame.height(); ++i)
+        for (int j = 0; j < current_frame.width(); ++j)
+            current_frame.at(i, j).background_color =
+                taeto::Color(255, 255, 255);
 }
 
 }

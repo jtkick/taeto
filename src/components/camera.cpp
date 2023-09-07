@@ -89,6 +89,9 @@ void Camera::set_x_exact_position(int64_t x)
 
 void Camera::set_focal_length(unsigned int fl)
 {
+    if (fl == 0)
+        throw "Focal length must be a natural number.";
+        
     focal_length_ = fl;
 }
 
