@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_RENDER_PIXEL_H_
-#define COMPONENTS_RENDER_PIXEL_H_
+#ifndef COMPONENTS_RENDER_PIXEL_HPP_
+#define COMPONENTS_RENDER_PIXEL_HPP_
 
 #include <string>
 
@@ -17,9 +17,19 @@ public:
 
     RenderPixel(char);
 
-    RenderPixel(char, Color, Color, bool);
+    RenderPixel(char, taeto::Color, taeto::Color, bool);
 
-    RenderPixel(char, Color, Color, bool, bool, bool, bool, Vector);
+    RenderPixel(
+        char,
+        taeto::Color,
+        taeto::Color,
+        bool b,
+        bool i,
+        bool u,
+        bool s,
+        taeto::Vector,
+        uint8_t,
+        bool);
 
     taeto::RenderPixel operator & (const taeto::RenderPixel &p);
 
@@ -67,4 +77,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_RENDER_PIXEL_H_
+#endif  // COMPONENTS_RENDER_PIXEL_HPP_

@@ -1,12 +1,14 @@
-#ifndef FRAMES_COLOR_FRAME_H_
-#define FRAMES_COLOR_FRAME_H_
+#ifndef FRAMES_COLOR_FRAME_HPP_
+#define FRAMES_COLOR_FRAME_HPP_
 
 #include "components/color.hpp"
 #include "frames/frame.hpp"
+#include "frames/uchar_frame.hpp"
 
 namespace taeto
 {
 
+class UCharFrame;   // forward include
 class ColorFrame : Frame<taeto::Color>
 {
 public:
@@ -21,4 +23,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // FRAMES_COLOR_FRAME_H_
+#endif  // FRAMES_COLOR_FRAME_HPP_

@@ -10,10 +10,9 @@
 #include "spdlog/sinks/basic_file_sink.h"
 
 #include "components/camera.hpp"
-#include "components/light.h"
-#include "components/sprite.h"
-#include "frames/display_pixel_frame.h"
-#include "frames/render_pixel_frame.h"
+#include "frames/display_pixel_frame.hpp"
+#include "frames/render_pixel_frame.hpp"
+#include "object/object.hpp"
 #include "scenes/scene.hpp"
 #include "systems/audio_system.hpp"
 #include "systems/input_system.hpp"
@@ -31,10 +30,10 @@ namespace {
         spdlog::basic_logger_mt("logger", "logs/log.txt");
 
     // Sprites to be rendered
-    std::vector<std::weak_ptr<taeto::Sprite>> sprites_;
+    std::vector<std::weak_ptr<taeto::Object>> sprites_;
 
     // Light sources
-    std::vector<std::weak_ptr<taeto::Light>> lights_;
+    std::vector<std::weak_ptr<taeto::Object>> lights_;
 
     // Currently loaded scene
     std::shared_ptr<Scene> scene_;
@@ -115,7 +114,7 @@ void run()
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
         int window_height_ = size.ws_row;
         int window_width_ = size.ws_col;
-        frame.resize(window_height, window_width);
+        frame.resize(window_height_, window_width_);
 
         ////////////////////////////////////////////////////////////////
         ////                       INPUT STEP                       ////
@@ -133,10 +132,10 @@ void run()
         // TODO
 
         logger_->debug("Telling sprites to animate.");
-        for (std::weak_ptr<Sprite> current_sprite_weak_ptr : sprites_)
+        for (std::weak_ptr<taeto::Object> current_sprite_weak_ptr : sprites_)
         {
             // Get pointer if not dead
-            std::shared_ptr<taeto::Sprite> current_sprite;
+            std::shared_ptr<taeto::Object> current_sprite;
             if (!(current_sprite = current_sprite_weak_ptr.lock()))
                 continue;
 
@@ -144,10 +143,10 @@ void run()
         }
 
         logger_->debug("Telling lights to animate.");
-        for (std::weak_ptr<Light> current_light_weak_ptr : lights_)
+        for (std::weak_ptr<taeto::Object> current_light_weak_ptr : lights_)
         {
             // Get pointer if not dead
-            std::shared_ptr<taeto::Light> current_light;
+            std::shared_ptr<taeto::Object> current_light;
             if (!(current_light = current_light_weak_ptr.lock()))
                 continue;
 
@@ -173,15 +172,15 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         // Clear out all dead pointers before rendering
-        std::vector<std::weak_ptr<taeto::Sprite>>::iterator sit = sprites_.begin();
+        std::vector<std::weak_ptr<taeto::Object>>::iterator sit = sprites_.begin();
         while (sit != sprites_.end())
-            if (std::shared_ptr<taeto::Sprite> spt = sit->lock())
+            if (std::shared_ptr<taeto::Object> spt = sit->lock())
                 ++sit;
             else
                 sit = sprites_.erase(sit);
-        std::vector<std::weak_ptr<taeto::Light>>::iterator lit = lights_.begin();
+        std::vector<std::weak_ptr<taeto::Object>>::iterator lit = lights_.begin();
         while (lit != lights_.end())
-            if (std::shared_ptr<taeto::Light> lpt = lit->lock())
+            if (std::shared_ptr<taeto::Object> lpt = lit->lock())
                 ++lit;
             else
                 lit = lights_.erase(lit);

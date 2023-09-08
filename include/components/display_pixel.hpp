@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_DISPLAY_PIXEL_H_
-#define COMPONENTS_DISPLAY_PIXEL_H_
+#ifndef COMPONENTS_DISPLAY_PIXEL_HPP_
+#define COMPONENTS_DISPLAY_PIXEL_HPP_
 
 #include <string>
 
@@ -12,6 +12,20 @@ namespace taeto
 class DisplayPixel
 {
 public:
+    // Constructors
+    DisplayPixel();
+
+    DisplayPixel(char);
+
+    DisplayPixel(char, Color, Color, bool);
+
+    DisplayPixel(char, Color, Color, bool, bool, bool, bool);
+
+    // Reset to default values
+    void clear();
+
+    // Export to string
+    std::string serialize();
 
     // Actual character to print
     char c;
@@ -34,24 +48,8 @@ public:
 
     // Whether the character has a line through it
     bool strikethrough;
-
-    // Constructors
-    DisplayPixel();
-
-    DisplayPixel(char);
-
-    DisplayPixel(char, Color, Color, bool);
-
-    DisplayPixel(char, Color, Color, bool, bool, bool, bool);
-
-    // Reset to default values
-    void clear();
-
-    // Export to string
-    std::string serialize();
-
 };
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_DISPLAY_PIXEL_H_
+#endif  // COMPONENTS_DISPLAY_PIXEL_HPP_

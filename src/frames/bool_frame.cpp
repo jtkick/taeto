@@ -1,6 +1,4 @@
-#include "frames/color_frame.hpp"
-
-#include "components/color.h"
+#include "frames/bool_frame.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -11,12 +9,12 @@
 namespace taeto
 {
 
-ColorFrame::ColorFrame()
+BoolFrame::BoolFrame()
 {
 
 }
 
-ColorFrame::ColorFrame(std::string path)
+BoolFrame::BoolFrame(std::string path)
 {
     // Decode png file
     std::vector<unsigned char> image;
@@ -31,22 +29,23 @@ ColorFrame::ColorFrame(std::string path)
     for (int i = 0; i < height; ++i)
     {
         // New row
-        std::vector<taeto::Color> row = std::vector<taeto::Color>();
+        std::vector<taeto::bool> row = std::vector<taeto::bool>();
 
         for (int j = 0; j < width; ++j)
         {
             // Begininning of this pixel in image
             int pixel_index = i*width*4 + j*4;
 
-            // Get color values
-            taeto::Color c = taeto::Color();
-            c.red = image.at(pixel_index);
-            c.green = image.at(pixel_index+1);
-            c.blue = image.at(pixel_index+2);
-            c.alpha = image.at(pixel_index+3);
-
-            // Add pixel to our color frame
-            row.push_back(c);
+            if (image.at(pixel_index == 255) &&
+                image.at(pixel_index+1 == 255) &&
+                image.at(pixel_index+2 == 255))
+                row.push_back(true);
+            else if (image.at(pixel_index == 0) &&
+                     image.at(pixel_index+1 == 0) &&
+                     image.at(pixel_index+2 == 0))
+                row.push_back(false);
+            else
+                throw Exception("Expected fully black or fully white pixels.");
         }
 
         values_.push_back(row);

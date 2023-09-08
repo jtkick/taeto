@@ -1,4 +1,4 @@
-#include "components/color.h"
+#include "components/color.hpp"
 
 namespace taeto
 {

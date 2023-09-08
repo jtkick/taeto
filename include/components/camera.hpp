@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_CAMERA_H_
-#define COMPONENTS_CAMERA_H_
+#ifndef COMPONENTS_CAMERA_HPP_
+#define COMPONENTS_CAMERA_HPP_
 
 #include <stdint.h>
 
@@ -68,4 +68,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_CAMERA_H_
+#endif  // COMPONENTS_CAMERA_HPP_

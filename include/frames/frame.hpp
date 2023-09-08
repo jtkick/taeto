@@ -65,7 +65,6 @@ public:
 
 
 protected:
-
     /**
      * Overwrite the second given two-dimensional vector onto the first
      * two-dimensional vector at the given location.
@@ -75,31 +74,31 @@ protected:
      * @param x Collumn of the row to begin writing the second frame to.
      * @param tile True if the function should tile the second frame on.
      */
-    void apply(
-        Frame<T>& other,
-        int y = 0,
-        int x = 0,
-        bool tile = false,
-        std::function<T(T, T)> op = std::plus)
-    {
-        // If tiling, dimensions are across the entire frame
-        unsigned int top = tile ? 0 : y;
-        unsigned int bottom =
-            tile ? height()-1 : std::min(y + other.height() - 1, height());
-        unsigned int left = tile ? 0 : x;
-        unsigned int right =
-            tile ? width()-1 : std::min(x + other.width() - 1, width());
-
-        // Start applying values
-        int o_h = other.height();
-        int o_w = other.width();
-        for (int i = top; i < bottom; ++i)
-            for (int j = left; j < right; ++j)
-                at(i, j) = op(
-                    at(i, j),
-                    other.at((i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w)
-                );
-    }
+    // void apply(
+    //     Frame<T>& other,
+    //     int y = 0,
+    //     int x = 0,
+    //     bool tile = false,
+    //     std::function<T(T, T)> op = std::plus)
+    // {
+    //     // If tiling, dimensions are across the entire frame
+    //     unsigned int top = tile ? 0 : y;
+    //     unsigned int bottom =
+    //         tile ? height()-1 : std::min(y + other.height() - 1, height());
+    //     unsigned int left = tile ? 0 : x;
+    //     unsigned int right =
+    //         tile ? width()-1 : std::min(x + other.width() - 1, width());
+    //
+    //     // Start applying values
+    //     int o_h = other.height();
+    //     int o_w = other.width();
+    //     for (int i = top; i < bottom; ++i)
+    //         for (int j = left; j < right; ++j)
+    //             at(i, j) = op(
+    //                 at(i, j),
+    //                 other.at((i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w)
+    //             );
+    // }
 
 
     /**

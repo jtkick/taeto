@@ -1,7 +1,7 @@
 #ifndef OBJECT_I_RENDERABLE_HPP_
 #define OBJECT_I_RENDERABLE_HPP_
 
-#include "components/render_pixel.hpp"
+color.h"/render_pixel.hpp"
 
 namespace taeto
 {

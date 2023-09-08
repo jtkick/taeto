@@ -36,7 +36,7 @@ MovingBox::MovingBox()
     {
         for (int j = 0; j < current_frame_.width(); ++j)
         {
-
+            
         }
     }
 

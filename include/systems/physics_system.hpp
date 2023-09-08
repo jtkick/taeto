@@ -1,11 +1,11 @@
-#ifndef SYSTESM_PHYSICS_SYSTEM_H_
-#define SYSTESM_PHYSICS_SYSTEM_H_
+#ifndef SYSTESM_PHYSICS_SYSTEM_HPP_
+#define SYSTESM_PHYSICS_SYSTEM_HPP_
 
 #include <memory>
 
 #include "spdlog/spdlog.h"
 
-#include "components/sprite.h"
+color.h"/sprite.h"
 #include "systems/system.hpp"
 
 namespace taeto
@@ -33,4 +33,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // SYSTESM_PHYSICS_SYSTEM_H_
+#endif  // SYSTESM_PHYSICS_SYSTEM_HPP_

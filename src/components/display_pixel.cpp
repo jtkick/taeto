@@ -36,7 +36,7 @@ DisplayPixel::DisplayPixel(char ch, Color fc, Color bc, bool b)
     strikethrough = false;
 }
 
-DisplayPixel::DisplayPixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s, Vector n)
+DisplayPixel::DisplayPixel(char ch, Color fc, Color bc, bool b, bool i, bool u, bool s)
 {
     c = ch;
     foreground_color = fc;

@@ -12,8 +12,7 @@
 #include "spdlog/spdlog.h"
 
 #include "components/camera.hpp"
-#include "components/light.h"
-#include "components/sprite.h"
+#include "object/object.hpp"
 #include "scenes/scene.hpp"
 
 namespace taeto
@@ -31,22 +30,13 @@ std::shared_ptr<bool> get_button_reference(int);
 taeto::Camera& get_camera();
 
 /**
- * Loads a light into the engine.
- * Is a weak pointer because the owner of the light can destroy the
- * light at any time and the engine will drop its weak pointer.
+ * Loads an object into the engine.
+ * Is a weak pointer because the owner of the object can destroy the
+ * object at any time and the engine will drop its weak pointer.
  *
- * @param sprite_ptr A weak_ptr to the sprite to be loaded.
+ * @param object_ptr A weak_ptr to the object to be loaded.
  */
-void load_light(std::weak_ptr<Light>);
-
-/**
- * Loads a sprite into the engine.
- * Is a weak pointer because the owner of the sprite can destroy the
- * sprite at any time and the engine will drop its weak pointer.
- *
- * @param sprite_ptr A weak_ptr to the sprite to be loaded.
- */
-void load_sprite(std::weak_ptr<Sprite>);
+void load_object(std::weak_ptr<Object>);
 
 /**
  * Loads a scene into the engine.

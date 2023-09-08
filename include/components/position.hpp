@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_POSITION_H_
-#define COMPONENTS_POSITION_H_
+#ifndef COMPONENTS_POSITION_HPP_
+#define COMPONENTS_POSITION_HPP_
 
 #include <cstdint>
 
@@ -25,4 +25,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_POSITION_H_
+#endif  // COMPONENTS_POSITION_HPP_

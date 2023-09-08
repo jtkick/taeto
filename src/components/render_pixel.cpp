@@ -106,11 +106,12 @@ bool operator == (const Pixel& p1, const Pixel& p2)
 //     collide = p.collide;
 // }
 
+// TODO: UPDATE THIS
 // This function combines pixels, applying the right pixel
 // onto the left pixel. Taking color alpha into account
-taeto::Pixel RenderPixel::operator & (const taeto::Pixel &p)
+taeto::RenderPixel RenderPixel::operator & (const taeto::RenderPixel &p)
 {
-    taeto::Pixel new_pixel;
+    taeto::RenderPixel new_pixel;
 
     // Only combine if foreground color is not fully transparent
     if (p.foreground_color.alpha != 0)

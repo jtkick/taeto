@@ -21,6 +21,9 @@ public:
 
     int64_t get_z_exact_position();
 
+    void move(uint64_t, uint64_t, uint64_t);
+    void place(uint64_t, uint64_t, uint64_t);
+
 protected:
     // Position on screen relative to origin
     // Top 32 bits are pixel position, bottom 32 bits are sub-pixel position

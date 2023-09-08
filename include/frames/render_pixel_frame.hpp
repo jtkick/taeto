@@ -1,5 +1,5 @@
-#ifndef FRAMES_RENDER_PIXEL_FRAME_H_
-#define FRAMES_RENDER_PIXEL_FRAME_H_
+#ifndef FRAMES_RENDER_PIXEL_FRAME_HPP_
+#define FRAMES_RENDER_PIXEL_FRAME_HPP_
 
 #include <vector>
 
@@ -10,6 +10,7 @@
 namespace taeto
 {
 
+class ColorFrame;   // forward include
 class RenderPixelFrame : Frame<taeto::DisplayPixel>
 {
 public:
@@ -24,4 +25,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // FRAMES_RENDER_PIXEL_FRAME_H_
+#endif  // FRAMES_RENDER_PIXEL_FRAME_HPP_

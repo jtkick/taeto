@@ -1,5 +1,5 @@
-#ifndef SYSTEMS_RENDER_SYSTEM_H_
-#define SYSTEMS_RENDER_SYSTEM_H_
+#ifndef SYSTEMS_RENDER_SYSTEM_HPP_
+#define SYSTEMS_RENDER_SYSTEM_HPP_
 
 #include <chrono>
 #include <deque>
@@ -10,10 +10,9 @@
 #include "spdlog/spdlog.h"
 
 #include "components/camera.hpp"
-#include "components/light.h"
-#include "components/pixel.h"
-#include "components/position.hpp"
-#include "components/sprite.h"
+#include "components/display_pixel.hpp"
+#include "components/render_pixel.hpp"
+#include "object/object.hpp"
 #include "systems/system.hpp"
 
 namespace taeto
@@ -74,4 +73,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // SYSTEMS_RENDER_SYSTEM_H_
+#endif  // SYSTEMS_RENDER_SYSTEM_HPP_
