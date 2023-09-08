@@ -70,9 +70,6 @@ public:
 
     // How "shiny" this pixel is
     uint8_t specularity;
-
-    // Whether or not to do collision detection on this pixel
-    bool collide;
 };
 
 }   // namespace taeto

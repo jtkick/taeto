@@ -17,6 +17,11 @@ public:
         resize(h, w, t);
     };
 
+    Frame(std::vector<std::vector<T>> v)
+    {
+        
+    }
+
     /**
      * Returns the value at the given y and x coordinates.
      *

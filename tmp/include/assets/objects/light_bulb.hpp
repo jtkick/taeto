@@ -1,5 +1,5 @@
-#ifndef ASSETS_OBJECTS_LIGHT_BULB_H_
-#define ASSETS_OBJECTS_LIGHT_BULB_H_
+#ifndef ASSETS_OBJECTS_LIGHT_BULB_HPP_
+#define ASSETS_OBJECTS_LIGHT_BULB_HPP_
 
 #include <memory>
 
@@ -26,4 +26,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // ASSETS_OBJECTS_LIGHT_BULB_H_
+#endif  // ASSETS_OBJECTS_LIGHT_BULB_HPP_

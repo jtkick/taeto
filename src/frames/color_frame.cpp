@@ -1,6 +1,7 @@
 #include "frames/color_frame.hpp"
 
-#include "components/color.h"
+#include "components/color.hpp"
+#include "frames/uchar_frame.h"
 
 #include <fstream>
 #include <iostream>
@@ -51,6 +52,78 @@ ColorFrame::ColorFrame(std::string path)
 
         values_.push_back(row);
     }
+}
+
+const taeto::UCharFrame& ColorFrame::reds() const
+{
+    taeto::UCharFrame frame(height(), width());
+    for (int i = 0; i < frame.height(); ++i)
+        for (int j = 0; j < frame.width(); ++j)
+            frame.at(i, j) = values_.at(i, j).red;
+    return frame;
+}
+
+void ColorFrame::reds(const taeto::UCharFrame& f)
+{
+    assert(height() == f.height());
+    assert(width() == f.width());
+    for (int i = 0; i < height(); ++i)
+        for (int j = 0; j < width(); ++j)
+            values_.at(i, j).red = f.at(i, j);
+}
+
+const taeto::UCharFrame& ColorFrame::greens() const
+{
+    taeto::UCharFrame frame(height(), width());
+    for (int i = 0; i < frame.height(); ++i)
+        for (int j = 0; j < frame.width(); ++j)
+            frame.at(i, j) = values_.at(i, j).green;
+    return frame;
+}
+
+void ColorFrame::greens(const taeto::UCharFrame& f)
+{
+    assert(height() == f.height());
+    assert(width() == f.width());
+    for (int i = 0; i < height(); ++i)
+        for (int j = 0; j < width(); ++j)
+            values_.at(i, j).green = f.at(i, j);
+}
+
+const taeto::UCharFrame& ColorFrame::blues() const
+{
+    taeto::UCharFrame frame(height(), width());
+    for (int i = 0; i < frame.height(); ++i)
+        for (int j = 0; j < frame.width(); ++j)
+            frame.at(i, j) = values_.at(i, j).blue;
+    return frame;
+}
+
+void ColorFrame::blues(const taeto::UCharFrame& f)
+{
+    assert(height() == f.height());
+    assert(width() == f.width());
+    for (int i = 0; i < height(); ++i)
+        for (int j = 0; j < width(); ++j)
+            values_.at(i, j).blue = f.at(i, j);
+}
+
+const taeto::UCharFrame& ColorFrame::alphas() const
+{
+    taeto::UCharFrame frame(height(), width());
+    for (int i = 0; i < frame.height(); ++i)
+        for (int j = 0; j < frame.width(); ++j)
+            frame.at(i, j) = values_.at(i, j).alpha;
+    return frame;
+}
+
+void ColorFrame::alphas(const taeto::UCharFrame& f)
+{
+    assert(height() == f.height());
+    assert(width() == f.width());
+    for (int i = 0; i < height(); ++i)
+        for (int j = 0; j < width(); ++j)
+            values_.at(i, j).alpha = f.at(i, j);
 }
 
 }   // namespace taeto

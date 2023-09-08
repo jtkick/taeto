@@ -1,5 +1,5 @@
-#ifndef FRAMES_BOOL_FRAME_H_
-#define FRAMES_BOOL_FRAME_H_
+#ifndef FRAMES_BOOL_FRAME_HPP_
+#define FRAMES_BOOL_FRAME_HPP_
 
 #include "frames/frame.hpp"
 
@@ -18,4 +18,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // FRAMES_BOOL_FRAME_H_
+#endif  // FRAMES_BOOL_FRAME_HPP_

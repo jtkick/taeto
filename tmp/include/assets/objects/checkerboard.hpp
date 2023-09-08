@@ -1,5 +1,5 @@
-#ifndef ASSETS_OBJECTS_CHECKERBOARD_H_
-#define ASSETS_OBJECTS_CHECKERBOARD_H_
+#ifndef ASSETS_OBJECTS_CHECKERBOARD_HPP_
+#define ASSETS_OBJECTS_CHECKERBOARD_HPP_
 
 #include "components/color.hpp"
 #include "object/object.hpp"
@@ -15,17 +15,17 @@ public:
 
     Checkerboard(uint64_t, uint64_t, taeto::Color, char);
 
-    taeto::RenderPixel get_pixel_at(unsigned long int, unsigned long int);
+    taeto::RenderPixel get_pixel_at(uint64_t, uint64_t);
 
-    unsigned long int height();
+    uint64_t height();
 
     char plane_orientation();
 
-    unsigned long int width();
+    uint64_t width();
 
 private:
-    unsigned long int height_;
-    unsigned long int width_;
+    uint64_t height_;
+    uint64_t width_;
     char plane_orientation_;
     taeto::Color light_color_;
     taeto::Color dark_color_;

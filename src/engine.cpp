@@ -3,6 +3,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <deque>
 #include <memory>
 
@@ -12,6 +13,9 @@
 #include "components/camera.hpp"
 #include "frames/display_pixel_frame.hpp"
 #include "frames/render_pixel_frame.hpp"
+#include "object/i_light.hpp"
+#include "object/i_physical_object.hpp"
+#include "object/i_renderable.hpp"
 #include "object/object.hpp"
 #include "scenes/scene.hpp"
 #include "systems/audio_system.hpp"
@@ -29,11 +33,17 @@ namespace {
     std::shared_ptr<spdlog::logger> logger_ =
         spdlog::basic_logger_mt("logger", "logs/log.txt");
 
+    // All objects known to the engine
+    std::vector<std::weak_ptr<taeto::Object>> objects_;
+
     // Sprites to be rendered
     std::vector<std::weak_ptr<taeto::Object>> sprites_;
 
     // Light sources
     std::vector<std::weak_ptr<taeto::Object>> lights_;
+
+    // Physical objects to collide/have physics applied
+    std::vector<std::weak_ptr<taeto::Object>> physicals_;
 
     // Currently loaded scene
     std::shared_ptr<Scene> scene_;
@@ -43,6 +53,10 @@ namespace {
 
     // If set to true, engine will display FPS in top left corner
     bool debug_mode_on_ = true;
+
+    // Time last the last frame was rendered, used for calculating FPS
+    std::chrono::milliseconds last_frame_start_time_;
+    std::chrono::milliseconds last_frame_duration_;
 
     // For keeping track of frame rate
     unsigned long long frame_number_;
@@ -63,16 +77,24 @@ taeto::Camera& get_camera()
     return camera_;
 }
 
-void load_light(std::weak_ptr<Light> light)
+void load_object(std::weak_ptr<taeto::Object> object)
 {
-    logger_->debug("Adding light to engine.");
-    lights_.push_back(light);
-}
+    logger_->info("Adding object to engine.");
 
-void load_sprite(std::weak_ptr<Sprite> sprite)
-{
-    logger_->debug("Adding sprite to engine.");
-    sprites_.push_back(sprite);
+    // Load object to main vector
+    objects_.push_back(object);
+
+    // If object implements light interface, add to lights
+    if (ILight* i = dynamic_cast<ILight*>(object.get()))
+        lights_.push_back(object);
+
+    // If object implements renderable interface, add to sprites
+    if (IRenderable* i = dynamic_cast<IRenderable*>(object.get()))
+        sprites_.push_back(object);
+
+    // If object implements physical object interface, add to physicals
+    if (IPhysicalObject* i = dynamic_cast<IPhysicalObject*>(object.get()))
+        physicals_.push_back(object);
 }
 
 void load_scene(std::shared_ptr<Scene> scene)
@@ -116,6 +138,22 @@ void run()
         int window_width_ = size.ws_col;
         frame.resize(window_height_, window_width_);
 
+        // For calculating frame rate and passing to objects, get time since
+        // the last frame was rendered
+        last_frame_duration_ =
+            duration_cast<std::chrono::milliseconds>(
+                    system_clock::now().time_since_epoch()
+                ) - last_frame_start_time_;
+
+        // Clear out all dead pointers from engine
+        std::vector<std::vector<taeto::Object>*> all_object_vectors=
+            {&objects_, &sprites_, &lights_, &physicals_};
+        for (std::weak_ptr<taeto::Object> object : objects_)
+            if (!object->lock())
+                for (std::vector<taeto::Object>* v : all_object_vectors)
+                    v->erase(
+                        std::remove(v->begin(), v->end(), object), v->end());
+
         ////////////////////////////////////////////////////////////////
         ////                       INPUT STEP                       ////
         ////////////////////////////////////////////////////////////////
@@ -128,32 +166,16 @@ void run()
         ////                     ANIMATION STEP                     ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->debug("Telling scene to animate.");
-        // TODO
-
-        logger_->debug("Telling sprites to animate.");
-        for (std::weak_ptr<taeto::Object> current_sprite_weak_ptr : sprites_)
+        logger_->info("Telling sprites to animate.");
+        for (std::weak_ptr<taeto::Object> object : objects_)
         {
             // Get pointer if not dead
-            std::shared_ptr<taeto::Object> current_sprite;
-            if (!(current_sprite = current_sprite_weak_ptr.lock()))
+            if (!(std::shared_ptr<taeto::Object> shared = object.lock()))
                 continue;
-
-            current_sprite->animate();
+            current_sprite->animate(last_frame_duration_);
         }
 
-        logger_->debug("Telling lights to animate.");
-        for (std::weak_ptr<taeto::Object> current_light_weak_ptr : lights_)
-        {
-            // Get pointer if not dead
-            std::shared_ptr<taeto::Object> current_light;
-            if (!(current_light = current_light_weak_ptr.lock()))
-                continue;
-
-            // TODO
-            //current_light->animate();
-        }
-
+        logger_->info("Telling scene to animate.");
         if (scene_)
             scene_->animate();
 
@@ -163,27 +185,13 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         // Physics
-        logger_->debug("Applying forces to sprites.");
-        physics_system_.detect_collisions(sprites_);
+        logger_->info("Applying forces to sprites.");
+        physics_system_.detect_collisions(physicals_);
 
 
         ////////////////////////////////////////////////////////////////
         ////                      RENDER STEP                       ////
         ////////////////////////////////////////////////////////////////
-
-        // Clear out all dead pointers before rendering
-        std::vector<std::weak_ptr<taeto::Object>>::iterator sit = sprites_.begin();
-        while (sit != sprites_.end())
-            if (std::shared_ptr<taeto::Object> spt = sit->lock())
-                ++sit;
-            else
-                sit = sprites_.erase(sit);
-        std::vector<std::weak_ptr<taeto::Object>>::iterator lit = lights_.begin();
-        while (lit != lights_.end())
-            if (std::shared_ptr<taeto::Object> lpt = lit->lock())
-                ++lit;
-            else
-                lit = lights_.erase(lit);
 
         logger_->debug("Rendering new frame.");
         render_system_.render_frame(frame, camera_, sprites_, lights_);
@@ -193,12 +201,11 @@ void run()
         ////                  POST-PROCESSING STEP                  ////
         ////////////////////////////////////////////////////////////////
 
-        // Draw debug data on frame
+        // Print debug information if flag is true
         if (debug_mode_on_)
         {
-            // Print debug information if flag is true
             frame.add_string(
-                0, 0, "FPS: " + std::to_string(current_fps_));
+                0, 0, "FPS: " + std::to_string((int)(1000.0 / last_frame_duration_));
             frame.add_string(
                 1, 0, "NUM SPRITES: " + std::to_string(sprites_.size()));
             frame.add_string(
@@ -219,32 +226,10 @@ void run()
         }
 
         // Tell all sprites and scenes that a frame is about to be rendered
-        logger_->debug("Posting Pre_Render_Message.");
+        //logger_->debug("Posting Pre_Render_Message.");
 
         logger_->debug("Displaying frame.");
         display_system_.display_frame(frame);
-
-        // Update frame rate
-        int const AVERAGING_TIME = 1000;
-
-        // Get milliseconds since epoch for saving when this frame was rendered
-        std::chrono::milliseconds time =
-            std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch());
-
-        // Add time of this frame
-        frame_times_.push_back(time);
-
-        // Remove all values in vector that are more than 'averaging_time'
-        // milliseconds old
-        while (time - frame_times_.front() >
-               std::chrono::milliseconds(AVERAGING_TIME))
-            frame_times_.pop_front();
-
-        frame_number_++;
-
-        // Calculate current FPS
-        current_fps_ = frame_times_.size() / (AVERAGING_TIME / 1000);
     }
 
     endwin();

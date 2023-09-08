@@ -1,39 +1,52 @@
 #ifndef FRAMES_DISPLAY_PIXEL_FRAME_HPP_
 #define FRAMES_DISPLAY_PIXEL_FRAME_HPP_
 
-#include <vector>
-
 #include "components/display_pixel.hpp"
 #include "frames/bool_frame.hpp"
+#include "frames/char_frame.hpp"
 #include "frames/color_frame.hpp"
 #include "frames/frame.hpp"
-#include "frames/render_pixel_frame.hpp"
 
 namespace taeto
 {
 
-class BoolFrame;    // forward include
-class CharFrame;    // forward include
-class ColorFrame;   // forward include
-class RenderPixelFrame;     // forward include
+// Forward includes
+class BoolFrame;
+class CharFrame;
+class ColorFrame;
+
 class DisplayPixelFrame : Frame<taeto::DisplayPixel>
 {
 public:
-    DisplayPixelFrame(const taeto::ColorFrame&);
+    DisplayPixelFrame();
 
-    DisplayPixelFrame(const taeto::RenderPixelFrame&);
+    const taeto::CharFrame& chars() const;
 
-    taeto::ColorFrame foreground_colors();
+    void chars(const taeto::CharFrame&);
 
-    taeto::ColorFrame background_colors();
+    const taeto::ColorFrame& foreground_colors() const;
 
-    taeto::BoolFrame bolds();
+    void foreground_colors(const taeto::ColorFrame&);
 
-    taeto::BoolFrame italics();
+    const taeto::ColorFrame& background_colors() const;
 
-    taeto::BoolFrame underlines();
+    void background_colors(const taeto::ColorFrame&);
 
-    taeto::BoolFrame strikethroughs();
+    const taeto::BoolFrame& bolds() const;
+
+    void bolds(const taeto::BoolFrame&);
+
+    const taeto::BoolFrame& italics() const;
+
+    void italics(const taeto::BoolFrame&);
+
+    const taeto::BoolFrame& underlines() const;
+
+    void underlines(const taeto::BoolFrame&);
+
+    const taeto::BoolFrame& strikethroughs() const;
+
+    void strikethroughs(const taeto::BoolFrame&);
 };
 
 }   // namespace taeto

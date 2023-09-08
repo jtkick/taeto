@@ -9,6 +9,10 @@ class Object
 public:
     Object();
 
+    // Since Object is the base class for the interfaces, it needs at least one
+    // virtual method to be polymorphic
+    virtaul ~Object() { };
+
     int32_t get_x_pixel_position();
 
     int32_t get_y_pixel_position();
@@ -23,6 +27,12 @@ public:
 
     void move(uint64_t, uint64_t, uint64_t);
     void place(uint64_t, uint64_t, uint64_t);
+
+    // Called when the object is loaded into the engine
+    // Allows object to load any necessary sub-objects
+    void load();
+
+    void animate(std::chrono::milliseconds);
 
 protected:
     // Position on screen relative to origin

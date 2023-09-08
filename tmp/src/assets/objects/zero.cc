@@ -1,12 +1,10 @@
-#include "zero.h"
+#include "assets/objects/zero.hpp"
 
 #include <memory>
 
-#include "components/color.h"
-#include "components/frame.h"
-#include "components/sprite.h"
-#include "messages/key_update_message.h"
-#include "messages/message.h"
+#include "components/color.hpp"
+#include "frames/render_pixel_frame.hpp"
+#include "object/object.hpp"
 
 namespace taeto
 {
@@ -14,9 +12,9 @@ namespace taeto
 Zero::Zero()
 {
     // Default position to the origin
-    x_position = 0;
-    y_position = -10;
-    z_position = 0;
+    x_position_ = 0;
+    y_position_ = -10;
+    z_position_ = 0;
 
     // Set frame details
     height = 2;
@@ -28,31 +26,37 @@ Zero::Zero()
     collide = true;
     detect_collisions = true;
 
+    // Create collision mesh on Zero's body
+    taeto::BoolFrame collision_frame_(height, width, false);
+    for (int i = 1; i <= 4; ++i)
+        collision_frame_.at(1, i) = true;
+
+
     //current_frame = new Frame(7, 7);
-    taeto::Frame f(height, width);
+    taeto::RenderPixelFrame f(height, width);
 
     taeto::Color w(255, 255, 255);
     taeto::Color g(43, 43, 43);
     taeto::Color a(0, 0, 0, 0);
     taeto::Color y(127, 127, 127, 127);
 
-    f.set_chars({ R"(@@__@@)",
-                  R"(@( ')')"});
-    f.set_foreground_colors( { { a, a, w, w, a, a },
-                               { a, w, w, w, w, w } } );
-    f.set_background_colors( { { a, a, a, a, a, a },
-                               { a, y, y, y, y, a } } );
+    f.chars({ R"(@@__@@)",
+              R"(@( ')')"});
+    f.foreground_colors( { { a, a, w, w, a, a },
+                           { a, w, w, w, w, w } } );
+    f.background_colors( { { a, a, a, a, a, a },
+                           { a, y, y, y, y, a } } );
     frames.insert(std::make_pair("forward", f));
 
-    f.set_chars({ R"(@@__@@)",
-                  R"('(' )@)"});
-    f.set_foreground_colors( { { a, a, w, w, a, a },
-                               { w, w, w, w, w, a } } );
-    f.set_background_colors( { { a, a, a, a, a, a },
-                               { a, y, y, y, y, a } } );
+    f.chars({ R"(@@__@@)",
+              R"('(' )@)"});
+    f.foreground_colors( { { a, a, w, w, a, a },
+                           { w, w, w, w, w, a } } );
+    f.background_colors( { { a, a, a, a, a, a },
+                           { a, y, y, y, y, a } } );
     frames.insert(std::make_pair("backward", f));
 
-    current_frame = frames["forward"];
+    current_frame_ = frames["forward"];
 
     respect_light_sources = true;
     use_normal_mapping = false;

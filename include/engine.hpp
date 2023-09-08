@@ -1,5 +1,5 @@
-#ifndef ENGINE_H_
-#define ENGINE_H_
+#ifndef ENGINE_HPP_
+#define ENGINE_HPP_
 
 #include <curses.h>
 
@@ -17,6 +17,7 @@
 
 namespace taeto
 {
+    
 /**
  * Returns a reference to a boolean that will change as button inputs change.
  *
@@ -60,4 +61,4 @@ void set_debug_mode(bool);
 
 }   // namespace taeto
 
-#endif  // ENGINE_H_
+#endif  // ENGINE_HPP_

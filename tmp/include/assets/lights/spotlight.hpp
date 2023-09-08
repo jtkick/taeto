@@ -1,5 +1,5 @@
-#ifndef ASSETS_LIGHTS_SPOTLIGHT_H
-#define ASSETS_LIGHTS_SPOTLIGHT_H
+#ifndef ASSETS_LIGHTS_SPOTLIGHT_HPP_
+#define ASSETS_LIGHTS_SPOTLIGHT_HPP_
 
 #include "components/color.hpp"
 #include "components/vector.hpp"
@@ -34,4 +34,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // ASSETS_LIGHTS_SPOTLIGHT_H
+#endif  // ASSETS_LIGHTS_SPOTLIGHT_HPP_
