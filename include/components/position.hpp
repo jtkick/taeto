@@ -1,8 +1,6 @@
 #ifndef COMPONENTS_POSITION_HPP_
 #define COMPONENTS_POSITION_HPP_
 
-#include <cstdint>
-
 namespace taeto
 {
 
@@ -12,16 +10,24 @@ class Position
 public:
     Position();
 
-    Position(int64_t, int64_t, int64_t);
+    Position(double, double, double);
 
     ~Position();
 
     static inline double distance(const Position&, const Position&);
 
-    int64_t z;
-    int64_t y;
-    int64_t x;
+    Position operator+(const Position& rhs) const;
+    Position operator-(const Position& rhs) const;
+    Position operator+=(const Position& rhs) const;
+    Position operator-=(const Position& rhs) const;
+    Position operator=(const Position& rhs) const;
+
+    double z_;
+    double y_;
+    double x_;
 };
+
+Position
 
 }   // namespace taeto
 

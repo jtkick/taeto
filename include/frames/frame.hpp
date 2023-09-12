@@ -80,6 +80,21 @@ public:
     };
 
 
+    /**
+     * Writes the given frame over top of this frame, replacing whatever was
+     * already there.
+     *
+     * @param y Row to write to
+     * @param x Column to write to
+     * @param frame Other frame
+     */
+    void overwrite(const Frame<T>& frame, int y, int x)
+    {
+        // Just use the apply function for simplicity
+        apply(frame, y, x, false, [](T t1, T t2){ return t2; });
+    };
+
+
 protected:
 
     /**
@@ -92,6 +107,11 @@ protected:
     template<class U>
     const Frame<U>& extract_member_frame(std::function<U(T)>& extractor)
     {
+        taeto::Frame<U> frame(height(), width());
+        for (int i = 0; i < frame.height(); ++i)
+            for (int j = 0; j < frame.width(); ++j)
+                frame.at(i, j) = extractor(values_.at(i, j));
+        return frame;
 
     }
 
@@ -119,80 +139,56 @@ protected:
      * @param x Collumn of the row to begin writing the second frame to.
      * @param tile True if the function should tile the second frame on.
      */
-    // void apply(
-    //     Frame<T>& other,
-    //     int y = 0,
-    //     int x = 0,
-    //     bool tile = false,
-    //     std::function<T(T, T)> op = std::plus)
-    // {
-    //     // If tiling, dimensions are across the entire frame
-    //     unsigned int top = tile ? 0 : y;
-    //     unsigned int bottom =
-    //         tile ? height()-1 : std::min(y + other.height() - 1, height());
-    //     unsigned int left = tile ? 0 : x;
-    //     unsigned int right =
-    //         tile ? width()-1 : std::min(x + other.width() - 1, width());
-    //
-    //     // Start applying values
-    //     int o_h = other.height();
-    //     int o_w = other.width();
-    //     for (int i = top; i < bottom; ++i)
-    //         for (int j = left; j < right; ++j)
-    //             at(i, j) = op(
-    //                 at(i, j),
-    //                 other.at((i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w)
-    //             );
-    // }
+    void apply(
+        Frame<T>& other,
+        int y = 0,
+        int x = 0,
+        bool tile = false,
+        std::function<const T&(const T&, const T&)> func = { return T(); })
+    {
+        // If tiling, dimensions are across the entire frame
+        unsigned int top = tile ? 0 : y;
+        unsigned int bottom =
+            tile ? height()-1 : std::min(y + other.height() - 1, height());
+        unsigned int left = tile ? 0 : x;
+        unsigned int right =
+            tile ? width()-1 : std::min(x + other.width() - 1, width());
+    
+        // Start applying values
+        int o_h = other.height();
+        int o_w = other.width();
+        for (int i = top; i < bottom; ++i)
+            for (int j = left; j < right; ++j)
+                at(i, j) = func(
+                    at(i, j),
+                    other.at((i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w)
+                );
+    }
 
 
     /**
      * Serializes the frame into a format that can be used to initialize
      * a new frame.
      *
-     * @param values The frame to be serialized.
-     * @param height The height of the frame.
-     * @param width The width of the frame.
+     * @param serialize Function to serialize the values contained within this
+     *                  frame
      * @return String containing values to initialize a frame.
      */
-    std::string serialize()
+    std::string serialize(std::function<std::string(const T&)> serialize)
     {
-        std::string s = "";
-
-        // Open frame
-        s += "{";
-
-        // Open pixels vector
-        s += "{";
-
+        std::string s = "{{";
         for (int i = 0; i < height(); i++)
         {
-            // Open row vector
             s += "{";
-
             for (int j = 0; j < width(); j++)
             {
-                // Add row pixels
-                s += values_.at(i).at(j).serialize();
-
-                // Don't add comma after last value
+                s += serialize(values_.at(i).at(j));
                 if (i != height() - 1) s += ",";
             }
-
-            // Close row vector
             s += "}";
-
-            // Don't add comma after last value
             if (i != height() - 1) s += ",";
-
         }
-
-        // Close pixels vector
-        s += "}";
-
-        // Close frame
-        s += "}";
-
+        s += "}}";
         return s;
     }
 

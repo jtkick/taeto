@@ -32,6 +32,13 @@ public:
     //virtual double scaling_factor() = 0;
 
     /*
+     * Sets whether or not this object can be seen in the current frame.
+     * Will be set by the render system, so that the object can decide if it
+     * will animate itself when it is not visible to the player.
+     */
+    void visible(const bool&);
+
+    /*
      * Returns the width of the sprite.
      */
     virtual uint64_t width() = 0;
