@@ -1,6 +1,8 @@
 #ifndef OBJECT_OBJECT_HPP_
 #define OBJECT_OBJECT_HPP_
 
+#include <chrono>
+
 namespace taeto
 {
 
@@ -11,7 +13,7 @@ public:
 
     // Since Object is the base class for the interfaces, it needs at least one
     // virtual method to be polymorphic
-    virtaul ~Object() { };
+    virtual ~Object() { };
 
     int32_t get_x_pixel_position();
 

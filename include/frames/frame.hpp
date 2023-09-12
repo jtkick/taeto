@@ -12,15 +12,26 @@ template <class T>
 class Frame
 {
 public:
-    Frame(unsigned long int h, unsigned long int w, T& t = T())
+    Frame()
     {
-        resize(h, w, t);
+        resize(0, 0, T());
     };
 
-    Frame(std::vector<std::vector<T>> v)
-    {
-        
-    }
+    // Frame(unsigned long int h, unsigned long int w, T t = T())
+    // {
+    //     resize(h, w, t);
+    // };
+    //
+    // Frame(unsigned long int h, unsigned long int w)
+    // {
+    //     resize(h, w, T());
+    // };
+
+
+    // Frame(std::vector<std::vector<T>> v)
+    // {
+    //
+    // };
 
     /**
      * Returns the value at the given y and x coordinates.
@@ -61,7 +72,7 @@ public:
      * @param x New width of the frame.
      * @param value Value of any new instances of the frame type.
      */
-    void resize(int y, int x, T& t = T())
+    void resize(int y, int x, T t = T())
     {
         values_.resize(y, t);
         for (std::vector<T> row : values_)
@@ -70,6 +81,35 @@ public:
 
 
 protected:
+
+    /**
+     * This method is designed to allow for getting data members from the
+     * underlying value types in an easy way. e.g. instead of defining a dozen
+     * methods that all get foreground_color from pixel and all the others,
+     * frames can just call this method with a function defining how to get the
+     * member from the value.
+     */
+    template<class U>
+    const Frame<U>& extract_member_frame(std::function<U(T)>& extractor)
+    {
+
+    }
+
+    // const Frame<T>& displace(const ColorFrame& frame)
+    // {
+    //
+    // }
+    //
+    // const Frame<T>& displace(const UCharFrame& frame)
+    // {
+    //
+    // }
+    //
+    // const Frame<T>& displace(const CharFrame& frame)
+    // {
+    //
+    // }
+
     /**
      * Overwrite the second given two-dimensional vector onto the first
      * two-dimensional vector at the given location.

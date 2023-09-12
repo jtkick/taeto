@@ -28,8 +28,7 @@ public:
         bool u,
         bool s,
         taeto::Vector,
-        uint8_t,
-        bool);
+        uint8_t);
 
     taeto::RenderPixel operator & (const taeto::RenderPixel &p);
 

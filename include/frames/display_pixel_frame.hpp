@@ -15,10 +15,12 @@ class BoolFrame;
 class CharFrame;
 class ColorFrame;
 
-class DisplayPixelFrame : Frame<taeto::DisplayPixel>
+class DisplayPixelFrame : public Frame<taeto::DisplayPixel>
 {
 public:
     DisplayPixelFrame();
+
+    DisplayPixelFrame(unsigned long int h, unsigned long int w, taeto::DisplayPixel d = taeto::DisplayPixel()): Frame(h, w, d) {};
 
     const taeto::CharFrame& chars() const;
 

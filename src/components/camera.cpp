@@ -1,5 +1,6 @@
 #include "components/camera.hpp"
 
+#include <stdexcept>
 #include <stdint.h>
 
 namespace taeto
@@ -23,8 +24,8 @@ unsigned int Camera::get_focal_length()
 void Camera::set_focal_length(unsigned int fl)
 {
     if (fl == 0)
-        throw Exception()"Focal length must be a natural number.");
-        
+        throw std::runtime_error("Focal length must be a natural number.");
+
     focal_length_ = fl;
 }
 

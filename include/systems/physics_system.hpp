@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-color.h"/sprite.h"
+#include "object/object.hpp"
 #include "systems/system.hpp"
 
 namespace taeto
@@ -21,10 +21,10 @@ public:
     ~PhysicsSystem();
 
     // Apply physics to all known sprites
-    void apply_forces(std::vector<std::weak_ptr<taeto::Sprite>>&);
+    void apply_forces(std::vector<std::weak_ptr<taeto::Object>>&);
 
     // Detect collisions and notify respective sprites
-    void detect_collisions(std::vector<std::weak_ptr<taeto::Sprite>>&);
+    void detect_collisions(std::vector<std::weak_ptr<taeto::Object>>&);
 
 private:
     // Engine-wide logger

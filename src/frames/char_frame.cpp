@@ -1,4 +1,4 @@
-#include "systems/render_system/uchar_frame.hpp"
+ #include "systems/render_system/char_frame.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -6,12 +6,12 @@
 namespace taeto
 {
 
-UCharFrame::UCharFrame()
+CharFrame::CharFrame()
 {
 
 }
 
-UCharFrame::UCharFrame(
+CharFrame::CharFrame(
     const taeto::ColorFrame& cf, std::string method = "luminosity")
 {
     for (int y = 0; y < height(); ++y)

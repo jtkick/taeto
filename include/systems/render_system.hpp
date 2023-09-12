@@ -12,6 +12,7 @@
 #include "components/camera.hpp"
 #include "components/display_pixel.hpp"
 #include "components/render_pixel.hpp"
+#include "frames/display_pixel_frame.hpp"
 #include "object/object.hpp"
 #include "systems/system.hpp"
 
@@ -34,10 +35,10 @@ public:
      * @param rendered_frame Frame to write rendered pixels to.
     */
     void render_frame(
-        taeto::Frame&,
+        taeto::DisplayPixelFrame&,
         taeto::Camera&,
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-        std::vector<std::weak_ptr<taeto::Light>>& lights
+        std::vector<std::weak_ptr<taeto::Object>>& sprites,
+        std::vector<std::weak_ptr<taeto::Object>>& lights
     );
 
     /**
@@ -48,15 +49,15 @@ public:
      * @param rendered_frame Frame to write rendered pixels to.
     */
     void render_frame_by_drawing(
-        taeto::Frame&,
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-        std::vector<std::weak_ptr<taeto::Light>>& lights
+        taeto::DisplayPixelFrame&,
+        std::vector<std::weak_ptr<taeto::Object>>& sprites,
+        std::vector<std::weak_ptr<taeto::Object>>& lights
     );
 
 private:
     // First rendered frame: pixels before lighting applied with additional data
-    typedef std::vector<std::vector<std::vector<std::tuple<
-        taeto::Pixel, taeto::Position>>>> AlbedoFrame;
+    // typedef std::vector<std::vector<std::vector<std::tuple<
+    //     taeto::DisplayPixel, taeto::Position>>>> AlbedoFrame;
 
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger_;

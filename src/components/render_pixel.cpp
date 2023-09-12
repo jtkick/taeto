@@ -14,7 +14,6 @@ RenderPixel::RenderPixel()
     strikethrough = false;
     normal = taeto::Vector(0, 0, 1);
     specularity = 0;
-    collide = false;
 }
 
 RenderPixel::RenderPixel(char character)
@@ -28,7 +27,6 @@ RenderPixel::RenderPixel(char character)
     strikethrough = false;
     normal = taeto::Vector(0, 0, 1);
     specularity = 0;
-    collide = false;
 }
 
 RenderPixel::RenderPixel(char ch, taeto::Color fc, taeto::Color bc, bool b)
@@ -42,7 +40,6 @@ RenderPixel::RenderPixel(char ch, taeto::Color fc, taeto::Color bc, bool b)
     strikethrough = false;
     normal = taeto::Vector(0, 0, 1);
     specularity = 0;
-    collide = false;
 }
 
 RenderPixel::RenderPixel(
@@ -54,8 +51,7 @@ RenderPixel::RenderPixel(
     bool u,
     bool s,
     taeto::Vector n,
-    uint8_t sp,
-    bool c)
+    uint8_t sp)
 {
     c = ch;
     foreground_color = fc;
@@ -66,7 +62,6 @@ RenderPixel::RenderPixel(
     strikethrough = s;
     normal = n;
     specularity = sp;
-    collide = c;
 }
 
 // Helper functions
@@ -82,7 +77,6 @@ void RenderPixel::clear()
     strikethrough = false;
     normal.set_all(0, 0, 127);
     specularity = 0;
-    collide = false;
 }
 
 /*

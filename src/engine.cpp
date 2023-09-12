@@ -10,6 +10,8 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
+#include "components/display_pixel.hpp"
+
 #include "components/camera.hpp"
 #include "frames/display_pixel_frame.hpp"
 #include "frames/render_pixel_frame.hpp"
@@ -81,19 +83,24 @@ void load_object(std::weak_ptr<taeto::Object> object)
 {
     logger_->info("Adding object to engine.");
 
+    // Get shared pointer to object
+    std::shared_ptr<taeto::Object> o;
+    if (!(o = object.lock()))
+        return
+
     // Load object to main vector
     objects_.push_back(object);
 
     // If object implements light interface, add to lights
-    if (ILight* i = dynamic_cast<ILight*>(object.get()))
+    if (ILight* i = dynamic_cast<ILight*>(o.get()))
         lights_.push_back(object);
 
     // If object implements renderable interface, add to sprites
-    if (IRenderable* i = dynamic_cast<IRenderable*>(object.get()))
+    if (IRenderable* i = dynamic_cast<IRenderable*>(o.get()))
         sprites_.push_back(object);
 
     // If object implements physical object interface, add to physicals
-    if (IPhysicalObject* i = dynamic_cast<IPhysicalObject*>(object.get()))
+    if (IPhysicalObject* i = dynamic_cast<IPhysicalObject*>(o.get()))
         physicals_.push_back(object);
 }
 
@@ -127,7 +134,9 @@ void run()
     int window_width_ = size.ws_col;
 
     // Create new frame for rendering and displaying game world
-    taeto::DisplayPixelFrame frame(window_height_, window_width_);
+    taeto::DisplayPixelFrame frame =
+        taeto::DisplayPixelFrame(
+            window_height_, window_width_);
 
     // Start rendering
     while (true)
@@ -141,15 +150,15 @@ void run()
         // For calculating frame rate and passing to objects, get time since
         // the last frame was rendered
         last_frame_duration_ =
-            duration_cast<std::chrono::milliseconds>(
-                    system_clock::now().time_since_epoch()
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
                 ) - last_frame_start_time_;
 
         // Clear out all dead pointers from engine
         std::vector<std::vector<taeto::Object>*> all_object_vectors=
             {&objects_, &sprites_, &lights_, &physicals_};
         for (std::weak_ptr<taeto::Object> object : objects_)
-            if (!object->lock())
+            if (!object.lock())
                 for (std::vector<taeto::Object>* v : all_object_vectors)
                     v->erase(
                         std::remove(v->begin(), v->end(), object), v->end());
@@ -170,7 +179,7 @@ void run()
         for (std::weak_ptr<taeto::Object> object : objects_)
         {
             // Get pointer if not dead
-            if (!(std::shared_ptr<taeto::Object> shared = object.lock()))
+            if (!(std::shared_ptr<taeto::Object> o = object.lock()))
                 continue;
             current_sprite->animate(last_frame_duration_);
         }
