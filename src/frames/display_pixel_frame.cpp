@@ -138,4 +138,15 @@ void DisplayPixelFrame::strikethroughs(const taeto::BoolFrame& f)
             values_.at(i, j).strikethrough = f.at(i, j);
 }
 
+void DisplayPixelFrame::add_string(int y, int x, std::string str)
+{
+    for (int i = 0; i < str.length(); ++i)
+    {
+        taeto::DisplayPixel& dp = at(y, x+i);
+        dp.char = str.at(i);
+        dp.foreground_color = taeto::Color(255, 255, 255, 255);
+        dp.background_color = taeto::Color(0, 0, 0, 255);
+    }
+}
+
 }   // namespace taeto

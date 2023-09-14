@@ -49,6 +49,8 @@ public:
     const taeto::BoolFrame& strikethroughs() const;
 
     void strikethroughs(const taeto::BoolFrame&);
+
+    void add_string(int, int, std::string);
 };
 
 }   // namespace taeto

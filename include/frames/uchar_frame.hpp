@@ -26,7 +26,7 @@ public:
 
     UCharFrame(const UCharFrame&);
 
-    UCharFrame(std::string);
+    UCharFrame(const Frame<unsigned char>&);
 
     // Conversion constructors
     UCharFrame(const taeto::ColorFrame& cf);

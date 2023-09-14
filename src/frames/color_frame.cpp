@@ -1,7 +1,7 @@
 #include "frames/color_frame.hpp"
 
 #include "components/color.hpp"
-#include "frames/uchar_frame.h"
+#include "frames/uchar_frame.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -20,8 +20,9 @@ ColorFrame::ColorFrame()
 ColorFrame::ColorFrame(std::string path)
 {
     // Decode png file
+    unsigned int h, w = 0;
     std::vector<unsigned char> image;
-    unsigned error = lodepng::decode(image, width, height, path);
+    unsigned error = lodepng::decode(image, w, h, path);
 
     // Print load error
     if (error)
@@ -29,15 +30,15 @@ ColorFrame::ColorFrame(std::string path)
                   << lodepng_error_text(error) << std::endl;
 
     // Load values into vector
-    for (int i = 0; i < height; ++i)
+    for (int i = 0; i < h; ++i)
     {
         // New row
         std::vector<taeto::Color> row = std::vector<taeto::Color>();
 
-        for (int j = 0; j < width; ++j)
+        for (int j = 0; j < w; ++j)
         {
             // Begininning of this pixel in image
-            int pixel_index = i*width*4 + j*4;
+            int pixel_index = i*w*4 + j*4;
 
             // Get color values
             taeto::Color c = taeto::Color();
@@ -56,11 +57,9 @@ ColorFrame::ColorFrame(std::string path)
 
 const taeto::UCharFrame& ColorFrame::reds() const
 {
-    taeto::UCharFrame frame(height(), width());
-    for (int i = 0; i < frame.height(); ++i)
-        for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = values_.at(i, j).red;
-    return frame;
+    std::function<unsigned char(taeto::Color)> func =
+        [](taeto::Color c){ return c.red; };
+    return extract_member_frame<unsigned char>(func);
 }
 
 void ColorFrame::reds(const taeto::UCharFrame& f)
@@ -74,11 +73,9 @@ void ColorFrame::reds(const taeto::UCharFrame& f)
 
 const taeto::UCharFrame& ColorFrame::greens() const
 {
-    taeto::UCharFrame frame(height(), width());
-    for (int i = 0; i < frame.height(); ++i)
-        for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = values_.at(i, j).green;
-    return frame;
+    std::function<unsigned char(taeto::Color)> func =
+        [](taeto::Color c){ return c.green; };
+    return extract_member_frame<unsigned char>(func);
 }
 
 void ColorFrame::greens(const taeto::UCharFrame& f)
@@ -92,11 +89,9 @@ void ColorFrame::greens(const taeto::UCharFrame& f)
 
 const taeto::UCharFrame& ColorFrame::blues() const
 {
-    taeto::UCharFrame frame(height(), width());
-    for (int i = 0; i < frame.height(); ++i)
-        for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = values_.at(i, j).blue;
-    return frame;
+    std::function<unsigned char(taeto::Color)> func =
+        [](taeto::Color c){ return c.blue; };
+    return extract_member_frame<unsigned char>(func);
 }
 
 void ColorFrame::blues(const taeto::UCharFrame& f)
@@ -110,11 +105,9 @@ void ColorFrame::blues(const taeto::UCharFrame& f)
 
 const taeto::UCharFrame& ColorFrame::alphas() const
 {
-    taeto::UCharFrame frame(height(), width());
-    for (int i = 0; i < frame.height(); ++i)
-        for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = values_.at(i, j).alpha;
-    return frame;
+    std::function<unsigned char(taeto::Color)> func =
+        [](taeto::Color c){ return c.alpha; };
+    return extract_member_frame<unsigned char>(func);
 }
 
 void ColorFrame::alphas(const taeto::UCharFrame& f)

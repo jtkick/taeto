@@ -27,8 +27,6 @@ public:
     double x_;
 };
 
-Position
-
 }   // namespace taeto
 
 #endif  // COMPONENTS_POSITION_HPP_

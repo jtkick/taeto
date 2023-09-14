@@ -8,23 +8,23 @@ namespace taeto
 
 Position::Position()
 {
-    z = 0;
-    y = 0;
-    x = 0;
+    z_ = 0;
+    y_ = 0;
+    x_ = 0;
 }
 
-Position::Position(int64_t z_, int64_t y_, int64_t x_)
+Position::Position(double z, double y, double x)
 {
-    z = z_;
-    y = y_;
-    x = x_;
+    z_ = z;
+    y_ = y;
+    x_ = x;
 }
 
 double Position::distance(const Position& p1, const Position& p2)
 {
-    return sqrt(((p1.z - p2.z) * (p1.z - p2.z)) +
-                ((p1.y - p2.y) * (p1.y - p2.y)) +
-                ((p1.x - p2.x) * (p1.x - p2.x)));
+    return sqrt(((p1.z_ - p2.z_) * (p1.z_ - p2.z_)) +
+                ((p1.y_ - p2.y_) * (p1.y_ - p2.y_)) +
+                ((p1.x_ - p2.x_) * (p1.x_ - p2.x_)));
 }
 
 

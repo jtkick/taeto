@@ -26,8 +26,6 @@ public:
 
     CharFrame(const CharFrame&);
 
-    CharFrame(std::string);
-
     // Conversion constructors
     CharFrame(const taeto::ColorFrame& cf);
 

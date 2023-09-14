@@ -17,8 +17,9 @@ BoolFrame::BoolFrame()
 BoolFrame::BoolFrame(std::string path)
 {
     // Decode png file
+    unsigned int w, h = 0;
     std::vector<unsigned char> image;
-    unsigned error = lodepng::decode(image, width, height, path);
+    unsigned error = lodepng::decode(image, w, h, path);
 
     // Print load error
     if (error)
@@ -26,15 +27,15 @@ BoolFrame::BoolFrame(std::string path)
                   << lodepng_error_text(error) << std::endl;
 
     // Load values into vector
-    for (int i = 0; i < height; ++i)
+    for (int i = 0; i < h; ++i)
     {
         // New row
-        std::vector<taeto::bool> row = std::vector<taeto::bool>();
+        std::vector<bool> row = std::vector<bool>();
 
-        for (int j = 0; j < width; ++j)
+        for (int j = 0; j < w; ++j)
         {
             // Begininning of this pixel in image
-            int pixel_index = i*width*4 + j*4;
+            int pixel_index = i*w*4 + j*4;
 
             if (image.at(pixel_index == 255) &&
                 image.at(pixel_index+1 == 255) &&
@@ -45,7 +46,8 @@ BoolFrame::BoolFrame(std::string path)
                      image.at(pixel_index+2 == 0))
                 row.push_back(false);
             else
-                throw Exception("Expected fully black or fully white pixels.");
+                throw std::runtime_error(
+                    "Expected fully black or fully white pixels.");
         }
 
         values_.push_back(row);

@@ -155,13 +155,20 @@ void run()
                 ) - last_frame_start_time_;
 
         // Clear out all dead pointers from engine
-        std::vector<std::vector<taeto::Object>*> all_object_vectors=
-            {&objects_, &sprites_, &lights_, &physicals_};
-        for (std::weak_ptr<taeto::Object> object : objects_)
-            if (!object.lock())
-                for (std::vector<taeto::Object>* v : all_object_vectors)
-                    v->erase(
-                        std::remove(v->begin(), v->end(), object), v->end());
+        std::vector<std::vector<std::weak_ptr<taeto::Object>>*>
+            all_object_vectors = {&objects_, &sprites_, &lights_, &physicals_};
+        for (std::vector<std::weak_ptr<taeto::Object>>* v : all_object_vectors)
+        {
+            auto it = v->begin();
+            while (it != v->end())
+            {
+                if (!it->lock())
+                    it = v->erase(it);
+                else
+                    it++;
+            }
+        }
+
 
         ////////////////////////////////////////////////////////////////
         ////                       INPUT STEP                       ////
@@ -177,12 +184,9 @@ void run()
 
         logger_->info("Telling sprites to animate.");
         for (std::weak_ptr<taeto::Object> object : objects_)
-        {
             // Get pointer if not dead
-            if (!(std::shared_ptr<taeto::Object> o = object.lock()))
-                continue;
-            current_sprite->animate(last_frame_duration_);
-        }
+            if (std::shared_ptr<taeto::Object> o = object.lock())
+                o->animate(last_frame_duration_);
 
         logger_->info("Telling scene to animate.");
         if (scene_)
@@ -214,7 +218,7 @@ void run()
         if (debug_mode_on_)
         {
             frame.add_string(
-                0, 0, "FPS: " + std::to_string((int)(1000.0 / last_frame_duration_));
+                0, 0, "FPS: " + std::to_string((int)(1000.0 / last_frame_duration_.count())));
             frame.add_string(
                 1, 0, "NUM SPRITES: " + std::to_string(sprites_.size()));
             frame.add_string(
@@ -228,8 +232,8 @@ void run()
             frame.add_string(
                 4, 0,
                 "FRAME DIMENSIONS: "
-                    + std::to_string(frame.get_height()) + "x"
-                    + std::to_string(frame.get_width()));
+                    + std::to_string(frame.height()) + "x"
+                    + std::to_string(frame.width()));
             frame.add_string(
                 5, 0, "CURRENT FRAME: " + std::to_string(frame_number_));
         }

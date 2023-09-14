@@ -17,11 +17,11 @@ public:
         resize(0, 0, T());
     };
 
-    // Frame(unsigned long int h, unsigned long int w, T t = T())
-    // {
-    //     resize(h, w, t);
-    // };
-    //
+    Frame(unsigned long int h, unsigned long int w, T t = T())
+    {
+        resize(h, w, t);
+    };
+
     // Frame(unsigned long int h, unsigned long int w)
     // {
     //     resize(h, w, T());
@@ -47,7 +47,7 @@ public:
      *
      * @return The height of the frame.
      */
-    inline unsigned int height() { return values_.size(); };
+    inline unsigned int height() const { return values_.size(); };
 
 
     /**
@@ -55,12 +55,12 @@ public:
      *
      * @return The width of the frame.
      */
-    inline unsigned int width()
+    inline unsigned int width() const
     {
         if (values_.size() == 0)
             return 0;
         else
-            return values_.at(0).size(0);
+            return values_.at(0).size();
     };
 
 
@@ -68,15 +68,13 @@ public:
      * Resizes the frame to the given height and width, with all new values
      * initialized with the given object.
      *
-     * @param y New height of the frame.
-     * @param x New width of the frame.
+     * @param h New height of the frame.
+     * @param w New width of the frame.
      * @param value Value of any new instances of the frame type.
      */
-    void resize(int y, int x, T t = T())
+    void resize(int h, int w, T t = T())
     {
-        values_.resize(y, t);
-        for (std::vector<T> row : values_)
-            row.resize(x, t);
+        values_.resize(h, std::vector<T>(w, t));
     };
 
 
@@ -105,7 +103,7 @@ protected:
      * member from the value.
      */
     template<class U>
-    const Frame<U>& extract_member_frame(std::function<U(T)>& extractor)
+    const Frame<U>& extract_member_frame(std::function<U(T)>& extractor) const
     {
         taeto::Frame<U> frame(height(), width());
         for (int i = 0; i < frame.height(); ++i)
@@ -114,6 +112,9 @@ protected:
         return frame;
 
     }
+
+    template<class U>
+    void apply_member_frame(std::function<(T))
 
     // const Frame<T>& displace(const ColorFrame& frame)
     // {
@@ -141,10 +142,10 @@ protected:
      */
     void apply(
         Frame<T>& other,
-        int y = 0,
-        int x = 0,
-        bool tile = false,
-        std::function<const T&(const T&, const T&)> func = { return T(); })
+        int y,
+        int x,
+        bool tile,
+        std::function<const T&(const T&, const T&)> func)
     {
         // If tiling, dimensions are across the entire frame
         unsigned int top = tile ? 0 : y;
@@ -153,7 +154,7 @@ protected:
         unsigned int left = tile ? 0 : x;
         unsigned int right =
             tile ? width()-1 : std::min(x + other.width() - 1, width());
-    
+
         // Start applying values
         int o_h = other.height();
         int o_w = other.width();
@@ -192,6 +193,7 @@ protected:
         return s;
     }
 
+public:
     std::vector<std::vector<T>> values_;
 };
 
