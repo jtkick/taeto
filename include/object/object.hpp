@@ -9,40 +9,29 @@ namespace taeto
 class Object
 {
 public:
-    Object();
+    Object() = default;
+
+    Object(const taeto::Position& p) : position_{p} { };
 
     // Since Object is the base class for the interfaces, it needs at least one
     // virtual method to be polymorphic
     virtual ~Object() { };
 
-    int32_t get_x_pixel_position();
+    const taeto::Position& position() const;
 
-    int32_t get_y_pixel_position();
+    void position(const taeto::Position&);
 
-    int32_t get_z_pixel_position();
-
-    int64_t get_x_exact_position();
-
-    int64_t get_y_exact_position();
-
-    int64_t get_z_exact_position();
-
-    void move(uint64_t, uint64_t, uint64_t);
-    void place(uint64_t, uint64_t, uint64_t);
+    void move(double, double, double) inline;
+    void move(const taeto::Position&) inline;
 
     // Called when the object is loaded into the engine
     // Allows object to load any necessary sub-objects
-    void load();
+    virtual void load();
 
-    void animate(std::chrono::milliseconds);
+    virtual void animate(std::chrono::milliseconds);
 
 protected:
-    // Position on screen relative to origin
-    // Top 32 bits are pixel position, bottom 32 bits are sub-pixel position
-    // This allows for positions and speeds that aren't tied to frame rate
-    int64_t x_position_;
-    int64_t y_position_;
-    int64_t z_position_;
+    taeto::Position position_ { 0.0f, 0.0f, 0.0f };
 };
 
 }   // namespace taeto

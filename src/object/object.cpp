@@ -1,41 +1,21 @@
 #include "object/object.hpp"
 
-Object::Object()
+const taeto::Position& Object::position() const
 {
-    x_position_ = 0;
-    y_position_ = 0;
-    z_position_ = 0;
+    return position_;
 }
 
-int32_t Object::get_x_pixel_position()
+void Object::position(const taeto::Position& p)
 {
-    // Top 32 bits are pixel position
-    return (int32_t)((x_position_ >> 32) & 0x00000000FFFFFFFF);
+    position_ = p;
 }
 
-int32_t Object::get_y_pixel_position()
+void Object::move(double z, double y, double x) inline
 {
-    // Top 32 bits are pixel position
-    return (int32_t)((y_position_ >> 32) & 0x00000000FFFFFFFF);
+    position_ += taeto::Position(z, y, x);
 }
 
-int32_t Object::get_z_pixel_position()
+void Object::move(const taeto::Position& p) inline
 {
-    // Top 32 bits are pixel position
-    return (int32_t)((z_position_ >> 32) & 0x00000000FFFFFFFF);
-}
-
-int64_t Object::get_x_exact_position()
-{
-    return x_position_;
-}
-
-int64_t Object::get_y_exact_position()
-{
-    return y_position_;
-}
-
-int64_t Object::get_z_exact_position()
-{
-    return z_position_;
+    position_ += p;
 }
