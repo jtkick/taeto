@@ -22,33 +22,33 @@ public:
 
     DisplayPixelFrame(unsigned long int h, unsigned long int w, taeto::DisplayPixel d = taeto::DisplayPixel()): Frame(h, w, d) {};
 
-    const taeto::CharFrame& chars() const;
+    taeto::CharFrame chars();
 
-    void chars(const taeto::CharFrame&);
+    void chars(taeto::CharFrame&);
 
-    const taeto::ColorFrame& foreground_colors() const;
+    taeto::ColorFrame foreground_colors();
 
-    void foreground_colors(const taeto::ColorFrame&);
+    void foreground_colors(taeto::ColorFrame&);
 
-    const taeto::ColorFrame& background_colors() const;
+    taeto::ColorFrame background_colors();
 
-    void background_colors(const taeto::ColorFrame&);
+    void background_colors(taeto::ColorFrame&);
 
-    const taeto::BoolFrame& bolds() const;
+    taeto::BoolFrame bolds();
 
-    void bolds(const taeto::BoolFrame&);
+    void bolds(taeto::BoolFrame&);
 
-    const taeto::BoolFrame& italics() const;
+    taeto::BoolFrame italics();
 
-    void italics(const taeto::BoolFrame&);
+    void italics(taeto::BoolFrame&);
 
-    const taeto::BoolFrame& underlines() const;
+    taeto::BoolFrame underlines();
 
-    void underlines(const taeto::BoolFrame&);
+    void underlines(taeto::BoolFrame&);
 
-    const taeto::BoolFrame& strikethroughs() const;
+    taeto::BoolFrame strikethroughs();
 
-    void strikethroughs(const taeto::BoolFrame&);
+    void strikethroughs(taeto::BoolFrame&);
 
     void add_string(int, int, std::string);
 };

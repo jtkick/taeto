@@ -1,4 +1,4 @@
-#include "components/position.hpp"
+#include "object/position.hpp"
 
 #include <algorithm>
 #include <cmath>

@@ -11,30 +11,35 @@ namespace taeto
 // Forward includes
 class UCharFrame;
 
-class ColorFrame : Frame<taeto::Color>
+class ColorFrame : public Frame<taeto::Color>
 {
 public:
     ColorFrame();
+
+    ColorFrame(
+        unsigned long int,
+        unsigned long int,
+        taeto::Color c = taeto::Color());
 
     ColorFrame(std::string path);
 
     ~ColorFrame();
 
-    const taeto::UCharFrame& reds() const;
+    taeto::UCharFrame reds();
 
-    void reds(const taeto::UCharFrame&);
+    void reds(taeto::UCharFrame&);
 
-    const taeto::UCharFrame& greens() const;
+    taeto::UCharFrame greens();
 
-    void greens(const taeto::UCharFrame&);
+    void greens(taeto::UCharFrame&);
 
-    const taeto::UCharFrame& blues() const;
+    taeto::UCharFrame blues();
 
-    void blues(const taeto::UCharFrame&);
+    void blues(taeto::UCharFrame&);
 
-    const taeto::UCharFrame& alphas() const;
+    taeto::UCharFrame alphas();
 
-    void alphas(const taeto::UCharFrame&);
+    void alphas(taeto::UCharFrame&);
 
     taeto::UCharFrame from_black_and_white(std::string);
 };

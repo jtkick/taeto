@@ -226,9 +226,9 @@ void run()
             frame.add_string(
                 3, 0,
                 "CAMERA LOCATION: ("
-                    + std::to_string(camera_.get_z_pixel_position()) + ", "
-                    + std::to_string(camera_.get_y_pixel_position()) + ", "
-                    + std::to_string(camera_.get_x_pixel_position()) + ")");
+                    + std::to_string((int)camera_.position().z()) + ", "
+                    + std::to_string((int)camera_.position().y()) + ", "
+                    + std::to_string((int)camera_.position().x()) + ")");
             frame.add_string(
                 4, 0,
                 "FRAME DIMENSIONS: "

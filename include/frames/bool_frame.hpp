@@ -6,7 +6,7 @@
 namespace taeto
 {
 
-class BoolFrame : Frame<bool>
+class BoolFrame : public Frame<bool>
 {
 public:
     BoolFrame();

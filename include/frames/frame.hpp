@@ -42,6 +42,7 @@ public:
      */
     inline T& at(int y, int x) { return values_.at(y).at(x); };
 
+
     /**
      * Returns the current height of the frame.
      *
@@ -108,13 +109,13 @@ protected:
         taeto::Frame<U> frame(height(), width());
         for (int i = 0; i < frame.height(); ++i)
             for (int j = 0; j < frame.width(); ++j)
-                frame.at(i, j) = extractor(values_.at(i, j));
+                frame.at(i, j) = extractor(at(i, j));
         return frame;
 
     }
 
-    template<class U>
-    void apply_member_frame(std::function<(T))
+    // template<class U>
+    // void apply_member_frame(std::function<(T))
 
     // const Frame<T>& displace(const ColorFrame& frame)
     // {

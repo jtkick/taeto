@@ -17,7 +17,7 @@ namespace taeto
 class ColorFrame;   // forward include
 class DisplayPixelFrame;    // forward include
 class RenderPixelFrame;     // forward include
-class CharFrame : Frame<uint8_t>
+class CharFrame : public Frame<uint8_t>
 {
 public:
     CharFrame();

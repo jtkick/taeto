@@ -1,6 +1,8 @@
 #ifndef OBJECT_OBJECT_HPP_
 #define OBJECT_OBJECT_HPP_
 
+#include "object/position.hpp"
+
 #include <chrono>
 
 namespace taeto
@@ -21,8 +23,8 @@ public:
 
     void position(const taeto::Position&);
 
-    void move(double, double, double) inline;
-    void move(const taeto::Position&) inline;
+    inline void move(double, double, double);
+    inline void move(const taeto::Position&);
 
     // Called when the object is loaded into the engine
     // Allows object to load any necessary sub-objects
