@@ -15,10 +15,9 @@
 #include "components/camera.hpp"
 #include "frames/display_pixel_frame.hpp"
 #include "frames/render_pixel_frame.hpp"
-#include "object/i_light.hpp"
-#include "object/i_physical_object.hpp"
-#include "object/i_renderable.hpp"
+#include "object/light.hpp"
 #include "object/object.hpp"
+#include "object/sprite.hpp"
 #include "scenes/scene.hpp"
 #include "systems/audio_system.hpp"
 #include "systems/input_system.hpp"
@@ -35,17 +34,11 @@ namespace {
     std::shared_ptr<spdlog::logger> logger_ =
         spdlog::basic_logger_mt("logger", "logs/log.txt");
 
-    // All objects known to the engine
-    std::vector<std::weak_ptr<taeto::Object>> objects_;
-
     // Sprites to be rendered
-    std::vector<std::weak_ptr<taeto::Object>> sprites_;
+    std::vector<std::weak_ptr<taeto::Sprite>> sprites_;
 
     // Light sources
-    std::vector<std::weak_ptr<taeto::Object>> lights_;
-
-    // Physical objects to collide/have physics applied
-    std::vector<std::weak_ptr<taeto::Object>> physicals_;
+    std::vector<std::weak_ptr<taeto::Light>> lights_;
 
     // Currently loaded scene
     std::shared_ptr<Scene> scene_;

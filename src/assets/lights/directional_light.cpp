@@ -2,6 +2,7 @@
 
 #include "components/color.hpp"
 #include "components/vector.hpp"
+#include "object/position.hpp"
 
 namespace taeto
 {
@@ -18,14 +19,12 @@ DirectionalLight::DirectionalLight(taeto::Color c, taeto::Vector v)
     vector_ = v;
 }
 
-inline taeto::Color DirectionalLight::light_color(
-    unsigned long int x, unsigned long int y, unsigned long int z)
+inline taeto::Color DirectionalLight::color(taeto::Position p)
 {
     return color_;
 }
 
-inline taeto::Vector DirectionalLight::light_vector(
-    unsigned long int x, unsigned long int y, unsigned long int z)
+inline taeto::Vector DirectionalLight::vector(taeto::Position p)
 {
     return vector_;
 }

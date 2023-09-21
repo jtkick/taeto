@@ -3,24 +3,22 @@
 
 #include "components/color.hpp"
 #include "components/vector.hpp"
-#include "object/i_light.hpp"
-#include "object/object.hpp"
+#include "object/light.hpp"
+#include "object/position.hpp"
 
 namespace taeto
 {
 
-class DirectionalLight: public Object, public ILight
+class DirectionalLight: public Light
 {
 public:
     DirectionalLight();
 
     DirectionalLight(taeto::Color, taeto::Vector);
 
-    inline taeto::Color light_color(
-        unsigned long int, unsigned long int, unsigned long int);
+    inline taeto::Color color(taeto::Position);
 
-    inline taeto::Vector light_vector(
-        unsigned long int, unsigned long int, unsigned long int);
+    inline taeto::Vector vector(taeto::Position);
 
 private:
     taeto::Color color_;

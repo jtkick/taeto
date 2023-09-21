@@ -13,7 +13,7 @@ class Object
 public:
     Object() = default;
 
-    Object(const taeto::Position& p) : position_{p} { };
+    Object(const taeto::Position& p) : position_(p) { };
 
     // Since Object is the base class for the interfaces, it needs at least one
     // virtual method to be polymorphic

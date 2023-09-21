@@ -3,24 +3,23 @@
 
 #include "components/color.hpp"
 #include "components/vector.hpp"
-#include "object/i_light.hpp"
+#include "object/light.hpp"
 #include "object/object.hpp"
+#include "object/position.hpp"
 
 namespace taeto
 {
 
-class Spotlight: public Object, public ILight
+class Spotlight: public Light
 {
 public:
     Spotlight();
 
     Spotlight(taeto::Color, float, int);
 
-    inline taeto::Color light_color(
-        unsigned long int, unsigned long int, unsigned long int);
+    inline taeto::Color color(taeto::Position);
 
-    inline taeto::Vector light_vector(
-        unsigned long int, unsigned long int, unsigned long int);
+    inline taeto::Vector vector(taeto::Position);
 
 private:
     taeto::Color color_;
