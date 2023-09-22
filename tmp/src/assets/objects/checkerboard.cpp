@@ -6,18 +6,7 @@
 namespace taeto
 {
 
-Checkerboard::Checkerboard()
-{
-    height_ = 0;
-    width_ = 0;
-
-    light_color_ = taeto::Color(255, 255, 255, 255);
-    dark_color_ = taeto::Color(127, 127, 127, 255);
-
-    plane_orientation_ = 'X';
-}
-
-Checkerboard::Checkerboard(uint64_t h, uint64_t w, taeto::Color c, char o = 'X')
+Checkerboard::Checkerboard(uint64_t h, uint64_t w, taeto::Color c, char o = 'Z')
 {
     height_ = h;
     width_ = w;
@@ -38,21 +27,6 @@ taeto::RenderPixel Checkerboard::get_pixel_at(
     p.background_color = (x%8<4)!=(y%4<2) ? light_color_ : dark_color_;
 
     return p;
-}
-
-unsigned long int Checkerboard::height()
-{
-    return height_;
-}
-
-char Checkerboard::plane_orientation()
-{
-    return plane_orientation_;
-}
-
-unsigned long int Checkerboard::width()
-{
-    return width_;
 }
 
 }   // namespace taeto

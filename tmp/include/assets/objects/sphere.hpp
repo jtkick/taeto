@@ -14,7 +14,7 @@ class Sphere: public taeto::Sprite
 public:
     Sphere(int);
 
-    void handle_collision(std::shared_ptr<taeto::Sprite>);
+    void on_collision(std::shared_ptr<taeto::Sprite>);
 
 private:
     set_color(taeto::Color);

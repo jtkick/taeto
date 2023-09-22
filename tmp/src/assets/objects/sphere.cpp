@@ -1,81 +1,75 @@
-// #include "assets/object/sphere.hpp"
-//
-// #include <memory>
-//
-// #include "components/color.h"
-// #include "components/frame.h"
-// #include "components/sprite.h"
-//
-// namespace taeto
-// {
-//
-// Sphere::Sphere(int diameter)
-// {
-//     height = (int)(diameter / 2.5);
-//     width = diameter * 2;
-//
-//     x_position = 0;
-//     y_position = 0;
-//     z_position = 0;
-//
-//     current_frame = taeto::Frame(height, width);
-//
-//     int sphere_center_y = height / 2;
-//     int sphere_center_x = width / 2;
-//
-//     int x_radius = diameter / 2;
-//     int y_radius = (diameter / 2) / 2.5;
-//
-//     // Initialize pixels
-//     for (int i = 0; i < height; ++i)
-//     {
-//         for (int j = 0; j < width; ++j)
-//         {
-//             taeto::Pixel& pixel = current_frame.get_pixel(i, j);
-//             pixel.char = ' ';
-//             pixel.foreground_color = taeto::Color(255, 255, 255);
-//             pixel.background_color = taeto::Color(255, 255, 255);
-//
-//             // Calculate normal
-//             int normal_z = (std::sqrt(i*i + j*j)
-//             taeto::Vector v = taeto::Vector(
-//                 x
-//                 y
-//                 z
-//             );
-//
-//         }
-//     }
-//
-//     current_frame.set_chars({r" _ ",
-//                              r"(m)",
-//                              r" = "});
-//
-//     taeto::Color w = taeto::Color(255, 255, 255);
-//     taeto::Color g = taeto::Color(127, 127, 127);
-//     taeto::Color a = taeto::Color(255, 0, 255, 0);
-//
-//     current_frame.set_foreground_colors({{w, w, w}, {w, w, w}, {g, g, g}});
-//
-//     current_frame.set_background_colors({{a, a, a}, {a, a, a}, {a, a, a}});
-//
-//     set_color(c);
-//
-//     // TODO: LOAD LIGHT DYNAMICALLY
-//     light_ = std::make_shared<taeto::PointLight>(c);
-//
-//     respect_light_sources = false;
-// }
-//
-// Sphere::set_color(taeto::Color c_)
-// {
-//     current_frame.get_pixel(1, 1).foreground_color = c_;
-// }
-//
-//
-// void Sphere::handle_collision(std::shared_ptr<taeto::Sprite> other_sprite)
-// {
-//
-// }
-//
-// }   // namespace taeto
+#include "assets/object/sphere.hpp"
+
+#include <memory>
+
+#include "components/color.hpp"
+#include "components/render_pixel.hpp"
+#include "components/render_pixel_frame.hpp"
+#include "components/sprite.hpp"
+
+#define HALF_PI 1.57079632679
+
+namespace taeto
+{
+
+Sphere::Sphere(int diameter)
+{
+    int height = (int)(diameter / 2.5);
+    int width = diameter;
+
+    double radius = (double)diameter / 2.0f;
+
+    current_frame = taeto::Frame(height, width);
+
+    // Initialize pixels
+    for (int i = 0; i < height; ++i)
+    {
+        for (int j = 0; j < width; ++j)
+        {
+            taeto::Pixel& pixel = current_frame.at(i, j);
+            pixel.char = ' ';
+            pixel.foreground_color = taeto::Color(255, 255, 255);
+            pixel.background_color = taeto::Color(255, 255, 255);
+
+            // For calculating normals, correct y value to make it easier
+            double y_loc = i * 2.5;
+            double x_loc = j;
+
+            // Get distance to center of circle
+            double y_dist = radius - y_loc;
+            double x_dist = radius - x_loc; 
+            double distance = std::sqrt(y_dist*y_dist + x_dist*x_dist);
+
+            // If distance is greater than the radius, make the pixel invisible
+            if (distance > radius)
+                pixel.foreground_color = taeto::Color(255, 0, 0, 0);
+
+            // Get distance from center in radians
+            double z_comp = (distance / radius) * HALF_PI;
+            double y_comp = (y_dist / radius) * HALF_PI;
+            double x_comp = (x_dist / radius) * HALF_PI;
+
+            // Calculate normal
+            taeto::Vector v = taeto::Vector(
+                std::cos(x_comp) * 255,
+                std::cos(y_comp) * 255,
+                (std::cos(z_comp) * 127) + 127
+            );
+            pixel.normal = v;
+
+        }
+    }
+}
+
+Sphere::set_color(taeto::Color c_)
+{
+    current_frame.get_pixel(1, 1).foreground_color = c_;
+}
+
+
+void Sphere::handle_collision(std::shared_ptr<taeto::Sprite> other_sprite)
+{
+
+}
+
+}   // namespace taeto
