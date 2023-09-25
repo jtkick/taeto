@@ -9,6 +9,14 @@
 namespace taeto
 {
 
+// Bro, just give me time since epoch
+std::chrono::milliseconds ms_since_epoch()
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+}
+
 taeto::RenderPixel Sprite::get_pixel_at(uint64_t, uint64_t)
 {
     return taeto::RenderPixel();
@@ -65,20 +73,14 @@ int Sprite::frame_timer(int frame_rate, bool refresh)
     int frame_time = 1000 / frame_rate;
 
     // Get difference in time between now and last time timer was called
-    // unsigned long time_diff =
-    //     std::chrono::duration_cast<std::chrono::milliseconds(
-    //         std::chrono::system_clock::now().time_since_epoch()
-    //     ) - prev_timer_time_;
-    unsigned long time_diff =
-            std::chrono::system_clock::now().time_since_epoch()
-         - prev_timer_time_;
+    std::chrono::milliseconds time_diff = ms_since_epoch() - prev_timer_time_;
 
     // Get number of frames that have passed
-    int num_frames = time_diff / frame_time;
+    int num_frames = time_diff.count() / frame_time;
 
     // Update timer for these new frames
     if (refresh)
-        prev_timer_time_ += frame_time * num_frames;
+        prev_timer_time_ += std::chrono::milliseconds(frame_time * num_frames);
 
     // Return number of frames that have passed
     return num_frames;
