@@ -17,14 +17,14 @@ std::chrono::milliseconds ms_since_epoch()
     );
 }
 
-taeto::RenderPixel Sprite::get_pixel_at(uint64_t, uint64_t)
+const taeto::RenderPixel& Sprite::get_pixel_at(uint64_t, uint64_t)
 {
     return taeto::RenderPixel();
 }
 
 uint64_t Sprite::height()
 {
-    return 0;
+    return height_;
 }
 
 char Sprite::plane_orientation()
@@ -44,7 +44,7 @@ bool Sprite::visible()
 
 uint64_t Sprite::width()
 {
-    return 0;
+    return width_;
 }
 
 bool Sprite::collides()

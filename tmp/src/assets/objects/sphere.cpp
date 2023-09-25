@@ -6,8 +6,7 @@
 #include "components/render_pixel.hpp"
 #include "components/render_pixel_frame.hpp"
 #include "components/sprite.hpp"
-
-#define HALF_PI 1.57079632679
+#include "engine.hpp"
 
 namespace taeto
 {
@@ -18,6 +17,8 @@ Sphere::Sphere(int diameter)
     int width = diameter;
 
     double radius = (double)diameter / 2.0f;
+
+    const double HALF_PI = 1.57079632679;
 
     current_frame = taeto::Frame(height, width);
 
@@ -42,7 +43,7 @@ Sphere::Sphere(int diameter)
 
             // If distance is greater than the radius, make the pixel invisible
             if (distance > radius)
-                pixel.foreground_color = taeto::Color(255, 0, 0, 0);
+                pixel.foreground_color = taeto::Color(255, 0, 255, 0);
 
             // Get distance from center in radians
             double z_comp = (distance / radius) * HALF_PI;
@@ -59,6 +60,11 @@ Sphere::Sphere(int diameter)
 
         }
     }
+}
+
+Sphere::load()
+{
+    taeto::load(light_);
 }
 
 Sphere::set_color(taeto::Color c_)

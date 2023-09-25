@@ -16,6 +16,8 @@ public:
 
     void on_collision(std::shared_ptr<taeto::Sprite>);
 
+    void load();
+
 private:
     set_color(taeto::Color);
 

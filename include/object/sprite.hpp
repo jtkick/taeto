@@ -56,7 +56,7 @@ public:
      * This function returns the pixel at the given position relavtive to the
      * object's position.
      */
-    taeto::RenderPixel get_pixel_at(uint64_t, uint64_t);
+    const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t);
 
     /*
      * Returns the height of the sprite.
@@ -168,6 +168,9 @@ public:
     void animate();
 
 protected:
+    uint64_t height_;
+    uint64_t width_;
+
     // Mass of the sprite for calculating speeds
     double mass_;
 
