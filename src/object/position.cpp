@@ -36,16 +36,18 @@ inline void Position::x(const double& x)
     x_ = x;
 }
 
-Position Position::operator+(Position lhs, const Position& rhs)
+Position operator+(const Position& lhs, const Position& rhs)
 {
-    lhs += rhs;
-    return lhs;
+    Position result = lhs;
+    result += rhs;
+    return result;
 }
 
-Position Position::operator-(Position lhs, const Position& rhs)
+Position operator-(const Position& lhs, const Position& rhs)
 {
-    lhs -= rhs;
-    return lhs;
+    Position result = lhs;
+    result -= rhs;
+    return result;
 }
 
 Position& Position::operator+=(const Position& rhs)
@@ -68,8 +70,13 @@ Position& Position::operator-=(const Position& rhs)
 
 Position& Position::operator=(Position rhs)
 {
-    std::swap(rhs);
-    return *this;
+    // std::swap(rhs);
+    // return *this;
+
+    // IDGAS
+    z_ = rhs.z_;
+    y_ = rhs.y_;
+    x_ = rhs.x_;
 }
 
 double Position::distance(const Position& p1, const Position& p2)

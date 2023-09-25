@@ -27,8 +27,8 @@ public:
 
     inline void x(const double&);
 
-    inline Position operator+(const Position& rhs);
-    inline Position operator-(const Position& rhs);
+    // inline Position operator+(Position lhs, const Position& rhs);
+    // inline Position operator-(Position lhs, const Position& rhs);
     Position& operator+=(const Position& rhs);
     Position& operator-=(const Position& rhs);
     Position& operator=(Position rhs);

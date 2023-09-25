@@ -33,8 +33,8 @@ inline taeto::Color Spotlight::color(taeto::Position p)
     // As a spotlight, z distance has no effect, since it goes on forever on
     // that axis
     long int distance = sqrt(
-        (position_.x - p.x) * (position_.x - p.x) +
-        (2.5 * (position_.y - p.y)) * (2.5 * (position_.y - p.y))
+        (position_.x() - p.x()) * (position_.x() - p.x()) +
+        (2.5 * (position_.y() - p.y())) * (2.5 * (position_.y() - p.y()))
     ) - radius_;
 
     // For sanity's sake

@@ -14,6 +14,11 @@ BoolFrame::BoolFrame()
 
 }
 
+BoolFrame::BoolFrame(unsigned long int h, unsigned long int w, bool b)
+{
+    resize(h, w, b);
+}
+
 BoolFrame::BoolFrame(std::string path)
 {
     // Decode png file

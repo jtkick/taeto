@@ -22,7 +22,7 @@ class UCharFrame : public Frame<uint8_t>
 public:
     UCharFrame();
 
-    UCharFrame(unsigned long int, unsigned long int);
+    UCharFrame(unsigned long int h, unsigned long int w, uint8_t v = 0);
 
     UCharFrame(const UCharFrame&);
 

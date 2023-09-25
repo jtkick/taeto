@@ -9,16 +9,16 @@ namespace taeto
 
 Vector::Vector()
 {
-    x = 0;
-    y = 0;
-    z = 0;
+    x_ = 0;
+    y_ = 0;
+    z_ = 0;
 }
 
 Vector::Vector(char a, char b, char c)
 {
-    x = a;
-    y = b;
-    z = c;
+    x_ = a;
+    y_ = b;
+    z_ = c;
 }
 
 Vector::~Vector()
@@ -27,56 +27,59 @@ Vector::~Vector()
 }
 
 // Getters
-char Vector::get_x_component() const
+char Vector::x() const
 {
-    return x;
+    return x_;
 }
 
-char Vector::get_y_component() const
+char Vector::y() const
 {
-    return y;
+    return y_;
 }
 
-char Vector::get_z_component() const
+char Vector::z() const
 {
-    return z;
+    return z_;
 }
 
 // Setters
-void Vector::set_x_component(char c)
+void Vector::x(char c)
 {
-    x = c;
+    x_ = c;
 
-    if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
+    if (sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)) > 127)
         set_magnitude(127);
 }
 
-void Vector::set_y_component(char c)
+void Vector::y(char c)
 {
-    y = c;
+    y_ = c;
 
-    if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
+    if (sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)) > 127)
         set_magnitude(127);
 }
 
-void Vector::set_z_component(char c)
+void Vector::z(char c)
 {
-    z = c;
+    z_ = c;
 
-    if (sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) > 127)
+    if (sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)) > 127)
         set_magnitude(127);
 }
 
 void Vector::set_all(char xc, char yc, char zc)
 {
-    x = xc;
-    y = yc;
-    z = zc;
+    x_ = xc;
+    y_ = yc;
+    z_ = zc;
+
+    if (sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)) > 127)
+        set_magnitude(127);
 }
 
 std::string Vector::serialize()
 {
-    return "{" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + "}";
+    return "{" + std::to_string(x_) + "," + std::to_string(y_) + "," + std::to_string(z_) + "}";
 }
 
 void Vector::set_magnitude(char mag)
@@ -88,17 +91,17 @@ void Vector::set_magnitude(char mag)
     }
 
     // Get current magnitude
-    double factor = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) / mag;
+    double factor = sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)) / mag;
 
     // Normalize all components to this value
-    x = (char)(x / factor);
-    y = (char)(y / factor);
-    z = (char)(z / factor);
+    x_ = (char)(x_ / factor);
+    y_ = (char)(y_ / factor);
+    z_ = (char)(z_ / factor);
 }
 
 char Vector::get_magnitude()
 {
-    return (char)(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));;
+    return (char)(sqrt(pow(x_, 2) + pow(y_, 2) + pow(z_, 2)));;
 }
 
 }   // namespace taeto

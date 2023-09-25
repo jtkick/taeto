@@ -1,6 +1,7 @@
 #ifndef OBJECT_SPRITE_HPP_
 #define OBJECT_SPRITE_HPP_
 
+#include "components/render_pixel.hpp"
 #include "object/object.hpp"
 #include "object/position.hpp"
 
@@ -11,19 +12,33 @@ namespace taeto
 {
 
 // Maybe put these in classes?
-struct
+struct Speed
 {
     double z;
     double y;
     double x;
-} Speed;
 
-struct
+    Speed(double z_, double y_, double x_)
+    {
+        z = z_;
+        y = y_;
+        x = x_;
+    }
+};
+
+struct Force
 {
     double z;
     double y;
     double x;
-} Force;
+
+    Force(double z_, double y_, double x_)
+    {
+        z = z_;
+        y = y_;
+        x = x_;
+    }
+};
 
 class Sprite
 {
@@ -145,6 +160,12 @@ public:
      * Returns the forces currently applied to the sprite.
      */
     taeto::Force force();
+
+    /*
+     * Animates sprite.
+     */
+    // TODO: MAYBE MOVE THIS TO taeto::Object?
+    void animate();
 
 protected:
     // Mass of the sprite for calculating speeds

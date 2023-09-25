@@ -6,9 +6,12 @@
 #include <chrono>
 #include <memory>
 
+namespace taeto
+{
+
 taeto::RenderPixel Sprite::get_pixel_at(uint64_t, uint64_t)
 {
-    retun taeto::RenderPixel();
+    return taeto::RenderPixel();
 }
 
 uint64_t Sprite::height()
@@ -56,16 +59,19 @@ bool Sprite::on_collision(std::shared_ptr<taeto::Object>)
     return false;
 }
 
-int Sprite::frame_timer(int frame_rate=30, bool refresh=true)
+int Sprite::frame_timer(int frame_rate, bool refresh)
 {
     // Get number of milliseconds per frame
-    std::chrono::milliseconds frame_time = 1000 / frame_rate;
+    int frame_time = 1000 / frame_rate;
 
     // Get difference in time between now and last time timer was called
-    std::chrono::milliseconds time_diff =
-        duration_cast<std::chrono::milliseconds(
-            system_clock::now().time_since_epoch()
-        ) - prev_timer_time_;
+    // unsigned long time_diff =
+    //     std::chrono::duration_cast<std::chrono::milliseconds(
+    //         std::chrono::system_clock::now().time_since_epoch()
+    //     ) - prev_timer_time_;
+    unsigned long time_diff =
+            std::chrono::system_clock::now().time_since_epoch()
+         - prev_timer_time_;
 
     // Get number of frames that have passed
     int num_frames = time_diff / frame_time;
@@ -88,7 +94,7 @@ void Sprite::apply_speed(const taeto::Speed& speed)
 {
     speed_.z += speed.z;
     speed_.y += speed.y;
-    speed_.x += speed.x;   
+    speed_.x += speed.x;
 }
 
 taeto::Speed Sprite::speed()
@@ -105,10 +111,17 @@ void Sprite::apply_force(const taeto::Force& force)
 {
     force_.z += force.z;
     force_.y += force.y;
-    force_.x += force.x;  
+    force_.x += force.x;
 }
 
 taeto::Force Sprite::force()
 {
     return force_;
 }
+
+void Sprite::animate()
+{
+
+}
+
+}   // namespace taeto

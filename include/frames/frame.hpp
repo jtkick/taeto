@@ -40,7 +40,8 @@ public:
      * @param x Collumn of selected row to get value from.
      * @return T A reference to the value at the given location.
      */
-    inline T& at(int y, int x) { return values_.at(y).at(x); };
+    inline constexpr T& at(int y, int x) { return values_.at(y).at(x); };
+    // inline constexpr const T& at(int y, int x) const { return values_.at(y).at(x); };
 
 
     /**

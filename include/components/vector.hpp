@@ -7,13 +7,15 @@
 namespace taeto
 {
 
+
+// TODO: FIX THIS WHOLE FUCKING CLASS
 class Vector
 {
 private:
     // Each cartesian component
-    char x;
-    char y;
-    char z;
+    char x_;
+    char y_;
+    char z_;
 
 public:
     // Constructors
@@ -25,18 +27,18 @@ public:
     ~Vector();
 
     // Getters
-    char get_x_component() const;
+    char x() const;
 
-    char get_y_component() const;
+    char y() const;
 
-    char get_z_component() const;
+    char z() const;
 
     // Setters
-    void set_x_component(char);
+    void x(char);
 
-    void set_y_component(char);
+    void y(char);
 
-    void set_z_component(char);
+    void z(char);
 
     void set_all(char, char, char);
 

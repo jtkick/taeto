@@ -73,7 +73,7 @@ taeto::BoolFrame DisplayPixelFrame::bolds()
     taeto::BoolFrame frame(height(), width());
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).bold;
+            frame.set(i, j, at(i, j).bold);
     return frame;
 }
 
@@ -91,7 +91,7 @@ taeto::BoolFrame DisplayPixelFrame::italics()
     taeto::BoolFrame frame(height(), width());
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).italic;
+            frame.set(i, j, at(i, j).italic);
     return frame;
 }
 
@@ -109,7 +109,7 @@ taeto::BoolFrame DisplayPixelFrame::underlines()
     taeto::BoolFrame frame(height(), width());
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).underline;
+            frame.set(i, j, at(i, j).underline);
     return frame;
 }
 
@@ -127,7 +127,7 @@ taeto::BoolFrame DisplayPixelFrame::strikethroughs()
     taeto::BoolFrame frame(height(), width());
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).strikethrough;
+            frame.set(i, j, at(i, j).strikethrough);
     return frame;
 }
 
@@ -145,7 +145,7 @@ void DisplayPixelFrame::add_string(int y, int x, std::string str)
     for (int i = 0; i < str.length(); ++i)
     {
         taeto::DisplayPixel& dp = at(y, x+i);
-        dp.char = str.at(i);
+        dp.c = str.at(i);
         dp.foreground_color = taeto::Color(255, 255, 255, 255);
         dp.background_color = taeto::Color(0, 0, 0, 255);
     }

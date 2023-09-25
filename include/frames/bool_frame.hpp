@@ -11,9 +11,15 @@ class BoolFrame : public Frame<bool>
 public:
     BoolFrame();
 
+    BoolFrame(unsigned long int h, unsigned long int w, bool b = false);
+
     BoolFrame(std::string path);
 
     ~BoolFrame();
+
+    inline bool at(int y, int x) { return values_.at(y).at(x); };
+
+    inline void set(int y, int x, bool val) { values_.at(y).at(x) = val; };
 };
 
 }   // namespace taeto

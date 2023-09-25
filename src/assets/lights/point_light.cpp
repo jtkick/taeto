@@ -26,16 +26,16 @@ inline taeto::Color PointLight::color(taeto::Position p)
     // Get distance between points
     // Multiply y difference by two plus a bit since characters are about twice
     // as tall as they are wide
-    long int distance = sqrt(
-        (position_.x - p.x) * (position_.x - p.x) +
-        (2.5 * (position_.y - p.y)) * (2.5 * (position_.y - p.y)) +
-        (position_.z - p.z) * (position_.z - p.z));
+    long int distance = std::sqrt(
+        (position_.x() - p.x()) * (position_.x() - p.x()) +
+        (2.5 * (position_.y() - p.y())) * (2.5 * (position_.y() - p.y())) +
+        (position_.z() - p.z()) * (position_.z() - p.z()));
 
     // Construct new color based on the distance
     taeto::Color new_color = taeto::Color(
-        color_.red * pow(sqrt(fade_), distance),
-        color_.green * pow(sqrt(fade_), distance),
-        color_.blue * pow(sqrt(fade_), distance)
+        color_.red * std::pow(std::sqrt(fade_), distance),
+        color_.green * std::pow(std::sqrt(fade_), distance),
+        color_.blue * std::pow(std::sqrt(fade_), distance)
     );
 
     return new_color;
@@ -43,7 +43,10 @@ inline taeto::Color PointLight::color(taeto::Position p)
 
 inline taeto::Vector PointLight::vector(taeto::Position p)
 {
-    return taeto::Vector(position_.x - p.x, position_.y - p.y, position_.z - p.z);
+    return taeto::Vector(
+        position_.x() - p.x(),
+        position_.y() - p.y(),
+        position_.z() - p.z());
 }
 
 }   // namespace taeto

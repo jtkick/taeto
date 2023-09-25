@@ -72,29 +72,17 @@ taeto::Camera& get_camera()
     return camera_;
 }
 
-void load_object(std::weak_ptr<taeto::Object> object)
+void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
 {
     logger_->info("Adding object to engine.");
 
     // Get shared pointer to object
-    std::shared_ptr<taeto::Object> o;
-    if (!(o = object.lock()))
-        return
+    std::shared_ptr<taeto::Sprite> s;
+    if (!(s = sprite.lock()))
+        return;
 
     // Load object to main vector
-    objects_.push_back(object);
-
-    // If object implements light interface, add to lights
-    if (ILight* i = dynamic_cast<ILight*>(o.get()))
-        lights_.push_back(object);
-
-    // If object implements renderable interface, add to sprites
-    if (IRenderable* i = dynamic_cast<IRenderable*>(o.get()))
-        sprites_.push_back(object);
-
-    // If object implements physical object interface, add to physicals
-    if (IPhysicalObject* i = dynamic_cast<IPhysicalObject*>(o.get()))
-        physicals_.push_back(object);
+    sprites_.push_back(sprite);
 }
 
 void load_scene(std::shared_ptr<Scene> scene)
@@ -148,19 +136,12 @@ void run()
                 ) - last_frame_start_time_;
 
         // Clear out all dead pointers from engine
-        std::vector<std::vector<std::weak_ptr<taeto::Object>>*>
-            all_object_vectors = {&objects_, &sprites_, &lights_, &physicals_};
-        for (std::vector<std::weak_ptr<taeto::Object>>* v : all_object_vectors)
-        {
-            auto it = v->begin();
-            while (it != v->end())
-            {
-                if (!it->lock())
-                    it = v->erase(it);
-                else
-                    it++;
-            }
-        }
+        for (int i = sprites_.size(); i >= 0; --i)
+            if (sprites_.at(i).expired())
+                sprites_.erase(sprites_.begin() + i);
+        for (int i = lights_.size(); i >= 0; --i)
+            if (lights_.at(i).expired())
+                lights_.erase(lights_.begin() + i);
 
 
         ////////////////////////////////////////////////////////////////
@@ -176,10 +157,11 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         logger_->info("Telling sprites to animate.");
-        for (std::weak_ptr<taeto::Object> object : objects_)
+        for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
             // Get pointer if not dead
-            if (std::shared_ptr<taeto::Object> o = object.lock())
-                o->animate(last_frame_duration_);
+            if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
+                // s->animate(last_frame_duration_);
+                s->animate();
 
         logger_->info("Telling scene to animate.");
         if (scene_)
@@ -192,7 +174,7 @@ void run()
 
         // Physics
         logger_->info("Applying forces to sprites.");
-        physics_system_.detect_collisions(physicals_);
+        physics_system_.detect_collisions(sprites_);
 
 
         ////////////////////////////////////////////////////////////////

@@ -13,7 +13,8 @@
 #include "components/display_pixel.hpp"
 #include "components/render_pixel.hpp"
 #include "frames/display_pixel_frame.hpp"
-#include "object/object.hpp"
+#include "object/light.hpp"
+#include "object/sprite.hpp"
 #include "systems/system.hpp"
 
 namespace taeto
@@ -37,8 +38,8 @@ public:
     void render_frame(
         taeto::DisplayPixelFrame&,
         taeto::Camera&,
-        std::vector<std::weak_ptr<taeto::Object>>& sprites,
-        std::vector<std::weak_ptr<taeto::Object>>& lights
+        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
+        std::vector<std::weak_ptr<taeto::Light>>& lights
     );
 
     /**
@@ -50,8 +51,8 @@ public:
     */
     void render_frame_by_drawing(
         taeto::DisplayPixelFrame&,
-        std::vector<std::weak_ptr<taeto::Object>>& sprites,
-        std::vector<std::weak_ptr<taeto::Object>>& lights
+        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
+        std::vector<std::weak_ptr<taeto::Light>>& lights
     );
 
 private:

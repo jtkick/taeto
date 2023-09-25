@@ -1,38 +1,43 @@
-#ifndef FRAMES_COLOR_FRAME_HPP_
-#define FRAMES_COLOR_FRAME_HPP_
+#ifndef FRAMES_VECTOR_FRAME_HPP_
+#define FRAMES_VECTOR_FRAME_HPP_
 
 #include "components/color.hpp"
 #include "frames/frame.hpp"
-#include "frames/char_frame.hpp"
+#include "frames/uchar_frame.hpp"
 
 namespace taeto
 {
 
 // Forward includes
-class CharFrame;
+class UCharFrame;
 
-class ColorFrame : Frame<taeto::Vector>
+class VectorFrame : public Frame<taeto::Vector>
 {
 public:
-    ColorFrame();
+    VectorFrame();
 
-    ColorFrame(std::string path);
+    VectorFrame(
+        unsigned long int h,
+        unsigned long int w,
+        taeto::Vector v = {0, 0, 0});
 
-    ~ColorFrame();
+    VectorFrame(std::string path);
 
-    const taeto::CharFrame& x() const;
+    ~VectorFrame();
 
-    void x(const taeto::CharFrame&);
+    taeto::UCharFrame x();
 
-    const taeto::CharFrame& y() const;
+    void x(taeto::UCharFrame&);
 
-    void y(const taeto::CharFrame&);
+    taeto::UCharFrame y();
 
-    const taeto::CharFrame& z() const;
+    void y(taeto::UCharFrame&);
 
-    void z(const taeto::CharFrame&);
+    taeto::UCharFrame z();
+
+    void z(taeto::UCharFrame&);
 };
 
 }   // namespace taeto
 
-#endif  // FRAMES_COLOR_FRAME_HPP_
+#endif  // FRAMES_VECTOR_FRAME_HPP_

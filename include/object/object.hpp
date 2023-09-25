@@ -11,13 +11,13 @@ namespace taeto
 class Object
 {
 public:
-    Object() = default;
+    Object() : position_(taeto::Position(0.0, 0.0, 0.0)) { };
 
     Object(const taeto::Position& p) : position_(p) { };
 
     // Since Object is the base class for the interfaces, it needs at least one
     // virtual method to be polymorphic
-    virtual ~Object() { };
+    ~Object() { };
 
     const taeto::Position& position() const;
 
