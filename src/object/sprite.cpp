@@ -62,7 +62,7 @@ bool Sprite::get_collision_at(uint64_t, uint64_t)
     return false;
 }
 
-bool Sprite::on_collision(std::shared_ptr<taeto::Object>)
+bool Sprite::on_collision(std::shared_ptr<taeto::Sprite>)
 {
     return false;
 }

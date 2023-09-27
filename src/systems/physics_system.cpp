@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-#include "components/sprite.h"
+#include "object/sprite.hpp"
 
 namespace taeto
 {
@@ -39,14 +39,12 @@ void PhysicsSystem::apply_forces(
 
         // Get sprite mass and forces
         double mass = sprite_ptr->get_mass();
-        double fx = sprite_ptr->get_x_force();
-        double fy = sprite_ptr->get_y_force();
-        double fz = sprite_ptr->get_z_force();
+        taeto::Force force = sprite_ptr->force();
 
         // Calculate accelerations
-        double ax = fx / mass;
-        double ay = fy / mass;
-        double az = fz / mass;
+        double ax = force.x / mass;
+        double ay = force.y / mass;
+        double az = force.z / mass;
 
         // Get current time in milliseconds
         long long current_time =
@@ -65,25 +63,20 @@ void PhysicsSystem::apply_forces(
         time_since_last_applied /= 1000;
 
         // Add accumulated speed to current speed
-        sprite_ptr->set_x_speed(
-            sprite_ptr->get_x_speed() + (ax * time_since_last_applied));
-        sprite_ptr->set_y_speed(
-            sprite_ptr->get_y_speed() + (ay * time_since_last_applied));
-        sprite_ptr->set_z_speed(
-            sprite_ptr->get_z_speed() + (az * time_since_last_applied));
+        taeto::Speed speed = sprite_ptr->speed();
+        speed.z += az * time_since_last_applied;
+        speed.y += ay * time_since_last_applied;
+        speed.x += ax * time_since_last_applied;
+        sprite_ptr->speed(speed);
 
 
         // TODO: MOVE THIS TO COLLISION DETECTION
         // Update position
-        sprite_ptr->set_x_exact_position(
-            sprite_ptr->get_x_exact_position() +
-            (sprite_ptr->get_x_speed() * time_since_last_applied));
-        sprite_ptr->set_y_exact_position(
-            sprite_ptr->get_y_exact_position() +
-            (sprite_ptr->get_y_speed() * time_since_last_applied));
-        sprite_ptr->set_z_exact_position(
-            sprite_ptr->get_z_exact_position() +
-            (sprite_ptr->get_z_speed() * time_since_last_applied));
+        taeto::Position position = sprite_ptr->position();
+        position.z(position.z() + (position.z() * time_since_last_applied));
+        position.y(position.y() + (position.y() * time_since_last_applied));
+        position.x(position.x() + (position.x() * time_since_last_applied));
+        sprite_ptr->position(position);
     }
 }
 
@@ -103,7 +96,7 @@ void PhysicsSystem::detect_collisions(
         if (!(sprite_ptr = sprite_weak_ptr.lock()))
             continue;
 
-        if (sprite_ptr->get_collide())
+        if (sprite_ptr->collides())
             sprites_that_collide.push_back(sprite_ptr);
     }
 
@@ -112,24 +105,45 @@ void PhysicsSystem::detect_collisions(
     for (std::weak_ptr<taeto::Sprite> sprite_weak_ptr : sprites)
     {
         // Get pointer if not dead
-        std::shared_ptr<taeto::Sprite> sprite_ptr;
-        if (!(sprite_ptr = sprite_weak_ptr.lock()))
+        std::shared_ptr<taeto::Sprite> spr_1;
+        if (!(spr_1 = sprite_weak_ptr.lock()))
             continue;
 
         // Only check if detect collisions is true
-        if (sprite_ptr->get_detect_collisions())
+        if (spr_1->detect_collisions())
         {
             logger->debug("Found sprite that wants to see collisions");
 
             // Check collisions against every other sprite
-            for (std::shared_ptr<taeto::Sprite> other_sprite_ptr : sprites_that_collide)
+            for (std::shared_ptr<taeto::Sprite> spr_2 : sprites_that_collide)
             {
                 // Make sure they're not the same sprite
-                if (sprite_ptr != other_sprite_ptr)
+                if (spr_1 != spr_2)
                 {
+                    // Do rough collision detection
+                    taeto::Position pos_1 = spr_1->position();
+                    taeto::Position pos_2 = spr_2->position();
+
+                    // x locations don't overlap
+                    if (((int)pos_1->x() > (int)pos_2->x() + spr_2->width()) ||
+                        ((int)pos_1->x() + spr_1->width()-1 < (int)pos_2->x()))
+                        continue;
+
+                    // y locations don't overlap
+                    if (((int)pos_1->y() > (int)pos_2->y() + spr_2->height()) ||
+                        ((int)pos_1->y() + spr_1->height()-1 < (int)pos_2->y()))
+                        continue;
+
+                    // Different z-plane
+                    if ((int)pos_1->z() != (int)pos_2->z())
+                        continue;
+
+                    // Now it's guaranteed that the sprites overlap in some way, so loop over each sprite's
+                    // collision mesh and compare to the other
+                    // TODO: GET TO THIS LATER
+
                     // Notify if they collide
-                    if (sprite_ptr->collides_with(other_sprite_ptr))
-                        sprite_ptr->handle_collision(other_sprite_ptr);
+                    spr_1->on_collision(spr_2);
                 }
             }
         }

@@ -1,5 +1,5 @@
-#ifndef SYSTESM_PHYSICS_SYSTEM_HPP_
-#define SYSTESM_PHYSICS_SYSTEM_HPP_
+#ifndef SYSTEM_PHYSICS_SYSTEM_HPP_
+#define SYSTEM_PHYSICS_SYSTEM_HPP_
 
 #include <memory>
 
@@ -33,4 +33,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // SYSTESM_PHYSICS_SYSTEM_HPP_
+#endif  // SYSTEM_PHYSICS_SYSTEM_HPP_

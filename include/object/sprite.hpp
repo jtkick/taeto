@@ -115,7 +115,7 @@ public:
     /*
      * Defines what happens when this object collides with the given object.
      */
-    bool on_collision(std::shared_ptr<taeto::Object>);
+    bool on_collision(std::shared_ptr<taeto::Sprite>);
 
     /*
      * Returns the given number of frames that have passed since the last time
