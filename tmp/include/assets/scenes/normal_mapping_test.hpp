@@ -29,10 +29,6 @@ private:
 
     float current_degree_ = 0.0;
 
-    std::chrono::milliseconds last_animate_;
-
-    std::chrono::milliseconds stopwatch_;
-
     // Assets
     std::shared_ptr<taeto::NormalTest> nt_;
     std::shared_ptr<taeto::PointLight> pl_;

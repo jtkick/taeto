@@ -86,8 +86,17 @@ int Sprite::frame_timer(int frame_rate, bool refresh)
     return num_frames;
 }
 
+void Sprite::mass(double mass)
+{
+    _mass = m;
+}
 
-void Sprite::set_speed(const taeto::Speed& speed)
+double Sprite::mass()
+{
+    return _mass;
+}
+
+void Sprite::speed(const taeto::Speed& speed)
 {
     speed_ = speed;
 }
@@ -99,7 +108,7 @@ void Sprite::apply_speed(const taeto::Speed& speed)
     speed_.x += speed.x;
 }
 
-taeto::Speed Sprite::speed()
+taeto::Speed& Sprite::speed()
 {
     return speed_;
 }
@@ -116,7 +125,7 @@ void Sprite::apply_force(const taeto::Force& force)
     force_.x += force.x;
 }
 
-taeto::Force Sprite::force()
+taeto::Force& Sprite::force()
 {
     return force_;
 }

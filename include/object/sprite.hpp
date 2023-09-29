@@ -127,11 +127,15 @@ public:
     // TODO: REPLACE THIS WITH AN ACTUAL TIMING SYSTEM
     int frame_timer(int frame_rate=30, bool refresh=true);
 
+    void mass(double);
+
+    double mass();
+
     /*
      * Sets speed of the object.
      * @param speed The sprite's new speed.
      */
-    void set_speed(const taeto::Speed& speed);
+    void speed(const taeto::Speed& speed);
 
     /*
      * Applies speed to the object.

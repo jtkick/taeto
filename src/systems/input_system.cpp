@@ -45,6 +45,11 @@ std::shared_ptr<bool> InputSystem::get_button_reference(int id)
     return mapped_buttons_[id];
 }
 
+// int64_t InputSystem::input_value(int id = 0)
+// {
+
+// }
+
 void InputSystem::poll_inputs()
 {
     // New poll method

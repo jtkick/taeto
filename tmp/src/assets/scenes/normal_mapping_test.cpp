@@ -59,6 +59,8 @@ void NormalMappingTest::animate()
         current_degree_ = fmod(current_degree_, 360.0);
     }
 
+    num_frames = 
+
 
     // Move light in a circle about the box
     long int x = distance_ * cos(current_degree_ * PI / 180);

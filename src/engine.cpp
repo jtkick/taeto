@@ -213,9 +213,6 @@ void run()
                 5, 0, "CURRENT FRAME: " + std::to_string(frame_number_));
         }
 
-        // Tell all sprites and scenes that a frame is about to be rendered
-        //logger_->debug("Posting Pre_Render_Message.");
-
         logger_->debug("Displaying frame.");
         display_system_.display_frame(frame);
     }

@@ -184,6 +184,32 @@ Color Color::operator & (const Color &c)
     return new_color;
 }
 
+struct vec4
+{
+    double r;
+    double g;
+    double b;
+    double a;
+};
+
+// TODO: TRY THIS ONE INSTEAD
+Color Color::operator & (const Color &c)
+{
+    // We're going to move to vec3 soon, so just convert to floats
+    vec4 c1 = {(double)red/255, (double)green/255,
+               (double)blue/255, (double)alpha/255};
+    vec4 c1 = {(double)c.red/255, (double)c.green/255,
+               (double)c.blue/255, (double)c.alpha/255};
+    vec4 cr = {0, 0, 0, 0};
+
+    cr.a = c1.a + (c2.a * (1 - c1.a));
+    cr.r = ((c1.r * c1.a) + (c2.r * c2.a) * (1 - c1.a)) / cr.a;
+    cr.g = ((c1.g * c1.a) + (c2.g * c2.a) * (1 - c1.a)) / cr.a;
+    cr.b = ((c1.b * c1.a) + (c2.b * c2.a) * (1 - c1.a)) / cr.a;
+
+    return Color(cr.r*255, cr.g*255, cr.b*255, cr.a*255);
+}
+
 Color Color::operator += (const Color &c)
 {
     red = red + c.red < 255 ? red + c.red : 255;
