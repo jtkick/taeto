@@ -6,30 +6,21 @@
 #include "spdlog/spdlog.h"
 
 #include "object/sprite.hpp"
+#include "object/position.hpp"
+#include "tools.hpp"
 
 namespace taeto
 {
 
-PhysicsSystem::PhysicsSystem()
-{
-
-}
-
-PhysicsSystem::PhysicsSystem(std::shared_ptr<spdlog::logger> l)
-{
-    logger = l;
-
-    logger->error("Done setting up physics system.");
-}
-
-PhysicsSystem::~PhysicsSystem()
-{
-
-}
-
 void PhysicsSystem::apply_forces(
     std::vector<std::weak_ptr<taeto::Sprite>>& sprites)
 {
+    // Get time since physics last applied
+    std::chrono::milliseconds now = taeto::ms_since_epoch();
+    std::chrono::milliseconds prev_frame_length =
+        now - time_physics_last_applied_;
+    time_physics_last_applied_ = now;
+
     for (std::weak_ptr<taeto::Sprite> sprite_weak_ptr : sprites)
     {
         // Get pointer if not dead
@@ -46,35 +37,23 @@ void PhysicsSystem::apply_forces(
         double ay = force.y / mass;
         double az = force.z / mass;
 
-        // Get current time in milliseconds
-        long long current_time =
-            std::chrono::duration_cast<std::chrono::milliseconds>
-            (
-                std::chrono::system_clock::now().time_since_epoch()
-            ).count();
-
-        // Get time since physics last applied to this sprite
-        double time_since_last_applied =
-            (double)current_time -
-            (double)sprite_ptr->get_time_physics_last_applied();
-        sprite_ptr->set_time_physics_last_applied(current_time);
-
         // Get in seconds
-        time_since_last_applied /= 1000;
+        double seconds_since_last_applied =
+            time_physics_last_applied_.count() / 1000;
 
         // Add accumulated speed to current speed
         taeto::Speed& speed = sprite_ptr->speed();
-        speed.z += az * time_since_last_applied;
-        speed.y += ay * time_since_last_applied;
-        speed.x += ax * time_since_last_applied;
+        speed.z += az * seconds_since_last_applied;
+        speed.y += ay * seconds_since_last_applied;
+        speed.x += ax * seconds_since_last_applied;
 
 
         // TODO: MOVE THIS TO COLLISION DETECTION
         // Update position
         taeto::Position& position = sprite_ptr->position();
-        position.z(position.z() + (position.z() * time_since_last_applied));
-        position.y(position.y() + (position.y() * time_since_last_applied));
-        position.x(position.x() + (position.x() * time_since_last_applied));
+        position.z(position.z() + (position.z() * seconds_since_last_applied));
+        position.y(position.y() + (position.y() * seconds_since_last_applied));
+        position.x(position.x() + (position.x() * seconds_since_last_applied));
     }
 }
 
@@ -126,17 +105,17 @@ void PhysicsSystem::detect_collisions(
             taeto::Position pos_2 = spr_2->position();
 
             // x locations don't overlap
-            if (((int)pos_1->x() > (int)pos_2->x() + spr_2->width()) ||
-                ((int)pos_1->x() + spr_1->width()-1 < (int)pos_2->x()))
+            if (((int)pos_1.x() > (int)pos_2.x() + spr_2->width()) ||
+                ((int)pos_1.x() + spr_1->width()-1 < (int)pos_2.x()))
                 continue;
 
             // y locations don't overlap
-            if (((int)pos_1->y() > (int)pos_2->y() + spr_2->height()) ||
-                ((int)pos_1->y() + spr_1->height()-1 < (int)pos_2->y()))
+            if (((int)pos_1.y() > (int)pos_2.y() + spr_2->height()) ||
+                ((int)pos_1.y() + spr_1->height()-1 < (int)pos_2.y()))
                 continue;
 
             // Different z-plane
-            if ((int)pos_1->z() != (int)pos_2->z())
+            if ((int)pos_1.z() != (int)pos_2.z())
                 continue;
 
             // Now it's guaranteed that the sprites overlap in some way, so loop over each sprite's

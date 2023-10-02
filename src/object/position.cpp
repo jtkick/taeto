@@ -6,36 +6,6 @@
 namespace taeto
 {
 
-inline const double& Position::z() const
-{
-    return z_;
-}
-
-inline void Position::z(const double& z)
-{
-    z_ = z;
-}
-
-inline const double& Position::y() const
-{
-    return y_;
-}
-
-inline void Position::y(const double& y)
-{
-    y_ = y;
-}
-
-inline const double& Position::x() const
-{
-    return x_;
-}
-
-inline void Position::x(const double& x)
-{
-    x_ = x;
-}
-
 Position operator+(const Position& lhs, const Position& rhs)
 {
     Position result = lhs;
@@ -77,6 +47,8 @@ Position& Position::operator=(Position rhs)
     z_ = rhs.z_;
     y_ = rhs.y_;
     x_ = rhs.x_;
+
+    return *this;
 }
 
 double Position::distance(const Position& p1, const Position& p2)

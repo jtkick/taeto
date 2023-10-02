@@ -40,22 +40,9 @@ public:
         taeto::Camera&,
         std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
         std::vector<std::weak_ptr<taeto::Light>>& lights
-    );
+    ) { throw std::runtime_error("bro"); };
 
-    /**
-     * Render a PixelFrame with all known objects in the engine. Draws sprites
-     * one at a time.
-     * CURRENTLY A WORK IN PROGRESS, HAS WEIRD ARTIFACTS AND PROBABLY CRASHES
-     *
-     * @param rendered_frame Frame to write rendered pixels to.
-    */
-    void render_frame_by_drawing(
-        taeto::DisplayPixelFrame&,
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-        std::vector<std::weak_ptr<taeto::Light>>& lights
-    );
-
-private:
+protected:
     // First rendered frame: pixels before lighting applied with additional data
     // typedef std::vector<std::vector<std::vector<std::tuple<
     //     taeto::DisplayPixel, taeto::Position>>>> AlbedoFrame;

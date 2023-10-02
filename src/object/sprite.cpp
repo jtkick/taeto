@@ -2,20 +2,13 @@
 
 #include "components/render_pixel.hpp"
 #include "object/object.hpp"
+#include "tools.hpp"
 
 #include <chrono>
 #include <memory>
 
 namespace taeto
 {
-
-// Bro, just give me time since epoch
-std::chrono::milliseconds ms_since_epoch()
-{
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    );
-}
 
 const taeto::RenderPixel& Sprite::get_pixel_at(uint64_t, uint64_t)
 {
@@ -88,12 +81,12 @@ int Sprite::frame_timer(int frame_rate, bool refresh)
 
 void Sprite::mass(double mass)
 {
-    _mass = m;
+    mass_ = mass;
 }
 
 double Sprite::mass()
 {
-    return _mass;
+    return mass_;
 }
 
 void Sprite::speed(const taeto::Speed& speed)

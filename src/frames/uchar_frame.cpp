@@ -46,9 +46,4 @@ UCharFrame::UCharFrame(const taeto::Frame<unsigned char>& f)
     values_ = f.values_;
 }
 
-CharFrame::~CharFrame()
-{
-
-}
-
 }   // namespace taeto

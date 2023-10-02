@@ -15,7 +15,7 @@ public:
 
     BoolFrame(std::string path);
 
-    ~BoolFrame();
+    ~BoolFrame() { };
 
     inline bool at(int y, int x) { return values_.at(y).at(x); };
 

@@ -28,6 +28,8 @@ public:
 
     RenderPixelFrame(const taeto::RenderPixelFrame&);
 
+    ~RenderPixelFrame() { };
+
     taeto::CharFrame chars();
 
     void chars(taeto::CharFrame&);

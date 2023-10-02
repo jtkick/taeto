@@ -23,7 +23,7 @@ public:
 
     VectorFrame(std::string path);
 
-    ~VectorFrame();
+    ~VectorFrame() { };
 
     taeto::UCharFrame x();
 

@@ -5,17 +5,34 @@
 
 #include "spdlog/spdlog.h"
 
-#include "frames/display_pixel_frame.h"
+#include "frames/display_pixel_frame.hpp"
 // #include "components/position.hpp"
 
 namespace taeto
 {
 
+RayCastRenderSystem::RayCastRenderSystem()
+{
+
+}
+
+RayCastRenderSystem::RayCastRenderSystem(std::shared_ptr<spdlog::logger> l)
+{
+    logger_ = l;
+
+    render_distance_ = 1000000000;
+}
+
+RayCastRenderSystem::~RayCastRenderSystem()
+{
+
+}
+
 void RayCastRenderSystem::render_frame(
     taeto::DisplayPixelFrame &rendered_frame,
     taeto::Camera &camera,
-    std::vector<std::weak_ptr<taeto::Object>>& sprites,
-    std::vector<std::weak_ptr<taeto::Object>>& lights)
+    std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
+    std::vector<std::weak_ptr<taeto::Light>>& lights)
 {
     // Get height and width for quick reference
     int h = rendered_frame.height();
@@ -38,10 +55,10 @@ void RayCastRenderSystem::render_frame(
             // TODO: MAKE SURE SPRITE AND LIGHT POINTERS AREN'T DEAD
 
             // Render each sprite at a time
-            for (std::weak_ptr<Object> current_object_weak_ptr : sprites)
+            for (std::weak_ptr<taeto::Sprite> current_sprite_weak_ptr : sprites)
             {
                 // Get pointer if not dead
-                std::shared_ptr<taeto::Object> current_sprite;
+                std::shared_ptr<taeto::Sprite> current_sprite;
                 if (!(current_sprite = current_sprite_weak_ptr.lock()))
                     continue;
 
@@ -49,8 +66,9 @@ void RayCastRenderSystem::render_frame(
                 current_sprite->visible(false);
 
                 // Get distance between sprite and camera
-                double z_diff = camera.get_z_pixel_position() -
-                                current_sprite->get_z_pixel_position();
+                taeto::Position& camera_position = camera.position();
+                double z_diff = (unsigned long int)camera_position.z() -
+                                (unsigned long int)current_sprite->position().z();
 
                 // Make sure sprite is at least in front of the camera and
                 // within rendering distance
@@ -61,55 +79,57 @@ void RayCastRenderSystem::render_frame(
                 // Get sprite pixel of interest depending on orientation plane
                 // We're going to be very literal to keep things straight
                 char plane_orientation =
-                    current_sprite->get_plane_orientation();
+                    current_sprite->plane_orientation();
                 int dp_y = y - half_frame_height;
                 int dp_x = x - half_frame_width;
                 double sprite_z = 0.0;
                 double sprite_y = 0.0;
                 double sprite_x = 0.0;
+                taeto::Position& sprite_position = current_sprite->position();
                 if (plane_orientation == 'Z')
                 {
-                    double z_diff = camera.get_z_pixel_position() -
-                        current_sprite->get_z_pixel_position();
+                    double z_diff = camera_position.z() - sprite_position.z();
                     double sprite_y =
                         (((dp_y * z_diff) /
-                          camera.get_focal_length()) +
-                         camera.get_y_pixel_position()) -
-                        current_sprite->get_y_pixel_position();
+                          camera.focal_length()) +
+                         (int64_t)camera_position.y()) -
+                        (int64_t)sprite_position.y();
                     double sprite_x =
                         (((dp_x * z_diff) /
-                          camera.get_focal_length()) +
-                         camera.get_x_pixel_position()) -
-                        current_sprite->get_x_pixel_position();
+                          camera.focal_length()) +
+                         (int64_t)camera_position.x()) -
+                        (int64_t)sprite_position.x();
                 }
                 else if (plane_orientation == 'Y')
                 {
-                    double y_diff = camera.get_y_pixel_position() -
-                        current_sprite->get_y_pixel_position();
+                    double y_diff = (int64_t)camera_position.y() -
+                        (int64_t)sprite_position.y();
                     double sprite_y =
                         (((dp_y * y_diff) /
-                          camera.get_focal_length()) +
-                         camera.get_z_pixel_position()) -
-                        current_sprite->get_z_pixel_position();
+                          camera.focal_length()) +
+                         (int64_t)camera_position.z()) -
+                        (int64_t)sprite_position.z();
                     double sprite_x =
                         (((dp_x * y_diff) /
-                          camera.get_focal_length()) +
-                         camera.get_x_pixel_position()) -
-                        current_sprite->get_z_pixel_position();
+                          camera.focal_length()) +
+                         (int64_t)camera_position.x()) -
+                        (int64_t)sprite_position.z();
                 }
 
                 // Map frame position to sprite plane position
-                double abs_z = current_sprite->get_z_pixel_position();
-                double abs_y = (((y - half_frame_height) * z_diff) / camera.get_focal_length()) + camera.get_y_pixel_position();
-                double abs_x = (((x - half_frame_width) * z_diff) / camera.get_focal_length()) + camera.get_x_pixel_position();
+                double abs_z = (int64_t)sprite_position.z();
+                double abs_y = (((y - half_frame_height) * z_diff) /
+                    camera.focal_length()) + (int64_t)camera_position.y();
+                double abs_x = (((x - half_frame_width) * z_diff) /
+                    camera.focal_length()) + (int64_t)camera_position.x();
 
                 // Get distance to camera
                 double distance_to_camera =
                     std::sqrt(abs_z * abs_z + abs_y * abs_y + abs_x * abs_x);
 
                 // Map to relative to sprite origin
-                double rel_y = abs_y - current_sprite->get_y_pixel_position();
-                double rel_x = abs_x - current_sprite->get_x_pixel_position();
+                double rel_y = abs_y - (int64_t)sprite_position.y();
+                double rel_x = abs_x - (int64_t)sprite_position.x();
 
                 // If pixel doesn't overlap with sprite, move on to next pixel
                 if (sprite_x < 0 || sprite_x >= current_sprite->width() ||
@@ -117,7 +137,7 @@ void RayCastRenderSystem::render_frame(
                      continue;
 
                 // Get pixel of interest
-                taeto::Pixel current_pixel =
+                taeto::RenderPixel current_pixel =
                     current_sprite->get_pixel_at(sprite_y, sprite_x);
 
                 // Now that we have a pixel from the sprite, we know that it's
@@ -131,19 +151,19 @@ void RayCastRenderSystem::render_frame(
 
                 // Compute lighting for this pixel
                 taeto::Color received_light(0, 0, 0);
-                for (std::weak_ptr<Object> light_weak_ptr : lights)
+                for (std::weak_ptr<taeto::Light> light_weak_ptr : lights)
                 {
                     // Get pointer if not dead
-                    std::shared_ptr<taeto::Object> light;
+                    std::shared_ptr<taeto::Light> light;
                     if (!(light = light_weak_ptr.lock()))
                         continue;
 
                     // Light color at this pixel location
-                    taeto::Color light_color = light->get_light_color(abs_x, abs_y, abs_z);
+                    taeto::Color light_color = light->color(taeto::Position(abs_z, abs_y, abs_x));
 
                     // Get light vector and pixel normal
                     const taeto::Vector &pixel_normal = current_pixel.normal;
-                    const taeto::Vector light_vector = light->get_light_vector(abs_x, abs_y, abs_z);
+                    const taeto::Vector light_vector = light->vector(taeto::Position(abs_z, abs_y, abs_x));
 
                     // TODO: PUT THIS IN A VECTOR OPERATOR METHOD
                     // Get vector components
@@ -188,7 +208,7 @@ void RayCastRenderSystem::render_frame(
 
             if (pixel_stack.size() == 0)
             {
-                rendered_frame.get_pixel_at(y, x).clear();
+                rendered_frame.at(y, x).clear();
                 continue;
             }
 
@@ -197,7 +217,7 @@ void RayCastRenderSystem::render_frame(
             // I SAY "FUCK IT"
 
             // Pixel is officially finished rendering, write to final frame
-            rendered_frame.get_pixel_at(y, x) = std::get<0>(pixel_stack.at(0));
+            rendered_frame.at(y, x) = std::get<0>(pixel_stack.at(0));
             continue;
 
 
@@ -205,7 +225,7 @@ void RayCastRenderSystem::render_frame(
 
 
             // Now that we have all the rendered pixels, combine them together
-            taeto::Pixel rendered_pixel =
+            taeto::DisplayPixel rendered_pixel =
                 std::get<0>(pixel_stack.at(pixel_stack.size() - 1));
             for (int i = pixel_stack.size() - 2; i >= 0; --i)
             {
@@ -217,7 +237,7 @@ void RayCastRenderSystem::render_frame(
             }
 
             // Pixel is officially finished rendering, write to final frame
-            rendered_frame.get_pixel_at(y, x) = rendered_pixel;
+            rendered_frame.at(y, x) = rendered_pixel;
         }
     }
 }

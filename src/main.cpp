@@ -67,8 +67,8 @@ int main(int argc, char** argv)
 
     // if (test_scene == "collision_detection")
     //     taeto::load_scene(std::make_shared<taeto::CollisionDetectionTest>());
-    // else if (test_scene == "normal_mapping")
-    //     taeto::load_scene(std::make_shared<taeto::NormalMappingTest>());
+    if (test_scene == "normal_mapping")
+         taeto::load_scene(std::make_shared<taeto::NormalMappingTest>());
     // else if (test_scene == "light_mixing")
     //     taeto::load_scene(std::make_shared<taeto::LightMixingTest>());
     // else if (test_scene == "sprite_orientation")

@@ -1,12 +1,14 @@
 #ifndef SYSTEM_PHYSICS_SYSTEM_HPP_
 #define SYSTEM_PHYSICS_SYSTEM_HPP_
 
+#include <chrono>
 #include <memory>
 
 #include "spdlog/spdlog.h"
 
 #include "object/sprite.hpp"
 #include "systems/system.hpp"
+#include "tools.hpp"
 
 namespace taeto
 {
@@ -14,11 +16,13 @@ namespace taeto
 class PhysicsSystem: public System
 {
 public:
-    PhysicsSystem();
+    PhysicsSystem() : time_physics_last_applied_(ms_since_epoch()) { };
 
-    PhysicsSystem(std::shared_ptr<spdlog::logger>);
+    PhysicsSystem(std::shared_ptr<spdlog::logger> l)
+        : logger(l)
+        , time_physics_last_applied_(ms_since_epoch()) { };
 
-    ~PhysicsSystem();
+    ~PhysicsSystem() { };
 
     // Apply physics to all known sprites
     void apply_forces(std::vector<std::weak_ptr<taeto::Sprite>>&);
@@ -29,6 +33,8 @@ public:
 private:
     // Engine-wide logger
     std::shared_ptr<spdlog::logger> logger;
+
+    std::chrono::milliseconds time_physics_last_applied_;
 };
 
 }   // namespace taeto

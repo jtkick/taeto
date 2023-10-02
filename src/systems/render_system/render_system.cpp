@@ -1,12 +1,6 @@
-#include "systems/render_system.hpp"
-
-#include <memory>
-#include <vector>
+#include "systems/render_system/render_system.hpp"
 
 #include "spdlog/spdlog.h"
-
-#include "components/frame.h"
-#include "components/position.hpp"
 
 namespace taeto
 {

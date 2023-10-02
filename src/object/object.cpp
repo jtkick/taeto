@@ -3,7 +3,7 @@
 namespace taeto
 {
 
-const taeto::Position& Object::position() const
+taeto::Position& Object::position()
 {
     return position_;
 }

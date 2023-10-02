@@ -47,6 +47,17 @@ DisplayPixel::DisplayPixel(char ch, Color fc, Color bc, bool b, bool i, bool u, 
     strikethrough = s;
 }
 
+DisplayPixel::DisplayPixel(taeto::RenderPixel rp)
+{
+    c = rp.c;
+    foreground_color = rp.foreground_color;
+    background_color = rp.background_color;
+    bold = rp.bold;
+    italic = rp.italic;
+    underline = rp.underline;
+    strikethrough = rp.strikethrough;
+}
+
 // Helper functions
 // Reset values to default
 void DisplayPixel::clear()

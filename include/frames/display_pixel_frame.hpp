@@ -22,6 +22,8 @@ public:
 
     DisplayPixelFrame(unsigned long int h, unsigned long int w, taeto::DisplayPixel d = taeto::DisplayPixel()): Frame(h, w, d) {};
 
+    ~DisplayPixelFrame() { };
+
     taeto::CharFrame chars();
 
     void chars(taeto::CharFrame&);

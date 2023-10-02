@@ -11,9 +11,9 @@ CharFrame::CharFrame()
 
 }
 
-CharFrame::~CharFrame()
+CharFrame::CharFrame(unsigned long int h, unsigned long int w)
 {
-
+    resize(h, w, ' ');
 }
 
 }   // namespace taeto

@@ -16,12 +16,12 @@ Camera::~Camera()
 
 }
 
-unsigned int Camera::get_focal_length()
+unsigned int Camera::focal_length()
 {
     return focal_length_;
 }
 
-void Camera::set_focal_length(unsigned int fl)
+void Camera::focal_length(unsigned int fl)
 {
     if (fl == 0)
         throw std::runtime_error("Focal length must be a natural number.");

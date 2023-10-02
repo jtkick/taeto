@@ -18,6 +18,11 @@ VectorFrame::VectorFrame()
 
 }
 
+VectorFrame::VectorFrame(unsigned long int h, unsigned long int w, taeto::Vector v)
+{
+    resize(h, w, v);
+}
+
 taeto::UCharFrame VectorFrame::x()
 {
     taeto::UCharFrame frame(height(), width());

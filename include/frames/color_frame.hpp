@@ -23,7 +23,7 @@ public:
 
     ColorFrame(std::string path);
 
-    ~ColorFrame();
+    ~ColorFrame() { };
 
     taeto::UCharFrame reds();
 

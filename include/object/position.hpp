@@ -13,19 +13,19 @@ public:
     Position(double z, double y, double x)
         : z_{z}, y_{y}, x_{x} { };
 
-    ~Position();
+    ~Position() { };
 
-    inline const double& z() const;
+    inline const double& z() const { return z_; };
 
-    inline void z(const double&);
+    inline void z(const double& z) { z_ = z; };
 
-    inline const double& y() const;
+    inline const double& y() const { return y_; };
 
-    inline void y(const double&);
+    inline void y(const double& y) { y_ = y; };
 
-    inline const double& x() const;
+    inline const double& x() const { return x_; };
 
-    inline void x(const double&);
+    inline void x(const double& x) { x_ = x; };
 
     // inline Position operator+(Position lhs, const Position& rhs);
     // inline Position operator-(Position lhs, const Position& rhs);

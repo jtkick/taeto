@@ -40,7 +40,7 @@ struct Force
     }
 };
 
-class Sprite
+class Sprite: public Object
 {
 public:
     Sprite() :
@@ -146,7 +146,7 @@ public:
     /*
      * Returns the current speed of the sprite.
      */
-    taeto::Speed speed();
+    taeto::Speed& speed();
 
     /*
      * Sets force on the object.
@@ -163,7 +163,7 @@ public:
     /*
      * Returns the forces currently applied to the sprite.
      */
-    taeto::Force force();
+    taeto::Force& force();
 
     /*
      * Animates sprite.

@@ -19,7 +19,7 @@ public:
     // virtual method to be polymorphic
     ~Object() { };
 
-    const taeto::Position& position() const;
+    taeto::Position& position();
 
     void position(const taeto::Position&);
 
@@ -28,9 +28,9 @@ public:
 
     // Called when the object is loaded into the engine
     // Allows object to load any necessary sub-objects
-    virtual void load();
+    void load() {};
 
-    virtual void animate(std::chrono::milliseconds);
+    void animate() {};
 
 protected:
     taeto::Position position_ { 0.0f, 0.0f, 0.0f };

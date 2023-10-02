@@ -33,7 +33,7 @@ public:
 
     CharFrame(const RenderPixelFrame&);
 
-    ~CharFrame();
+    ~CharFrame() { };
 };
 
 }   // namespace taeto

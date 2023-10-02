@@ -22,7 +22,7 @@
 #include "systems/audio_system.hpp"
 #include "systems/input_system.hpp"
 #include "systems/display_system.hpp"
-#include "systems/render_system.hpp"
+#include "systems/render_system/ray_cast_render_system.hpp"
 #include "systems/physics_system.hpp"
 
 namespace taeto
@@ -103,7 +103,7 @@ void run()
     logger_->info("Constructing engine systems.");
     taeto::AudioSystem audio_system_ = taeto::AudioSystem(logger_);
     // taeto::InputSystem input_system_ = taeto::InputSystem(logger_);
-    taeto::RenderSystem render_system_ = taeto::RenderSystem(logger_);
+    taeto::RayCastRenderSystem render_system_ = taeto::RayCastRenderSystem(logger_);
     taeto::DisplaySystem display_system_ = taeto::DisplaySystem(logger_);
     taeto::PhysicsSystem physics_system_ = taeto::PhysicsSystem(logger_);
     logger_->error("Done setting up engine.");
@@ -118,6 +118,7 @@ void run()
     taeto::DisplayPixelFrame frame =
         taeto::DisplayPixelFrame(
             window_height_, window_width_);
+    logger_->info("Frame dimensions set.");
 
     // Start rendering
     while (true)
@@ -127,19 +128,25 @@ void run()
         int window_height_ = size.ws_row;
         int window_width_ = size.ws_col;
         frame.resize(window_height_, window_width_);
+        logger_->info("Frame dimensions resized.");
 
         // For calculating frame rate and passing to objects, get time since
         // the last frame was rendered
+        logger_->info("Getting frame duration.");
         last_frame_duration_ =
             std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
                 ) - last_frame_start_time_;
+        last_frame_start_time_ =
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch());
 
         // Clear out all dead pointers from engine
-        for (int i = sprites_.size(); i >= 0; --i)
+        logger_->info("Clearing out all dead pointers.");
+        for (int i = sprites_.size()-1; i >= 0; --i)
             if (sprites_.at(i).expired())
                 sprites_.erase(sprites_.begin() + i);
-        for (int i = lights_.size(); i >= 0; --i)
+        for (int i = lights_.size()-1; i >= 0; --i)
             if (lights_.at(i).expired())
                 lights_.erase(lights_.begin() + i);
 
@@ -148,7 +155,7 @@ void run()
         ////                       INPUT STEP                       ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->debug("Polling inputs.");
+        logger_->info("Polling inputs.");
         input_system_.poll_inputs();
 
 
@@ -181,7 +188,7 @@ void run()
         ////                      RENDER STEP                       ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->debug("Rendering new frame.");
+        logger_->info("Rendering new frame.");
         render_system_.render_frame(frame, camera_, sprites_, lights_);
 
 
@@ -193,7 +200,7 @@ void run()
         if (debug_mode_on_)
         {
             frame.add_string(
-                0, 0, "FPS: " + std::to_string((int)(1000.0 / last_frame_duration_.count())));
+                0, 0, "FPS: " + std::to_string((int)(1000.0/last_frame_duration_.count())));
             frame.add_string(
                 1, 0, "NUM SPRITES: " + std::to_string(sprites_.size()));
             frame.add_string(
@@ -210,7 +217,7 @@ void run()
                     + std::to_string(frame.height()) + "x"
                     + std::to_string(frame.width()));
             frame.add_string(
-                5, 0, "CURRENT FRAME: " + std::to_string(frame_number_));
+                5, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
         }
 
         logger_->debug("Displaying frame.");

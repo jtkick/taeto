@@ -4,6 +4,7 @@
 #include <string>
 
 #include "components/color.hpp"
+#include "components/render_pixel.hpp"
 #include "components/vector.hpp"
 
 namespace taeto
@@ -20,6 +21,8 @@ public:
     DisplayPixel(char, Color, Color, bool);
 
     DisplayPixel(char, Color, Color, bool, bool, bool, bool);
+
+    DisplayPixel(taeto::RenderPixel);
 
     // Reset to default values
     void clear();

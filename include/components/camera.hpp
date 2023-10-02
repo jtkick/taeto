@@ -19,12 +19,12 @@ public:
     /**
      * Get the distance of the drawing plane from the camera.
      */
-    unsigned int get_focal_length();
+    unsigned int focal_length();
 
     /**
      * Set the distance of the drawing plane from the camera.
      */
-    void set_focal_length(unsigned int);
+    void focal_length(unsigned int);
 
 private:
     /**
