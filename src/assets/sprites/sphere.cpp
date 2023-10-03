@@ -18,8 +18,6 @@ Sphere::Sphere(int diameter)
 
     double radius = (double)diameter / 2.0f;
 
-    const double HALF_PI = 1.57079632679;
-
     frame_ = taeto::RenderPixelFrame(height, width);
 
     // Initialize pixels
@@ -33,28 +31,24 @@ Sphere::Sphere(int diameter)
             pixel.background_color = taeto::Color(255, 255, 255);
 
             // For calculating normals, correct y value to make it easier
-            double y_loc = i * 2.5;
-            double x_loc = j;
+            double y_loc = (i * 2.5) + 0.5;
+            double x_loc = j + 0.5;
 
-            // Get distance to center of circle
-            double y_dist = radius - y_loc;
-            double x_dist = radius - x_loc;
-            double distance = std::sqrt(y_dist*y_dist + x_dist*x_dist);
+            // Get normal vector in relation to the radius
+            double y_comp = (radius - y_loc) / radius;
+            double x_comp = (radius - x_loc) / radius;
+            double z_comp = std::sqrt(y_comp*y_comp + x_comp*x_comp);
 
-            // If distance is greater than the radius, make the pixel invisible
-            if (distance > radius + 0.2)
+            // If no z component, we've gone off the edge of the sphere, so
+            // make all of these pixels fully transparent
+            if (z_comp < 0.0)
                 pixel.foreground_color = taeto::Color(255, 0, 255, 0);
-
-            // Get distance from center in radians
-            double z_comp = (distance / radius) * HALF_PI;
-            double y_comp = (y_dist / radius) * HALF_PI;
-            double x_comp = (x_dist / radius) * HALF_PI;
 
             // Calculate normal
             taeto::Vector v = taeto::Vector(
-                std::cos(x_comp) * 255,
-                std::cos(y_comp) * 255,
-                (std::cos(z_comp) * 127) + 127
+                (x_comp * 255) - 128,
+                (y_comp * 255) - 128,
+                z_comp * 127
             );
             pixel.normal = v;
         }
