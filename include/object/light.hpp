@@ -16,9 +16,9 @@ public:
 
     ~Light() { };
 
-    taeto::Color color(taeto::Position);
+    virtual taeto::Color color(taeto::Position);
 
-    taeto::Vector vector(taeto::Position);
+    virtual taeto::Vector vector(taeto::Position);
 
     void load();
 

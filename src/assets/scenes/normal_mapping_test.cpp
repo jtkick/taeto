@@ -65,7 +65,7 @@ void NormalMappingTest::animate()
     // Move light in a circle about the box
     double x = distance_ * cos(current_degree_ * PI / 180);
     double y = distance_ * sin(current_degree_ * PI / 180);
-    pl_->position({x, y, 0});
+    pl_->position({0, y, x});
 
 }
 

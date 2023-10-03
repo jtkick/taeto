@@ -253,6 +253,7 @@ void RayCastRenderSystem::render_frame(
                 pixel_stack.push_back({current_pixel, distance_to_camera});
 
                 rendered_frame.at(y, x) = current_pixel;
+				// rendered_frame.at(y, x).background_color = taeto::Color(current_pixel.normal.x()+127, current_pixel.normal.y()+127, current_pixel.normal.z()+127);
 
                 // If this sprite's pixel is fully opaque, we're done rendering this pixel
                 if (current_pixel.background_color.alpha == 255)

@@ -16,9 +16,9 @@ public:
 
     PointLight(taeto::Color, float);
 
-    inline taeto::Color color(taeto::Position);
+    taeto::Color color(taeto::Position) override;
 
-    inline taeto::Vector vector(taeto::Position);
+    taeto::Vector vector(taeto::Position) override;
 
 private:
     taeto::Color color_;
