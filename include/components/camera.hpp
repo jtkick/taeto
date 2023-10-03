@@ -14,6 +14,8 @@ public:
 
     Camera();
 
+    Camera(int);
+
     ~Camera();
 
     /**

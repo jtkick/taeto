@@ -1,5 +1,6 @@
 #include "frames/render_pixel_frame.hpp"
 
+#include "components/render_pixel.hpp"
 #include "frames/bool_frame.hpp"
 #include "frames/char_frame.hpp"
 #include "frames/color_frame.hpp"
@@ -14,6 +15,11 @@ namespace taeto
 RenderPixelFrame::RenderPixelFrame()
 {
 
+}
+
+RenderPixelFrame::RenderPixelFrame(unsigned long int h, unsigned long int w)
+{
+    resize(h, w, taeto::RenderPixel());
 }
 
 taeto::CharFrame RenderPixelFrame::chars()

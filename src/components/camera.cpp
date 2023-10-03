@@ -11,6 +11,11 @@ Camera::Camera()
     focal_length_ = 10;
 }
 
+Camera::Camera(int fl)
+{
+    focal_length_ = fl;
+}
+
 Camera::~Camera()
 {
 

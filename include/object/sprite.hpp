@@ -56,17 +56,17 @@ public:
      * This function returns the pixel at the given position relavtive to the
      * object's position.
      */
-    const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t);
+    virtual const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t);
 
     /*
      * Returns the height of the sprite.
      */
-    uint64_t height();
+    virtual uint64_t height();
 
     /*
      * Returns the axis perpendicular to how the sprite should be rendered.
      */
-    char plane_orientation();
+    virtual char plane_orientation();
 
     /*
      * Returns the scaling factor to adjust the size of a sprite.
@@ -89,13 +89,13 @@ public:
     /*
      * Returns the width of the sprite.
      */
-    uint64_t width();
+    virtual uint64_t width();
 
     /*
      * Returns true if the object should collide with other objects that return
      * true as well.
      */
-    bool collides();
+    virtual bool collides();
 
     /*
      * If this object collides with others, this method determines whether or
@@ -104,18 +104,18 @@ public:
      * another where 'detects_collisions' returns true. This is usually true
      * for objects that move, and false for things like the floor.
      */
-    bool detect_collisions();
+    virtual bool detect_collisions();
 
     /*
      * Returns true if the pixel at the given position within the object should
      * collide with other objects.
      */
-    bool get_collision_at(uint64_t, uint64_t);
+    virtual bool get_collision_at(uint64_t, uint64_t);
 
     /*
      * Defines what happens when this object collides with the given object.
      */
-    bool on_collision(std::shared_ptr<taeto::Sprite>);
+    virtual bool on_collision(std::shared_ptr<taeto::Sprite>);
 
     /*
      * Returns the given number of frames that have passed since the last time
@@ -169,7 +169,9 @@ public:
      * Animates sprite.
      */
     // TODO: MAYBE MOVE THIS TO taeto::Object?
-    void animate();
+    virtual void animate();
+
+    virtual bool respect_light_sources();
 
 protected:
     uint64_t height_;

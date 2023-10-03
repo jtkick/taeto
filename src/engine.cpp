@@ -44,7 +44,7 @@ namespace {
     std::shared_ptr<Scene> scene_;
 
     // Engine camera
-    taeto::Camera camera_ = taeto::Camera();
+    taeto::Camera camera_ = taeto::Camera(10);
 
     // If set to true, engine will display FPS in top left corner
     bool debug_mode_on_ = true;
@@ -85,8 +85,24 @@ void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
     sprites_.push_back(sprite);
 }
 
+void load_light(std::weak_ptr<taeto::Light> light)
+{
+    logger_->info("Adding light to engine.");
+
+    // Get shared pointer to object
+    std::shared_ptr<taeto::Light> l;
+    if (!(l = light.lock()))
+        return;
+
+    // Load object to main vector
+    lights_.push_back(light);
+}
+
 void load_scene(std::shared_ptr<Scene> scene)
 {
+    sprites_.clear();
+    lights_.clear();
+
     logger_->debug("Loading scene.");
     scene_ = scene;
     scene_->load();

@@ -12,12 +12,14 @@
 #include "spdlog/spdlog.h"
 
 #include "components/camera.hpp"
+#include "object/light.hpp"
 #include "object/object.hpp"
+#include "object/sprite.hpp"
 #include "scenes/scene.hpp"
 
 namespace taeto
 {
-    
+
 /**
  * Returns a reference to a boolean that will change as button inputs change.
  *
@@ -37,7 +39,8 @@ taeto::Camera& get_camera();
  *
  * @param object_ptr A weak_ptr to the object to be loaded.
  */
-void load_object(std::weak_ptr<Object>);
+void load_sprite(std::weak_ptr<Sprite>);
+void load_light(std::weak_ptr<Light>);
 
 /**
  * Loads a scene into the engine.

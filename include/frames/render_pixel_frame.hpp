@@ -19,10 +19,12 @@ class ColorFrame;
 class UCharFrame;
 class VectorFrame;
 
-class RenderPixelFrame : Frame<taeto::RenderPixel>
+class RenderPixelFrame : public Frame<taeto::RenderPixel>
 {
 public:
     RenderPixelFrame();
+
+    RenderPixelFrame(unsigned long int, unsigned long int);
 
     RenderPixelFrame(const taeto::ColorFrame&);
 

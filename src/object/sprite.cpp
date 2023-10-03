@@ -6,13 +6,14 @@
 
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 
 namespace taeto
 {
 
 const taeto::RenderPixel& Sprite::get_pixel_at(uint64_t, uint64_t)
 {
-    return taeto::RenderPixel();
+    throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");
 }
 
 uint64_t Sprite::height()
@@ -126,6 +127,11 @@ taeto::Force& Sprite::force()
 void Sprite::animate()
 {
 
+}
+
+bool Sprite::respect_light_sources()
+{
+    return false;
 }
 
 }   // namespace taeto
