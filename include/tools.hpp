@@ -13,6 +13,12 @@ namespace taeto
  */
 std::chrono::milliseconds ms_since_epoch();
 
+/**
+ * Calculates smoothstep value.
+ */
+double smoothstep(double x, double edge0 = 0.0f, double edge1 = 1.0f);
+
+
 }   // namespace taeto
 
 #endif  // TOOLS_HPP_

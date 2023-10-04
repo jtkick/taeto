@@ -5,8 +5,9 @@
 
 #include "spdlog/spdlog.h"
 
-#include "frames/display_pixel_frame.hpp"
 // #include "components/position.hpp"
+#include "frames/display_pixel_frame.hpp"
+#include "tools.hpp"
 
 namespace taeto
 {
@@ -235,10 +236,13 @@ void RayCastRenderSystem::render_frame(
                                             sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2))));
 
                         // Scale from 0 to pi, to between 0 and 255
-                        unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
+                        // unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
+
+                        // Scale from 0 to pi, to between 0 and 1 and compute smoothstep
+                        double brightness = taeto::smoothstep(angle / 3.1415927);
 
                         // Adjust light brightness accordingly
-                        light_color.set_brightness(brightness);
+                        light_color.set_brightness(brightness * 255);
 
                         // Add light to accumulated pixel light
                         received_light += light_color;

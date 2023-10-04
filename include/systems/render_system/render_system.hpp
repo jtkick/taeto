@@ -23,11 +23,13 @@ namespace taeto
 class RenderSystem : public System
 {
 public:
-    RenderSystem();
+    RenderSystem() { };
 
-    RenderSystem(std::shared_ptr<spdlog::logger>);
+    RenderSystem(std::shared_ptr<spdlog::logger> l) :
+        logger_(l),
+        render_distance_(1000000000) { };
 
-    ~RenderSystem();
+    ~RenderSystem() { };
 
     /**
      * Render a PixelFrame with all known objects in the engine. Uses a

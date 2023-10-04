@@ -5,21 +5,4 @@
 namespace taeto
 {
 
-RenderSystem::RenderSystem()
-{
-
-}
-
-RenderSystem::RenderSystem(std::shared_ptr<spdlog::logger> l)
-{
-    logger_ = l;
-
-    render_distance_ = 1000000000;
-}
-
-RenderSystem::~RenderSystem()
-{
-
-}
-
 }   // namespace taeto

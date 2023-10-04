@@ -53,17 +53,11 @@ Sphere::Sphere(int diameter)
 
             // Calculate normal
             // z_comp = std::sqrt((j/diameter)*(j/diameter) + (i/diameter)*(i/diameter));
-            taeto::Vector v = taeto::Vector(
+            pixel.normal = taeto::Vector(
                 ((x_loc/diameter) * 255) - 128,
                 ((y_loc/diameter) * 255) - 128,
                 z_comp * 127
             );
-            // taeto::Vector v = taeto::Vector(
-            //     (x_comp * 255),
-            //     (y_comp * 255),
-            //     z_comp * 127
-            // );
-            pixel.normal = v;
         }
     }
 }
