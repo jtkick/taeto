@@ -3,20 +3,12 @@
 #include <memory>
 
 #include <SFML/Window/Keyboard.hpp>
-#include "spdlog/spdlog.h"
 
 namespace taeto
 {
 
 InputSystem::InputSystem()
 {
-
-}
-
-InputSystem::InputSystem(std::shared_ptr<spdlog::logger> l)
-{
-    logger = l;
-
     // TODO: MAKE THIS VARIABLE
     buttons_ = {{0, sf::Keyboard::A},
                 {1, sf::Keyboard::W},

@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <SFML/Window/Keyboard.hpp>
-#include "spdlog/spdlog.h"
 
 #include "systems/system.hpp"
 
@@ -21,8 +20,6 @@ class InputSystem: public System
 public:
     InputSystem();
 
-    InputSystem(std::shared_ptr<spdlog::logger>);
-
     ~InputSystem();
 
     // Returns reference to an input button boolean
@@ -32,9 +29,6 @@ public:
     void poll_inputs();
 
 private:
-    // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger;
-
     // Axes to watch
     std::map<int, int32_t> axes_ = { };
 

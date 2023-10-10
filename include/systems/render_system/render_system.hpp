@@ -23,11 +23,7 @@ namespace taeto
 class RenderSystem : public System
 {
 public:
-    RenderSystem() { };
-
-    RenderSystem(std::shared_ptr<spdlog::logger> l) :
-        logger_(l),
-        render_distance_(1000000000) { };
+    RenderSystem() : render_distance_(1000000000) { };
 
     ~RenderSystem() { };
 
@@ -48,9 +44,6 @@ protected:
     // First rendered frame: pixels before lighting applied with additional data
     // typedef std::vector<std::vector<std::vector<std::tuple<
     //     taeto::DisplayPixel, taeto::Position>>>> AlbedoFrame;
-
-    // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger_;
 
     // Currently loaded skybox
     // taeto::Skybox skybox_;

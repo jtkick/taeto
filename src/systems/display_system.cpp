@@ -36,13 +36,6 @@ namespace taeto
 
 DisplaySystem::DisplaySystem()
 {
-
-}
-
-DisplaySystem::DisplaySystem(std::shared_ptr<spdlog::logger> l)
-{
-    logger = l;
-
     // Open alternate terminal screen
     std::cout << "\e[?1049h";
 
@@ -61,7 +54,7 @@ DisplaySystem::DisplaySystem(std::shared_ptr<spdlog::logger> l)
     // Change terminal title
     std::cout << "\033]0;Taeto\007";
 
-    logger->error("Done setting up display system.");
+    spdlog::debug("Done setting up display system.");
 }
 
 DisplaySystem::~DisplaySystem()

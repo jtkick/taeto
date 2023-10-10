@@ -3,8 +3,6 @@
 
 #include <memory>
 
-#include "spdlog/spdlog.h"
-
 #include "frames/display_pixel_frame.hpp"
 #include "systems/system.hpp"
 
@@ -40,9 +38,7 @@ class DisplaySystem: public System
 public:
     DisplaySystem();
 
-    DisplaySystem(std::shared_ptr<spdlog::logger>);
-
-    ~DisplaySystem();
+    ~DisplaySystem() { };
 
     // Write entire frame to stdout
     void display_frame(taeto::DisplayPixelFrame&);
@@ -51,9 +47,6 @@ public:
 private:
     // Resize output buffer
     void resize(int, int);
-
-    // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger;
 
     // The output buffer that will output on every frame to stdout
     std::string output_buffer;

@@ -12,23 +12,6 @@
 namespace taeto
 {
 
-RayCastRenderSystem::RayCastRenderSystem()
-{
-
-}
-
-RayCastRenderSystem::RayCastRenderSystem(std::shared_ptr<spdlog::logger> l)
-{
-    logger_ = l;
-
-    render_distance_ = 1000000000;
-}
-
-RayCastRenderSystem::~RayCastRenderSystem()
-{
-
-}
-
 void RayCastRenderSystem::render_frame(
     taeto::DisplayPixelFrame &rendered_frame,
     taeto::Camera &camera,
@@ -161,11 +144,6 @@ void RayCastRenderSystem::render_frame(
                 if (z_diff <= 0 || z_diff > render_distance_)
                     continue;
 
-                logger_->info("pos z:" + std::to_string(current_sprite->position().z()));
-                logger_->info("pos y:" + std::to_string(current_sprite->position().y()));
-                logger_->info("pos x:" + std::to_string(current_sprite->position().x()));
-
-
                 // Map frame position to sprite plane position
                 double abs_z = (int64_t)current_sprite->position().z();
                 double abs_y = (((y - half_frame_height) * z_diff) / camera.focal_length()) + (int64_t)camera.position().y();
@@ -186,8 +164,6 @@ void RayCastRenderSystem::render_frame(
                 // LMAO
                 double distance_to_camera = 10.0;
 
-                logger_->info("WE GOT HERE");
-
                 // Get pixel of interest
                 current_pixel =
                     current_sprite->get_pixel_at(rel_y, rel_x);
@@ -200,8 +176,6 @@ void RayCastRenderSystem::render_frame(
                 // If the foreground alpha channel is anything but 0, it will be drawn
                 if (current_pixel.foreground_color.alpha == 0)
                     continue;
-
-                logger_->info("IT SHOULD BE WRITTEN");
 
                 // Compute lighting for this pixel
                 if (current_sprite->respect_light_sources())

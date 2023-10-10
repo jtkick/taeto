@@ -65,7 +65,7 @@ void PhysicsSystem::detect_collisions(
     // TODO: SUB-FRAME COLLISION DETECTION
 
     // Compile list of sprites that will collide
-    logger->debug("Compiling list of sprites that collide");
+    spdlog::debug("Compiling list of sprites that collide");
     std::vector<std::shared_ptr<taeto::Sprite>> sprites_that_collide;
     for (std::weak_ptr<taeto::Sprite> sprite_weak_ptr : sprites)
     {
@@ -79,7 +79,7 @@ void PhysicsSystem::detect_collisions(
     }
 
     // Check each sprite
-    logger->debug("Checking for collisions");
+    spdlog::debug("Checking for collisions");
     for (std::weak_ptr<taeto::Sprite> sprite_weak_ptr : sprites)
     {
         // Get pointer if not dead
@@ -91,7 +91,7 @@ void PhysicsSystem::detect_collisions(
         if (!spr_1->detect_collisions())
             continue;
 
-        logger->debug("Found sprite that wants to see collisions");
+        spdlog::debug("Found sprite that wants to see collisions");
 
         // Check collisions against every other sprite
         for (std::shared_ptr<taeto::Sprite> spr_2 : sprites_that_collide)

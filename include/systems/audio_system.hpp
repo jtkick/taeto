@@ -6,9 +6,6 @@
 #include <SFML/Audio.hpp>
 #include <thread>
 
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/basic_file_sink.h"
-
 #include "systems/system.hpp"
 
 namespace taeto
@@ -17,18 +14,13 @@ namespace taeto
 class AudioSystem: public System
 {
 public:
-    AudioSystem();
+    AudioSystem() { };
 
-    AudioSystem(std::shared_ptr<spdlog::logger>);
-
-    ~AudioSystem();
+    ~AudioSystem() { };
 
     void play();
 
 private:
-    // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger;
-
     std::shared_ptr<sf::Music> music_ptr;
 };
 

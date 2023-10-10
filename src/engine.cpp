@@ -8,7 +8,6 @@
 #include <memory>
 
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/basic_file_sink.h"
 
 #include "components/display_pixel.hpp"
 
@@ -30,9 +29,6 @@ namespace taeto
 
 // Private data
 namespace {
-
-    std::shared_ptr<spdlog::logger> logger_ =
-        spdlog::basic_logger_mt("logger", "logs/log.txt");
 
     // Sprites to be rendered
     std::vector<std::weak_ptr<taeto::Sprite>> sprites_;
@@ -74,7 +70,7 @@ taeto::Camera& get_camera()
 
 void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
 {
-    logger_->info("Adding object to engine.");
+    spdlog::debug("Adding object to engine.");
 
     // Get shared pointer to object
     std::shared_ptr<taeto::Sprite> s;
@@ -87,7 +83,7 @@ void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
 
 void load_light(std::weak_ptr<taeto::Light> light)
 {
-    logger_->info("Adding light to engine.");
+    spdlog::debug("Adding light to engine.");
 
     // Get shared pointer to object
     std::shared_ptr<taeto::Light> l;
@@ -103,26 +99,21 @@ void load_scene(std::shared_ptr<Scene> scene)
     sprites_.clear();
     lights_.clear();
 
-    logger_->debug("Loading scene.");
+    spdlog::debug("Loading scene.");
     scene_ = scene;
     scene_->load();
 }
 
 void run()
 {
-    if (debug_mode_on_)
-        logger_->flush_on(spdlog::level::debug);
-    else
-        logger_->flush_on(spdlog::level::info);
-
     // Declare and start all systems
-    logger_->info("Constructing engine systems.");
-    taeto::AudioSystem audio_system_ = taeto::AudioSystem(logger_);
-    // taeto::InputSystem input_system_ = taeto::InputSystem(logger_);
-    taeto::RayCastRenderSystem render_system_ = taeto::RayCastRenderSystem(logger_);
-    taeto::DisplaySystem display_system_ = taeto::DisplaySystem(logger_);
-    taeto::PhysicsSystem physics_system_ = taeto::PhysicsSystem(logger_);
-    logger_->error("Done setting up engine.");
+    spdlog::info("Constructing engine systems.");
+    taeto::AudioSystem audio_system_ = taeto::AudioSystem();
+    // taeto::InputSystem input_system_ = taeto::InputSystem();
+    taeto::RayCastRenderSystem render_system_ = taeto::RayCastRenderSystem();
+    taeto::DisplaySystem display_system_ = taeto::DisplaySystem();
+    taeto::PhysicsSystem physics_system_ = taeto::PhysicsSystem();
+    spdlog::info("Done setting up engine.");
 
     // Get window dimensions
     struct winsize size;
@@ -134,7 +125,7 @@ void run()
     taeto::DisplayPixelFrame frame =
         taeto::DisplayPixelFrame(
             window_height_, window_width_);
-    logger_->info("Frame dimensions set.");
+    spdlog::debug("Frame dimensions set.");
 
     // Start rendering
     while (true)
@@ -144,11 +135,11 @@ void run()
         int window_height_ = size.ws_row;
         int window_width_ = size.ws_col;
         frame.resize(window_height_, window_width_);
-        logger_->info("Frame dimensions resized.");
+        spdlog::debug("Frame dimensions resized.");
 
         // For calculating frame rate and passing to objects, get time since
         // the last frame was rendered
-        logger_->info("Getting frame duration.");
+        spdlog::debug("Getting frame duration.");
         last_frame_duration_ =
             std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -158,7 +149,7 @@ void run()
                 std::chrono::system_clock::now().time_since_epoch());
 
         // Clear out all dead pointers from engine
-        logger_->info("Clearing out all dead pointers.");
+        spdlog::debug("Clearing out all dead pointers.");
         for (int i = sprites_.size()-1; i >= 0; --i)
             if (sprites_.at(i).expired())
                 sprites_.erase(sprites_.begin() + i);
@@ -171,7 +162,7 @@ void run()
         ////                       INPUT STEP                       ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->info("Polling inputs.");
+        spdlog::debug("Polling inputs.");
         input_system_.poll_inputs();
 
 
@@ -179,14 +170,14 @@ void run()
         ////                     ANIMATION STEP                     ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->info("Telling sprites to animate.");
+        spdlog::debug("Telling sprites to animate.");
         for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
             // Get pointer if not dead
             if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
                 // s->animate(last_frame_duration_);
                 s->animate();
 
-        logger_->info("Telling scene to animate.");
+        spdlog::debug("Telling scene to animate.");
         if (scene_)
             scene_->animate();
 
@@ -196,7 +187,7 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         // Physics
-        logger_->info("Applying forces to sprites.");
+        spdlog::debug("Applying forces to sprites.");
         physics_system_.detect_collisions(sprites_);
 
 
@@ -204,7 +195,7 @@ void run()
         ////                      RENDER STEP                       ////
         ////////////////////////////////////////////////////////////////
 
-        logger_->info("Rendering new frame.");
+        spdlog::debug("Rendering new frame.");
         render_system_.render_frame(frame, camera_, sprites_, lights_);
 
 
@@ -236,7 +227,7 @@ void run()
                 5, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
         }
 
-        logger_->debug("Displaying frame.");
+        spdlog::debug("Displaying frame.");
         display_system_.display_frame(frame);
     }
 

@@ -4,8 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "spdlog/spdlog.h"
-
 #include "components/camera.hpp"
 #include "components/render_pixel.hpp"
 #include "frames/display_pixel_frame.hpp"
@@ -20,8 +18,6 @@ class DrawingRenderSystem : public RenderSystem
 {
 public:
     DrawingRenderSystem();
-
-    DrawingRenderSystem(std::shared_ptr<spdlog::logger>);
 
     ~DrawingRenderSystem();
 

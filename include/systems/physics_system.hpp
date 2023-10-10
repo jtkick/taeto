@@ -4,8 +4,6 @@
 #include <chrono>
 #include <memory>
 
-#include "spdlog/spdlog.h"
-
 #include "object/sprite.hpp"
 #include "systems/system.hpp"
 #include "tools.hpp"
@@ -18,10 +16,6 @@ class PhysicsSystem: public System
 public:
     PhysicsSystem() : time_physics_last_applied_(ms_since_epoch()) { };
 
-    PhysicsSystem(std::shared_ptr<spdlog::logger> l)
-        : logger(l)
-        , time_physics_last_applied_(ms_since_epoch()) { };
-
     ~PhysicsSystem() { };
 
     // Apply physics to all known sprites
@@ -31,9 +25,6 @@ public:
     void detect_collisions(std::vector<std::weak_ptr<taeto::Sprite>>&);
 
 private:
-    // Engine-wide logger
-    std::shared_ptr<spdlog::logger> logger;
-
     std::chrono::milliseconds time_physics_last_applied_;
 };
 

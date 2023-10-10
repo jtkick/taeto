@@ -16,6 +16,7 @@ using namespace std;
 // #include "assets/objects/zero.h"
 
 #include <tclap/CmdLine.h>
+#include "spdlog/spdlog.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +26,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+
+    spdlog::set_level(spdlog::level::warn);
 
     // shared_ptr<sf::Music> music = make_shared<sf::Music>();
     // if (!music->openFromFile("/home/jared/Desktop/Dream Sweet in Sea Major - truncated.wav"))
