@@ -55,7 +55,7 @@ namespace {
     unsigned long current_fps_;
 
     // Systems
-    taeto::InputSystem input_system_ = taeto::InputSystem(logger_);
+    taeto::InputSystem input_system_ = taeto::InputSystem();
 }
 
 std::shared_ptr<bool> get_button_reference(int id)

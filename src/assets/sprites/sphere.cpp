@@ -42,8 +42,9 @@ Sphere::Sphere(int diameter)
             // Get normal vector in relation to the radius
             double y_comp = y_dist / radius;
             double x_comp = x_dist / radius;
-            double z_comp = std::sqrt(y_comp*y_comp + x_comp*x_comp);
-            z_comp = 1.0;
+            double z_comp = std::cos(
+                (std::sqrt(y_dist*y_dist + x_dist*x_dist) / radius) *
+                1.57079632679);
 
             // If no z component, we've gone off the edge of the sphere, so
             // make all of these pixels fully transparent
@@ -52,7 +53,6 @@ Sphere::Sphere(int diameter)
                 pixel.foreground_color = taeto::Color(255, 0, 255, 0);
 
             // Calculate normal
-            // z_comp = std::sqrt((j/diameter)*(j/diameter) + (i/diameter)*(i/diameter));
             pixel.normal = taeto::Vector(
                 ((x_loc/diameter) * 255) - 128,
                 ((y_loc/diameter) * 255) - 128,

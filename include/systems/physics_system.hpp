@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <memory>
+#include <vector>
 
 #include "object/sprite.hpp"
 #include "systems/system.hpp"

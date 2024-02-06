@@ -17,9 +17,9 @@ namespace taeto
 class RayCastRenderSystem : public RenderSystem
 {
 public:
-    RayCastRenderSystem();
+    RayCastRenderSystem() { };
 
-    ~RayCastRenderSystem();
+    ~RayCastRenderSystem() { };
 
     /**
      * Render a PixelFrame with all known objects in the engine. Uses a

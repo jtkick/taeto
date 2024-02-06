@@ -12,7 +12,7 @@ std::chrono::milliseconds ms_since_epoch()
     );
 }
 
-double smoothstep(double x, double edge0 = 0.0f, double edge1 = 1.0f)
+double smoothstep(double x, double edge0, double edge1)
 {
     auto clamp = [](float x, float ll = 0.0f, float ul = 1.0f)
     {

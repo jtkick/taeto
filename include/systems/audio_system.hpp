@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 
+#include <memory>
 #include <SFML/Audio.hpp>
 #include <thread>
 

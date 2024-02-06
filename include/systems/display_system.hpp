@@ -38,7 +38,7 @@ class DisplaySystem: public System
 public:
     DisplaySystem();
 
-    ~DisplaySystem() { };
+    ~DisplaySystem();
 
     // Write entire frame to stdout
     void display_frame(taeto::DisplayPixelFrame&);

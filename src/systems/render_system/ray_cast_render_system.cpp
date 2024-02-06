@@ -52,91 +52,9 @@ void RayCastRenderSystem::render_frame(
                 // Clear rendered pixel
                 rendered_frame.at(y, x).clear();
 
-
-                // // Set visible to false until we get a pixel from the object
-                // current_sprite->visible(false);
-                //
-                // // Get distance between sprite and camera
-                // taeto::Position& camera_position = camera.position();
-                // double z_diff = (unsigned long int)camera_position.z() -
-                //                 (unsigned long int)current_sprite->position().z();
-                //
-                // // Make sure sprite is at least in front of the camera and
-                // // within rendering distance
-                // // Also handle case where z-diff is 0 to prevent divide by zero error
-                // // if (z_diff <= 0 || z_diff > render_distance_)
-                // //     continue;
-                //
-                // // Get sprite pixel of interest depending on orientation plane
-                // // We're going to be very literal to keep things straight
-                // char plane_orientation =
-                //     current_sprite->plane_orientation();
-                // int dp_y = y - half_frame_height;
-                // int dp_x = x - half_frame_width;
-                // double sprite_z = 0.0;
-                // double sprite_y = 0.0;
-                // double sprite_x = 0.0;
-                // taeto::Position& sprite_position = current_sprite->position();
-                // if (plane_orientation == 'Z')
-                // {
-                //     double z_diff = camera_position.z() - sprite_position.z();
-                //     double sprite_y =
-                //         (((dp_y * z_diff) /
-                //           camera.focal_length()) +
-                //          (int64_t)camera_position.y()) -
-                //         (int64_t)sprite_position.y();
-                //     double sprite_x =
-                //         (((dp_x * z_diff) /
-                //           camera.focal_length()) +
-                //          (int64_t)camera_position.x()) -
-                //         (int64_t)sprite_position.x();
-                // }
-                // // else if (plane_orientation == 'Y')
-                // // {
-                // //     double y_diff = (int64_t)camera_position.y() -
-                // //         (int64_t)sprite_position.y();
-                // //     double sprite_y =
-                // //         (((dp_y * y_diff) /
-                // //           camera.focal_length()) +
-                // //          (int64_t)camera_position.z()) -
-                // //         (int64_t)sprite_position.z();
-                // //     double sprite_x =
-                // //         (((dp_x * y_diff) /
-                // //           camera.focal_length()) +
-                // //          (int64_t)camera_position.x()) -
-                // //         (int64_t)sprite_position.z();
-                // // }
-                //
-                // // Map frame position to sprite plane position
-                // double abs_z = (int64_t)sprite_position.z();
-                // double abs_y = (((y - half_frame_height) * z_diff) /
-                //     camera.focal_length()) + (int64_t)camera_position.y();
-                // double abs_x = (((x - half_frame_width) * z_diff) /
-                //     camera.focal_length()) + (int64_t)camera_position.x();
-                //
-                // // Get distance to camera
-                // double distance_to_camera =
-                //     std::sqrt(abs_z * abs_z + abs_y * abs_y + abs_x * abs_x);
-                //
-                // // Map to relative to sprite origin
-                // double rel_y = abs_y - sprite_position.y();
-                // double rel_x = abs_x - sprite_position.x();
-                //
-                // // If pixel doesn't overlap with sprite, move on to next pixel
-                // if (sprite_x < 0 || sprite_x >= current_sprite->width() ||
-                //     sprite_y < 0 || sprite_y >= current_sprite->height())
-                //      continue;
-                //
-                // // Get pixel of interest
-                // taeto::RenderPixel current_pixel =
-                //     current_sprite->get_pixel_at(sprite_y, sprite_x);
-
                 // Get distance between sprite and camera
                 double z_diff = (int64_t)camera.position().z() -
                                 (int64_t)current_sprite->position().z();
-
-                // logger_->info("camera z: " + std::to_string((int64_t)camera.position().z()));
-                // logger_->info("sprite z: " + std::to_string((int64_t)current_sprite->position().z()));
 
                 // Make sure sprite is at least in front of the camera and
                 // within rendering distance
@@ -197,23 +115,27 @@ void RayCastRenderSystem::render_frame(
 
                         // TODO: PUT THIS IN A VECTOR OPERATOR METHOD
                         // Get vector components
-                        char x1 = pixel_normal.x();
-                        char y1 = pixel_normal.y();
-                        char z1 = pixel_normal.z();
-                        char x2 = light_vector.x();
-                        char y2 = light_vector.y();
-                        char z2 = light_vector.z();
+                        double x1 = pixel_normal.x();
+                        double y1 = pixel_normal.y();
+                        double z1 = pixel_normal.z();
+                        double x2 = light_vector.x();
+                        double y2 = light_vector.y();
+                        double z2 = light_vector.z();
 
                         // Calculate angle between the two
-                        float angle = acos((x1 * x2 + y1 * y2 + z1 * z2) /
-                                           (sqrt(pow(x1, 2) + pow(y1, 2) + pow(z1, 2)) *
-                                            sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2))));
+                        // float angle = acos((x1 * x2 + y1 * y2 + z1 * z2) /
+                        //                    (sqrt(pow(x1, 2) + pow(y1, 2) + pow(z1, 2)) *
+                        //                     sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2))));
+                        double dot = x1*x2 + y1*y2 + z1*z2;
+                        double len_sq1 = x1*x1 + y1*y1 + z1*z1;
+                        double len_sq2 = x2*x2 + y2*y2 + z2*z2;
+                        double angle = acos(dot / sqrt(len_sq1 * len_sq2));
 
                         // Scale from 0 to pi, to between 0 and 255
                         // unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
 
                         // Scale from 0 to pi, to between 0 and 1 and compute smoothstep
-                        double brightness = taeto::smoothstep(angle / 3.1415927);
+                        double brightness = taeto::smoothstep(1.0 - (angle / 3.1415927));
 
                         // Adjust light brightness accordingly
                         light_color.set_brightness(brightness * 255);
