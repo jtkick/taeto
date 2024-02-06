@@ -12,13 +12,13 @@ find_package(Curses REQUIRED)
 find_package(spdlog REQUIRED)
 
 include_directories("include"
-                    "prerequisites/spdlog"
-                    "prerequisites/tclap-1.2.4/include"
-                    "prerequisites/lodepng/include"
+                    "deps/spdlog"
+                    "deps/tclap/include"
+                    "deps/lodepng"
                     ${CURSES_INCLUDE_DIR})
 
 # TODO: FIX THIS
-file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "src/*/*/*.cpp" "src/*/*/*/*.cpp" "src/*/*/*/*/*.cpp" "assets/*/src/*.cpp" "prerequisites/*/src/**")
+file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "src/*/*/*.cpp" "src/*/*/*/*.cpp" "src/*/*/*/*/*.cpp" "assets/*/src/*.cpp" "deps/lodepng/lodepng.cpp")
 
 add_executable(taeto ${SOURCES})
 
