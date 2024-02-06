@@ -1,9 +1,0 @@
-<map id="XorHandler.h" name="XorHandler.h">
-<area shape="rect" id="node2" href="$Arg_8h.html" title="tclap/Arg.h" alt="" coords="710,80,795,107"/>
-<area shape="rect" id="node9" href="$sstream_8h.html" title="tclap/sstream.h" alt="" coords="1287,155,1399,181"/>
-<area shape="rect" id="node11" href="$ArgException_8h.html" title="tclap/ArgException.h" alt="" coords="5,155,148,181"/>
-<area shape="rect" id="node13" href="$Visitor_8h.html" title="tclap/Visitor.h" alt="" coords="408,155,511,181"/>
-<area shape="rect" id="node14" href="$CmdLineInterface_8h.html" title="tclap/CmdLineInterface.h" alt="" coords="903,155,1071,181"/>
-<area shape="rect" id="node16" href="$ArgTraits_8h.html" title="tclap/ArgTraits.h" alt="" coords="535,155,653,181"/>
-<area shape="rect" id="node17" href="$StandardTraits_8h.html" title="tclap/StandardTraits.h" alt="" coords="677,155,828,181"/>
-</map>

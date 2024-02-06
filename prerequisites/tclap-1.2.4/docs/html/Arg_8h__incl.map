@@ -1,8 +1,0 @@
-<map id="Arg.h" name="Arg.h">
-<area shape="rect" id="node8" href="$sstream_8h.html" title="tclap/sstream.h" alt="" coords="741,80,853,107"/>
-<area shape="rect" id="node10" href="$ArgException_8h.html" title="tclap/ArgException.h" alt="" coords="5,80,148,107"/>
-<area shape="rect" id="node12" href="$Visitor_8h.html" title="tclap/Visitor.h" alt="" coords="877,80,980,107"/>
-<area shape="rect" id="node13" href="$CmdLineInterface_8h.html" title="tclap/CmdLineInterface.h" alt="" coords="274,80,442,107"/>
-<area shape="rect" id="node15" href="$ArgTraits_8h.html" title="tclap/ArgTraits.h" alt="" coords="1004,80,1123,107"/>
-<area shape="rect" id="node16" href="$StandardTraits_8h.html" title="tclap/StandardTraits.h" alt="" coords="1147,80,1297,107"/>
-</map>
