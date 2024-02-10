@@ -1,11 +1,9 @@
 #ifndef COMPONENTS_DISPLAY_PIXEL_HPP_
 #define COMPONENTS_DISPLAY_PIXEL_HPP_
 
-#include <string>
-
-#include "components/color.hpp"
 #include "components/render_pixel.hpp"
-#include "components/vector.hpp"
+
+#include <glm/vec3.hpp>
 
 namespace taeto
 {
@@ -18,9 +16,9 @@ public:
 
     DisplayPixel(char);
 
-    DisplayPixel(char, Color, Color, bool);
+    DisplayPixel(char, glm::vec3, glm::vec3, bool);
 
-    DisplayPixel(char, Color, Color, bool, bool, bool, bool);
+    DisplayPixel(char, glm::vec3, glm::vec3, bool, bool, bool, bool);
 
     DisplayPixel(taeto::RenderPixel);
 
@@ -35,10 +33,10 @@ public:
 
     // Color of this 'pixel'
     // Based on whatever color palette is set in the engine
-    taeto::Color foreground_color;
+    glm::vec3 fg_color;
 
     // Color of background of 'pixel'
-    taeto::Color background_color;
+    glm::vec3 bg_color;
 
     // Whether or not this 'pixel' should be printed in bold
     bool bold;

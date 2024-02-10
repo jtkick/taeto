@@ -7,31 +7,27 @@
 
 #include "lodepng.h"
 
-#include "frames/color_frame.hpp"
 #include "frames/frame.hpp"
 #include "frames/render_pixel_frame.hpp"
 
 namespace taeto
 {
 
-class ColorFrame;   // forward include
 class DisplayPixelFrame;    // forward include
 class RenderPixelFrame;     // forward include
-class CharFrame : public Frame<uint8_t>
+class CharFrame : public taeto::Frame<char>
 {
 public:
     CharFrame();
 
-    CharFrame(unsigned long int, unsigned long int);
+    CharFrame(glm::uvec2 shape, char c = ' ');
 
     CharFrame(const CharFrame&);
 
     // Conversion constructors
-    CharFrame(const taeto::ColorFrame& cf);
+    CharFrame(const taeto::DisplayPixelFrame&);
 
-    CharFrame(const DisplayPixelFrame&);
-
-    CharFrame(const RenderPixelFrame&);
+    CharFrame(const taeto::RenderPixelFrame&);
 
     ~CharFrame() { };
 };

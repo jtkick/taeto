@@ -1,15 +1,14 @@
-#include "systems/display_system.hpp"
+#include "systems/display_systems/stdout_display_system/stdout_display_system.hpp"
 
 #include <cstdlib>
 #include <signal.h>
 #include <termios.h>
 
 #include <iostream>
-#include <memory>
 
+#include <glm/glm.hpp>
 #include "spdlog/spdlog.h"
 
-#include "components/color.hpp"
 #include "components/display_pixel.hpp"
 #include "frames/display_pixel_frame.hpp"
 
@@ -34,7 +33,7 @@ void signal_callback_handler(int signum)
 namespace taeto
 {
 
-DisplaySystem::DisplaySystem()
+StdoutDisplaySystem::StdoutDisplaySystem()
 {
     // Open alternate terminal screen
     std::cout << "\e[?1049h";
@@ -57,7 +56,7 @@ DisplaySystem::DisplaySystem()
     spdlog::debug("Done setting up display system.");
 }
 
-DisplaySystem::~DisplaySystem()
+StdoutDisplaySystem::~StdoutDisplaySystem()
 {
     // Go back to original terminal screen
     std::cout << "\e[?1049l";
@@ -72,7 +71,7 @@ DisplaySystem::~DisplaySystem()
     tcsetattr(0, TCSANOW, &t);
 }
 
-void DisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
+void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
 {
     // First, resize buffer if wrong size
     if (frame.height() != height || frame.width() != width)
@@ -90,7 +89,7 @@ void DisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
                 break;
 
             // Get pixel in question
-            DisplayPixel& current_pixel = frame.at(h, w);
+            DisplayPixel& current_pixel = frame.at(glm::uvec2(w, h));
 
             // Location of start of this pixel in string
             unsigned int pixel_start = TOTAL_PIXEL_STRING_LENGTH * ((h*width) + w);
@@ -108,41 +107,41 @@ void DisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
             output_buffer.replace(pixel_start + X_LOC_OFFSET, 4, temp);
 
             // Get pixel to display
-            current_pixel = frame.at(h, w);
+            current_pixel = frame.at(glm::uvec2(w, h));
 
             // Get background color
-            Color& c = current_pixel.background_color;
+            glm::vec3& c = current_pixel.bg_color;
 
             // BG red
-            temp = std::to_string((int)(c.red));
+            temp = color_to_string(c.x);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_RED_OFFSET, 3, temp);
 
             // BG green
-            temp = std::to_string((int)(c.green));
+            temp = color_to_string(c.y);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_GREEN_OFFSET, 3, temp);
 
             // BG blue
-            temp = std::to_string((int)(c.blue));
+            temp = color_to_string(c.z);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + BG_BLUE_OFFSET, 3, temp);
 
             // Get foreground color
-            c = current_pixel.foreground_color;
+            c = current_pixel.fg_color;
 
             // FG red
-            temp = std::to_string((int)(c.red));
+            temp = color_to_string(c.x);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_RED_OFFSET, 3, temp);
 
             // FG green
-            temp = std::to_string((int)(c.green));
+            temp = color_to_string(c.y);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_GREEN_OFFSET, 3, temp);
 
             // FG blue
-            temp = std::to_string((int)(c.blue));
+            temp = color_to_string(c.z);
             temp.insert(temp.begin(), 3 - temp.length(), '0');
             output_buffer.replace(pixel_start + FG_BLUE_OFFSET, 3, temp);
 
@@ -163,7 +162,7 @@ void DisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
 
 
 
-void DisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
+void StdoutDisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
 {
     output_buffer = "";
 
@@ -180,19 +179,19 @@ void DisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
                 break;
 
             // Get pixel in question
-            DisplayPixel& current_pixel = frame.at(h, w);
+            DisplayPixel& current_pixel = frame.at(glm::uvec2(w, h));
 
             // Add background color
-            Color& c = current_pixel.background_color;
-            output_buffer += "\033[48;2;" + std::to_string((int)(c.red)) + ";" +
-                                            std::to_string((int)(c.green)) + ";" +
-                                            std::to_string((int)(c.blue)) + "m";
+            glm::vec3& c = current_pixel.bg_color;
+            output_buffer += "\033[48;2;" + color_to_string(c.x) + ";" +
+                                            color_to_string(c.y) + ";" +
+                                            color_to_string(c.z) + "m";
 
             // Add foreground color
-            c = current_pixel.foreground_color;
-            output_buffer += "\033[38;2;" + std::to_string((int)(c.red)) + ";" +
-                                            std::to_string((int)(c.green)) + ";" +
-                                            std::to_string((int)(c.blue)) + "m";
+            c = current_pixel.fg_color;
+            output_buffer += "\033[38;2;" + color_to_string(c.x) + ";" +
+                                            color_to_string(c.y) + ";" +
+                                            color_to_string(c.z) + "m";
 
             // Add actual character
             output_buffer += current_pixel.c;
@@ -203,7 +202,7 @@ void DisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
     std::cout << output_buffer << std::flush;
 }
 
-void DisplaySystem::resize(int h, int w)
+void StdoutDisplaySystem::resize(int h, int w)
 {
     // Save dimensions
     height = h;
@@ -213,6 +212,19 @@ void DisplaySystem::resize(int h, int w)
     output_buffer = "";
     for (int i = 0; i < height*width; i++)
         output_buffer += BLANK_PIXEL_STRING;
+}
+
+std::string StdoutDisplaySystem::color_to_string(float c)
+{
+    // Convert to 8-bit color value
+    float f = c * 255.0;
+
+    // Clamp to between 0 and 255
+    f = f < 0.0 ? 0.0 : f;
+    f = f > 255.0 ? 255.0 : f;
+
+    // Convert to int and return
+    return std::to_string((uint8_t)f);
 }
 
 }   // namespace taeto

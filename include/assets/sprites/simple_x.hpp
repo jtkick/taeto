@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "components/render_pixel.hpp"
 #include "object/sprite.hpp"
 
@@ -14,13 +16,13 @@ class SimpleX: public taeto::Sprite
 public:
     SimpleX();
 
-    const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t) override;
+    const taeto::RenderPixel& get_pixel_at(glm::uvec2) override;
 
     bool respect_light_sources();
 
-    uint64_t height() override;
+    uint height() override;
 
-    uint64_t width() override;
+    uint width() override;
 
 private:
     taeto::RenderPixel pixel_;

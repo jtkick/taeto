@@ -7,6 +7,7 @@
 #include <deque>
 #include <memory>
 
+#include <glm/glm.hpp>
 #include "spdlog/spdlog.h"
 
 #include "components/display_pixel.hpp"
@@ -20,7 +21,8 @@
 #include "scenes/scene.hpp"
 #include "systems/audio_system.hpp"
 #include "systems/input_system.hpp"
-#include "systems/display_system.hpp"
+#include "systems/display_systems/display_system.hpp"
+#include "systems/display_systems/stdout_display_system/stdout_display_system.hpp"
 #include "systems/render_system/ray_cast_render_system.hpp"
 #include "systems/physics_system.hpp"
 
@@ -111,7 +113,9 @@ void run()
     taeto::AudioSystem audio_system_ = taeto::AudioSystem();
     // taeto::InputSystem input_system_ = taeto::InputSystem();
     taeto::RayCastRenderSystem render_system_ = taeto::RayCastRenderSystem();
-    taeto::DisplaySystem display_system_ = taeto::DisplaySystem();
+    std::shared_ptr<taeto::DisplaySystem> display_system_ =
+        std::make_shared<taeto::StdoutDisplaySystem>(
+            taeto::StdoutDisplaySystem());
     taeto::PhysicsSystem physics_system_ = taeto::PhysicsSystem();
     spdlog::info("Done setting up engine.");
 
@@ -122,9 +126,8 @@ void run()
     int window_width_ = size.ws_col;
 
     // Create new frame for rendering and displaying game world
-    taeto::DisplayPixelFrame frame =
-        taeto::DisplayPixelFrame(
-            window_height_, window_width_);
+    taeto::DisplayPixelFrame frame = taeto::DisplayPixelFrame(
+        glm::uvec2(window_width_, window_height_));
     spdlog::debug("Frame dimensions set.");
 
     // Start rendering
@@ -134,7 +137,7 @@ void run()
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
         int window_height_ = size.ws_row;
         int window_width_ = size.ws_col;
-        frame.resize(window_height_, window_width_);
+        frame.resize(glm::uvec2(window_width_, window_height_));
         spdlog::debug("Frame dimensions resized.");
 
         // For calculating frame rate and passing to objects, get time since
@@ -174,7 +177,6 @@ void run()
         for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
             // Get pointer if not dead
             if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
-                // s->animate(last_frame_duration_);
                 s->animate();
 
         spdlog::debug("Telling scene to animate.");
@@ -215,9 +217,9 @@ void run()
             frame.add_string(
                 3, 0,
                 "CAMERA LOCATION: ("
-                    + std::to_string((int)camera_.position().z()) + ", "
-                    + std::to_string((int)camera_.position().y()) + ", "
-                    + std::to_string((int)camera_.position().x()) + ")");
+                    + std::to_string((int)camera_.position().z) + ", "
+                    + std::to_string((int)camera_.position().y) + ", "
+                    + std::to_string((int)camera_.position().x) + ")");
             frame.add_string(
                 4, 0,
                 "FRAME DIMENSIONS: "
@@ -228,7 +230,7 @@ void run()
         }
 
         spdlog::debug("Displaying frame.");
-        display_system_.display_frame(frame);
+        display_system_->display_frame(frame);
     }
 
     endwin();

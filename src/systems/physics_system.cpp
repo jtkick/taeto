@@ -3,10 +3,10 @@
 #include <chrono>
 #include <memory>
 
+#include <glm/glm.hpp>
 #include "spdlog/spdlog.h"
 
 #include "object/sprite.hpp"
-#include "object/position.hpp"
 #include "tools.hpp"
 
 namespace taeto
@@ -29,31 +29,23 @@ void PhysicsSystem::apply_forces(
             continue;
 
         // Get sprite mass and forces
-        double mass = sprite_ptr->mass();
-        taeto::Force force = sprite_ptr->force();
+        float mass = sprite_ptr->mass();
+        const glm::vec3& force = sprite_ptr->force();
 
         // Calculate accelerations
-        double ax = force.x / mass;
-        double ay = force.y / mass;
-        double az = force.z / mass;
+        glm::vec3 accel = force / mass;
 
         // Get in seconds
-        double seconds_since_last_applied =
+        float seconds_since_last_applied =
             time_physics_last_applied_.count() / 1000;
 
         // Add accumulated speed to current speed
-        taeto::Speed& speed = sprite_ptr->speed();
-        speed.z += az * seconds_since_last_applied;
-        speed.y += ay * seconds_since_last_applied;
-        speed.x += ax * seconds_since_last_applied;
-
+        sprite_ptr->speed() += accel * seconds_since_last_applied;
 
         // TODO: MOVE THIS TO COLLISION DETECTION
         // Update position
-        taeto::Position& position = sprite_ptr->position();
-        position.z(position.z() + (position.z() * seconds_since_last_applied));
-        position.y(position.y() + (position.y() * seconds_since_last_applied));
-        position.x(position.x() + (position.x() * seconds_since_last_applied));
+        sprite_ptr->position() +=
+            sprite_ptr->speed() * seconds_since_last_applied;
     }
 }
 
@@ -101,21 +93,21 @@ void PhysicsSystem::detect_collisions(
                 continue;
 
             // Do rough collision detection
-            taeto::Position pos_1 = spr_1->position();
-            taeto::Position pos_2 = spr_2->position();
+            glm::dvec3 pos_1 = spr_1->position();
+            glm::dvec3 pos_2 = spr_2->position();
 
             // x locations don't overlap
-            if (((int)pos_1.x() > (int)pos_2.x() + spr_2->width()) ||
-                ((int)pos_1.x() + spr_1->width()-1 < (int)pos_2.x()))
+            if (((long long)pos_1.x > (long long)pos_2.x + spr_2->width()) ||
+                ((long long)pos_1.x + spr_1->width()-1 < (long long)pos_2.x))
                 continue;
 
             // y locations don't overlap
-            if (((int)pos_1.y() > (int)pos_2.y() + spr_2->height()) ||
-                ((int)pos_1.y() + spr_1->height()-1 < (int)pos_2.y()))
+            if (((long long)pos_1.y > (long long)pos_2.y + spr_2->height()) ||
+                ((long long)pos_1.y + spr_1->height()-1 < (long long)pos_2.y))
                 continue;
 
             // Different z-plane
-            if ((int)pos_1.z() != (int)pos_2.z())
+            if ((long long)pos_1.z != (int)pos_2.z)
                 continue;
 
             // Now it's guaranteed that the sprites overlap in some way, so loop over each sprite's

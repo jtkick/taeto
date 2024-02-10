@@ -1,19 +1,18 @@
 #include "object/light.hpp"
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
 
 namespace taeto
 {
 
-taeto::Color Light::color(taeto::Position p)
+glm::vec3 Light::color(glm::dvec3 p)
 {
-    return taeto::Color(255, 0, 255);
+    return glm::vec3(1.0, 0.0, 1.0);
 }
 
-taeto::Vector Light::vector(taeto::Position p)
+glm::vec3 Light::vector(glm::dvec3 p)
 {
-    return taeto::Vector(-127, 0, 0);
+    return glm::vec3(-1.0, 0.0, 0.0);
 }
 
 void Light::load()

@@ -1,11 +1,9 @@
-#ifndef COMPONENTS_COLOR_HPP_
-#define COMPONENTS_COLOR_HPP_
+#ifndef SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_ITERM_HPP_
+#define SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_ITERM_HPP_
 
 #include <cstdint>
-#include <cstdlib>
-#include <string>
 
-int const COLOR_TABLE[256][3] = {
+int const kColorTable[256][3] = {
     // 8-bit, RGB hex
     // Primary 3-bit (8 colors). Unique representation!
     { 0x00, 0x00, 0x00 },
@@ -275,49 +273,66 @@ int const COLOR_TABLE[256][3] = {
 namespace taeto
 {
 
-class Color
+/*
+ * Takes an iterm color ID and returns an ivec3 with the corresponding RGB color
+ * values.
+ */
+inline glm::ivec3 vec3_from_iterm(uint8_t iterm_color)
 {
-public:
-    uint8_t red = 255;
-    uint8_t green = 255;
-    uint8_t blue = 255;
-    uint8_t alpha = 255;
+    // Pull RGB values from lookup table
+    int[3] c = kColorTable[iterm_color];
+    return glm::ivec3(c[0], c[1], c[2]);
+}
 
-public:
-    Color();
+/*
+ * Takes an RGB ivec3 and returns the iterm color ID closest to the given color.
+ */
+inline uint8_t iterm_from_vec3(glm::vec3 color) const
+{
+    int increments_length = 6;
+    int increments[6] = { 0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff };
 
-    Color(uint8_t, uint8_t, uint8_t);
+    int closest_color[3] = { 0 };
 
-    Color(uint8_t, uint8_t, uint8_t, uint8_t);
+    for (int color = 0; color < 3; color++)
+    {
+        for (int i = 0; i < increments_length - 1; i++)
+        {
+            int smaller = increments[i];
+            int bigger = increments[i+1];
 
-    void set_all(uint8_t, uint8_t, uint8_t, uint8_t);
+            if (smaller <= rgba[color] && rgba[color] <= bigger)
+            {
+                int smaller_diff = std::abs(smaller - rgba[color]);
+                int bigger_diff = std::abs(bigger - rgba[color]);
 
-    void set_brightness(uint8_t);
+                if (smaller_diff < bigger_diff)
+                    closest_color[color] = smaller;
+                else
+                    closest_color[color] = bigger;
+            }
+        }
+    }
 
-//        void from_iterm(uint8_t);
+    // Find closest color in table
+    int match_index;
+    for (match_index = 0; match_index < 256; match_index++)
+    {
+        // Compare all color values
+        if (closest_color[0] == kColorTable[match_index][0] &&
+            closest_color[1] == kColorTable[match_index][1] &&
+            closest_color[2] == kColorTable[match_index][2])
+            break;
 
-//        uint8_t to_iterm() const;
+    }
 
-    Color operator * (const Color&);
+    // If index is 256, there wasn't a match
+    if (match_index == 256)
+        throw std::runtime_error("Couldn't find valid iterm color in table.");
 
-    // Additive color addition
-    Color operator + (const Color&);
-
-    Color operator - (const Color&);
-
-    // Subtractive color addition
-    Color operator & (const Color&);
-
-    Color operator += (const Color&);
-
-    Color operator -= (const Color&);
-
-    void operator = (const Color&);
-
-    std::string serialize();
-
-};
+    return match_index;
+}
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_COLOR_HPP_
+#endif  // SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_ITERM_HPP_

@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 namespace taeto
 {
 
@@ -11,9 +13,9 @@ CharFrame::CharFrame()
 
 }
 
-CharFrame::CharFrame(unsigned long int h, unsigned long int w)
+CharFrame::CharFrame(glm::uvec2 shape, char c)
 {
-    resize(h, w, ' ');
+    resize(shape, c);
 }
 
 }   // namespace taeto

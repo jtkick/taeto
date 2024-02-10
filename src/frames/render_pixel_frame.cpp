@@ -1,13 +1,14 @@
 #include "frames/render_pixel_frame.hpp"
 
-#include "components/render_pixel.hpp"
-#include "frames/bool_frame.hpp"
-#include "frames/char_frame.hpp"
-#include "frames/color_frame.hpp"
-#include "frames/uchar_frame.hpp"
-#include "frames/vector_frame.hpp"
-
 #include <cassert>
+
+#include <glm/glm.hpp>
+
+#include "components/render_pixel.hpp"
+#include "frames/char_frame.hpp"
+#include "frames/uchar_frame.hpp"
+#include "frames/vec3_frame.hpp"
+#include "frames/vec4_frame.hpp"
 
 namespace taeto
 {
@@ -17,17 +18,17 @@ RenderPixelFrame::RenderPixelFrame()
 
 }
 
-RenderPixelFrame::RenderPixelFrame(unsigned long int h, unsigned long int w)
+RenderPixelFrame::RenderPixelFrame(glm::uvec2 size)
 {
-    resize(h, w, taeto::RenderPixel());
+    resize(size, taeto::RenderPixel());
 }
 
 taeto::CharFrame RenderPixelFrame::chars()
 {
-    taeto::CharFrame frame(height(), width());
+    taeto::CharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).c;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).c;
     return frame;
 }
 
@@ -37,151 +38,151 @@ void RenderPixelFrame::chars(taeto::CharFrame& f)
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).c = f.at(i, j);
+            at(glm::uvec2(j, i)).c = f.at(glm::uvec2(j, i));
 }
 
-taeto::ColorFrame RenderPixelFrame::foreground_colors()
+taeto::Vec4Frame RenderPixelFrame::fg_colors()
 {
-    taeto::ColorFrame frame(height(), width());
+    taeto::Vec4Frame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).foreground_color;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).fg_color;
     return frame;
 }
 
-void RenderPixelFrame::foreground_colors(taeto::ColorFrame& f)
+void RenderPixelFrame::fg_colors(taeto::Vec4Frame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).foreground_color = f.at(i, j);
+            at(glm::uvec2(j, i)).fg_color = f.at(glm::uvec2(j, i));
 }
 
-taeto::ColorFrame RenderPixelFrame::background_colors()
+taeto::Vec4Frame RenderPixelFrame::bg_colors()
 {
-    taeto::ColorFrame frame(height(), width());
+    taeto::Vec4Frame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).background_color;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).bg_color;
     return frame;
 }
 
-void RenderPixelFrame::background_colors(taeto::ColorFrame& f)
+void RenderPixelFrame::bg_colors(taeto::Vec4Frame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).background_color = f.at(i, j);
+            at(glm::uvec2(j, i)).bg_color = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame RenderPixelFrame::bolds()
+taeto::UCharFrame RenderPixelFrame::bolds()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).bold);
+            frame.at(glm::uvec2(j, i)), at(glm::uvec2(j, i)).bold;
     return frame;
 }
 
-void RenderPixelFrame::bolds(taeto::BoolFrame& f)
+void RenderPixelFrame::bolds(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).bold = f.at(i, j);
+            at(glm::uvec2(j, i)).bold = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame RenderPixelFrame::italics()
+taeto::UCharFrame RenderPixelFrame::italics()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).italic);
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).italic;
     return frame;
 }
 
-void RenderPixelFrame::italics(taeto::BoolFrame& f)
+void RenderPixelFrame::italics(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).italic = f.at(i, j);
+            at(glm::uvec2(j, i)).italic = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame RenderPixelFrame::underlines()
+taeto::UCharFrame RenderPixelFrame::underlines()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).underline);
+            frame.at(glm::uvec2(j, i)), at(glm::uvec2(j, i)).underline;
     return frame;
 }
 
-void RenderPixelFrame::underlines(taeto::BoolFrame& f)
+void RenderPixelFrame::underlines(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).underline = f.at(i, j);
+            at(glm::uvec2(j, i)).underline = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame RenderPixelFrame::strikethroughs()
+taeto::UCharFrame RenderPixelFrame::strikethroughs()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).strikethrough);
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).strikethrough;
     return frame;
 }
 
-void RenderPixelFrame::strikethroughs(taeto::BoolFrame& f)
+void RenderPixelFrame::strikethroughs(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).strikethrough = f.at(i, j);
+            at(glm::uvec2(j, i)).strikethrough = f.at(glm::uvec2(j, i));
 }
 
-taeto::VectorFrame RenderPixelFrame::normals()
+taeto::Vec3Frame RenderPixelFrame::normals()
 {
-    taeto::VectorFrame frame(height(), width());
+    taeto::Vec3Frame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).normal;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).normal;
     return frame;
 }
 
-void RenderPixelFrame::normals(taeto::VectorFrame& f)
+void RenderPixelFrame::normals(taeto::Vec3Frame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).normal = f.at(i, j);
+            at(glm::uvec2(j, i)).normal = f.at(glm::uvec2(j, i));
 }
 
-taeto::UCharFrame RenderPixelFrame::specularities()
+taeto::FloatFrame RenderPixelFrame::specularities()
 {
-    taeto::UCharFrame frame(height(), width());
+    taeto::FloatFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).specularity;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).specularity;
     return frame;
 }
 
-void RenderPixelFrame::specularities(taeto::UCharFrame& f)
+void RenderPixelFrame::specularities(taeto::FloatFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).specularity = f.at(i, j);
+            at(glm::uvec2(j, i)).specularity = f.at(glm::uvec2(j, i));
 }
 
 }   // namespace taeto

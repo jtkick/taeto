@@ -1,10 +1,12 @@
 #include "frames/display_pixel_frame.hpp"
 
-#include "frames/bool_frame.hpp"
-#include "frames/char_frame.hpp"
-#include "frames/color_frame.hpp"
-
 #include <cassert>
+
+#include <glm/glm.hpp>
+
+#include "frames/char_frame.hpp"
+#include "frames/uchar_frame.hpp"
+#include "frames/vec4_frame.hpp"
 
 namespace taeto
 {
@@ -16,10 +18,10 @@ DisplayPixelFrame::DisplayPixelFrame()
 
 taeto::CharFrame DisplayPixelFrame::chars()
 {
-    taeto::CharFrame frame(height(), width());
+    taeto::CharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).c;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).c;
     return frame;
 }
 
@@ -29,125 +31,125 @@ void DisplayPixelFrame::chars(taeto::CharFrame& f)
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).c = f.at(i, j);
+            at(glm::uvec2(j, i)).c = f.at(glm::uvec2(j, i));
 }
 
-taeto::ColorFrame DisplayPixelFrame::foreground_colors()
+taeto::Vec3Frame DisplayPixelFrame::fg_colors()
 {
-    taeto::ColorFrame frame(height(), width());
+    taeto::Vec3Frame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).foreground_color;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).fg_color;
     return frame;
 }
 
-void DisplayPixelFrame::foreground_colors(taeto::ColorFrame& f)
+void DisplayPixelFrame::fg_colors(taeto::Vec3Frame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).foreground_color = f.at(i, j);
+            at(glm::uvec2(j, i)).fg_color = f.at(glm::uvec2(j, i));
 }
 
-taeto::ColorFrame DisplayPixelFrame::background_colors()
+taeto::Vec3Frame DisplayPixelFrame::bg_colors()
 {
-    taeto::ColorFrame frame(height(), width());
+    taeto::Vec3Frame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).background_color;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).bg_color;
     return frame;
 }
 
-void DisplayPixelFrame::background_colors(taeto::ColorFrame& f)
+void DisplayPixelFrame::bg_colors(taeto::Vec3Frame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).background_color = f.at(i, j);
+            at(glm::uvec2(j, i)).bg_color = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame DisplayPixelFrame::bolds()
+taeto::UCharFrame DisplayPixelFrame::bolds()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).bold);
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).bold;
     return frame;
 }
 
-void DisplayPixelFrame::bolds(taeto::BoolFrame& f)
+void DisplayPixelFrame::bolds(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).bold = f.at(i, j);
+            at(glm::uvec2(j, i)).bold = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame DisplayPixelFrame::italics()
+taeto::UCharFrame DisplayPixelFrame::italics()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).italic);
+            frame.at(glm::uvec2(j, i)) =  at(glm::uvec2(j, i)).italic;
     return frame;
 }
 
-void DisplayPixelFrame::italics(taeto::BoolFrame& f)
+void DisplayPixelFrame::italics(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).italic = f.at(i, j);
+            at(glm::uvec2(j, i)).italic = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame DisplayPixelFrame::underlines()
+taeto::UCharFrame DisplayPixelFrame::underlines()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).underline);
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).underline;
     return frame;
 }
 
-void DisplayPixelFrame::underlines(taeto::BoolFrame& f)
+void DisplayPixelFrame::underlines(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).underline = f.at(i, j);
+            at(glm::uvec2(j, i)).underline = f.at(glm::uvec2(j, i));
 }
 
-taeto::BoolFrame DisplayPixelFrame::strikethroughs()
+taeto::UCharFrame DisplayPixelFrame::strikethroughs()
 {
-    taeto::BoolFrame frame(height(), width());
+    taeto::UCharFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.set(i, j, at(i, j).strikethrough);
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).strikethrough;
     return frame;
 }
 
-void DisplayPixelFrame::strikethroughs(taeto::BoolFrame& f)
+void DisplayPixelFrame::strikethroughs(taeto::UCharFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).strikethrough = f.at(i, j);
+            at(glm::uvec2(j, i)).strikethrough = f.at(glm::uvec2(j, i));
 }
 
 void DisplayPixelFrame::add_string(int y, int x, std::string str)
 {
     for (int i = 0; i < str.length(); ++i)
     {
-        taeto::DisplayPixel& dp = at(y, x+i);
+        taeto::DisplayPixel& dp = at(glm::uvec2(x+i, y));
         dp.c = str.at(i);
-        dp.foreground_color = taeto::Color(255, 255, 255, 255);
-        dp.background_color = taeto::Color(0, 0, 0, 255);
+        dp.fg_color = glm::vec3(1.0, 1.0, 1.0);
+        dp.bg_color = glm::vec3(0.0, 0.0, 0.0);
     }
 }
 

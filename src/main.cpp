@@ -18,6 +18,14 @@ using namespace std;
 #include <tclap/CmdLine.h>
 #include "spdlog/spdlog.h"
 
+
+// Temp
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
@@ -94,6 +102,22 @@ int main(int argc, char** argv)
     //     shared_ptr<Test_Scene> ts = make_shared<Test_Scene>();
     //     engine.load_scene(ts);
     // }
+
+
+
+
+
+    // Testing for glm library
+    glm::vec3 v = {0.1, 0.2, 0.3};
+    glm::vec2 v2 = {0.4, 0.5};
+
+
+
+
+
+
+
+
 
     taeto::run();
 

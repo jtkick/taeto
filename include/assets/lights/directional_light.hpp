@@ -1,29 +1,28 @@
 #ifndef ASSETS_LIGHTS_DIRECTIONAL_LIGHT_HPP_
 #define ASSETS_LIGHTS_DIRECTIONAL_LIGHT_HPP_
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
+
 #include "object/light.hpp"
-#include "object/position.hpp"
 
 namespace taeto
 {
 
-class DirectionalLight: public Light
+class DirectionalLight: public taeto::Light
 {
 public:
     DirectionalLight();
 
-    DirectionalLight(taeto::Color, taeto::Vector);
+    DirectionalLight(glm::vec3, glm::vec3);
 
-    inline taeto::Color color(taeto::Position);
+    inline glm::vec3 color(glm::dvec3);
 
-    inline taeto::Vector vector(taeto::Position);
+    inline glm::vec3 vector(glm::dvec3);
 
 private:
-    taeto::Color color_;
+    glm::vec3 color_;
 
-    taeto::Vector vector_;
+    glm::vec3 vector_;
 };
 
 }   // namespace taeto

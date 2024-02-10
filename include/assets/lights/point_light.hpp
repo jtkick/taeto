@@ -1,27 +1,26 @@
 #ifndef ASSETS_LIGHTS_POINT_LIGHT_HPP_
 #define ASSETS_LIGHTS_POINT_LIGHT_HPP_
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
+
 #include "object/light.hpp"
-#include "object/position.hpp"
 
 namespace taeto
 {
 
-class PointLight: public Light
+class PointLight: public taeto::Light
 {
 public:
     PointLight();
 
-    PointLight(taeto::Color, float);
+    PointLight(glm::vec3, float);
 
-    taeto::Color color(taeto::Position) override;
+    glm::vec3 color(glm::dvec3) override;
 
-    taeto::Vector vector(taeto::Position) override;
+    glm::vec3 vector(glm::dvec3) override;
 
 private:
-    taeto::Color color_;
+    glm::vec3 color_;
 
     double fade_;
 };

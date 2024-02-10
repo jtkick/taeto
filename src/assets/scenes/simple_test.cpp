@@ -11,7 +11,7 @@ namespace taeto
 SimpleTest::SimpleTest()
 {
     s_ = std::make_shared<taeto::SimpleX>();
-    s_->position({-10, 0, 0});
+    s_->position({0, 0, -10});
 }
 
 SimpleTest::~SimpleTest()

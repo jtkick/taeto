@@ -3,7 +3,8 @@
 
 #include <memory>
 
-#include "components/color.hpp"
+#include <glm/glm.hpp>
+
 #include "components/render_pixel.hpp"
 #include "frames/render_pixel_frame.hpp"
 #include "object/sprite.hpp"
@@ -16,10 +17,10 @@ class Sphere: public taeto::Sprite
 public:
     Sphere(int);
 
-    const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t) override;
+    const taeto::RenderPixel& get_pixel_at(glm::uvec2) override;
 
-    uint64_t height() override;
-    uint64_t width() override;
+    uint height() override;
+    uint width() override;
 
     bool respect_light_sources() override;
 

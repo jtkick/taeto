@@ -2,31 +2,30 @@
 #define FRAMES_RENDER_PIXEL_FRAME_HPP_
 
 #include "components/render_pixel.hpp"
-#include "frames/bool_frame.hpp"
 #include "frames/char_frame.hpp"
-#include "frames/color_frame.hpp"
-#include "frames/uchar_frame.hpp"
-#include "frames/vector_frame.hpp"
+#include "frames/float_frame.hpp"
 #include "frames/frame.hpp"
+#include "frames/uchar_frame.hpp"
+#include "frames/vec3_frame.hpp"
+#include "frames/vec4_frame.hpp"
 
 namespace taeto
 {
 
 // Forward includes
-class BoolFrame;
 class CharFrame;
-class ColorFrame;
+class FloatFrame;
 class UCharFrame;
-class VectorFrame;
-
-class RenderPixelFrame : public Frame<taeto::RenderPixel>
+class Vec3Frame;
+class Vec4Frame;
+class RenderPixelFrame : public taeto::Frame<taeto::RenderPixel>
 {
 public:
     RenderPixelFrame();
 
-    RenderPixelFrame(unsigned long int, unsigned long int);
+    RenderPixelFrame(glm::uvec2 shape);
 
-    RenderPixelFrame(const taeto::ColorFrame&);
+    RenderPixelFrame(const taeto::Vec4Frame&);
 
     RenderPixelFrame(const taeto::RenderPixelFrame&);
 
@@ -36,37 +35,37 @@ public:
 
     void chars(taeto::CharFrame&);
 
-    taeto::ColorFrame foreground_colors();
+    taeto::Vec4Frame fg_colors();
 
-    void foreground_colors(taeto::ColorFrame&);
+    void fg_colors(taeto::Vec4Frame&);
 
-    taeto::ColorFrame background_colors();
+    taeto::Vec4Frame bg_colors();
 
-    void background_colors(taeto::ColorFrame&);
+    void bg_colors(taeto::Vec4Frame&);
 
-    taeto::BoolFrame bolds();
+    taeto::UCharFrame bolds();
 
-    void bolds(taeto::BoolFrame&);
+    void bolds(taeto::UCharFrame&);
 
-    taeto::BoolFrame italics();
+    taeto::UCharFrame italics();
 
-    void italics(taeto::BoolFrame&);
+    void italics(taeto::UCharFrame&);
 
-    taeto::BoolFrame underlines();
+    taeto::UCharFrame underlines();
 
-    void underlines(taeto::BoolFrame&);
+    void underlines(taeto::UCharFrame&);
 
-    taeto::BoolFrame strikethroughs();
+    taeto::UCharFrame strikethroughs();
 
-    void strikethroughs(taeto::BoolFrame&);
+    void strikethroughs(taeto::UCharFrame&);
 
-    taeto::VectorFrame normals();
+    taeto::Vec3Frame normals();
 
-    void normals(taeto::VectorFrame&);
+    void normals(taeto::Vec3Frame&);
 
-    taeto::UCharFrame specularities();
+    taeto::FloatFrame specularities();
 
-    void specularities(taeto::UCharFrame&);
+    void specularities(taeto::FloatFrame&);
 };
 
 }   // namespace taeto

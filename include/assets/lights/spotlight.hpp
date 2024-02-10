@@ -1,30 +1,29 @@
 #ifndef ASSETS_LIGHTS_SPOTLIGHT_HPP_
 #define ASSETS_LIGHTS_SPOTLIGHT_HPP_
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
+
 #include "object/light.hpp"
 #include "object/object.hpp"
-#include "object/position.hpp"
 
 namespace taeto
 {
 
-class Spotlight: public Light
+class Spotlight: public taeto::Light
 {
 public:
     Spotlight();
 
-    Spotlight(taeto::Color, float, int);
+    Spotlight(glm::vec3, float, int);
 
-    inline taeto::Color color(taeto::Position);
+    inline glm::vec3 color(glm::dvec3);
 
-    inline taeto::Vector vector(taeto::Position);
+    inline glm::vec3 vector(glm::dvec3);
 
 private:
-    taeto::Color color_;
+    glm::vec3 color_;
 
-    taeto::Vector vector_;
+    glm::vec3 vector_;
 
     unsigned int radius_;
 

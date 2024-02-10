@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "components/color.hpp"
+#include <glm/glm.hpp>
+
 #include "components/render_pixel.hpp"
-#include "object/position.hpp"
 
 namespace taeto
 {
@@ -13,31 +13,30 @@ SimpleX::SimpleX()
 {
     pixel_ = taeto::RenderPixel(
         'X',
-        taeto::Color(255, 0, 0, 255),
-        taeto::Color(0, 255, 0, 255),
+        glm::vec4(1.0, 0.0, 0.0, 1.0),
+        glm::vec4(0.0, 1.0, 0.0, 1.0),
         false
     );
 }
 
-const taeto::RenderPixel& SimpleX::get_pixel_at(
-    uint64_t h, uint64_t w)
+const taeto::RenderPixel& SimpleX::get_pixel_at(glm::uvec2 pos)
 {
     return pixel_;
 }
 
-uint64_t SimpleX::height()
+uint SimpleX::height()
 {
     return 10;
 }
 
-uint64_t SimpleX::width()
+uint SimpleX::width()
 {
     return 20;
 }
 
 bool SimpleX::respect_light_sources()
 {
-    return true;
+    return false;
 }
 
 }   // namespace taeto

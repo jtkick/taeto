@@ -1,24 +1,23 @@
 #ifndef OBJECT_LIGHT_HPP_
 #define OBJECT_LIGHT_HPP_
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
+
 #include "object/object.hpp"
-#include "object/position.hpp"
 
 namespace taeto
 {
 
-class Light : public Object
+class Light : public taeto::Object
 {
 public:
     Light() { };
 
     ~Light() { };
 
-    virtual taeto::Color color(taeto::Position);
+    virtual glm::vec3 color(glm::dvec3);
 
-    virtual taeto::Vector vector(taeto::Position);
+    virtual glm::vec3 vector(glm::dvec3);
 
     void load();
 

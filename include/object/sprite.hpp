@@ -1,44 +1,16 @@
 #ifndef OBJECT_SPRITE_HPP_
 #define OBJECT_SPRITE_HPP_
 
-#include "components/render_pixel.hpp"
-#include "object/object.hpp"
-#include "object/position.hpp"
-
 #include <chrono>
 #include <memory>
 
+#include <glm/glm.hpp>
+
+#include "components/render_pixel.hpp"
+#include "object/object.hpp"
+
 namespace taeto
 {
-
-// Maybe put these in classes?
-struct Speed
-{
-    double z;
-    double y;
-    double x;
-
-    Speed(double z_, double y_, double x_)
-    {
-        z = z_;
-        y = y_;
-        x = x_;
-    }
-};
-
-struct Force
-{
-    double z;
-    double y;
-    double x;
-
-    Force(double z_, double y_, double x_)
-    {
-        z = z_;
-        y = y_;
-        x = x_;
-    }
-};
 
 class Sprite: public Object
 {
@@ -56,17 +28,12 @@ public:
      * This function returns the pixel at the given position relavtive to the
      * object's position.
      */
-    virtual const taeto::RenderPixel& get_pixel_at(uint64_t, uint64_t);
+    virtual const taeto::RenderPixel& get_pixel_at(glm::uvec2);
 
     /*
      * Returns the height of the sprite.
      */
-    virtual uint64_t height();
-
-    /*
-     * Returns the axis perpendicular to how the sprite should be rendered.
-     */
-    virtual char plane_orientation();
+    virtual uint height();
 
     /*
      * Returns the scaling factor to adjust the size of a sprite.
@@ -89,7 +56,7 @@ public:
     /*
      * Returns the width of the sprite.
      */
-    virtual uint64_t width();
+    virtual uint width();
 
     /*
      * Returns true if the object should collide with other objects that return
@@ -110,7 +77,7 @@ public:
      * Returns true if the pixel at the given position within the object should
      * collide with other objects.
      */
-    virtual bool get_collision_at(uint64_t, uint64_t);
+    virtual bool get_collision_at(glm::uvec2);
 
     /*
      * Defines what happens when this object collides with the given object.
@@ -135,35 +102,28 @@ public:
      * Sets speed of the object.
      * @param speed The sprite's new speed.
      */
-    void speed(const taeto::Speed& speed);
-
-    /*
-     * Applies speed to the object.
-     * @param speed The speed to apply.
-     */
-    void apply_speed(const taeto::Speed& speed);
+    void speed(const glm::vec3& speed);
 
     /*
      * Returns the current speed of the sprite.
      */
-    taeto::Speed& speed();
+    glm::vec3& speed();
 
     /*
      * Sets force on the object.
      * @param force The sprite's new force.
      */
-    void set_force(const taeto::Force& force);
-
-    /*
-     * Applies force to the object.
-     * @param force The force to apply.
-     */
-    void apply_force(const taeto::Force& force);
+    void force(const glm::vec3& force);
 
     /*
      * Returns the forces currently applied to the sprite.
      */
-    taeto::Force& force();
+    glm::vec3& force();
+
+    /*
+     * Returns height and width of the sprite as a uvec2
+     */
+    glm::uvec2& shape();
 
     /*
      * Animates sprite.
@@ -174,17 +134,16 @@ public:
     virtual bool respect_light_sources();
 
 protected:
-    uint64_t height_;
-    uint64_t width_;
+    glm::uvec2 shape_;
 
     // Mass of the sprite for calculating speeds
-    double mass_;
+    float mass_;
 
     // Sprite's speed in all directions
-    taeto::Speed speed_;
+    glm::vec3 speed_;
 
     // Forces applied to sprite in all directions
-    taeto::Force force_;
+    glm::vec3 force_;
 
 private:
     // Whether or not the sprite is currently visible

@@ -11,19 +11,14 @@
 namespace taeto
 {
 
-const taeto::RenderPixel& Sprite::get_pixel_at(uint64_t, uint64_t)
+const taeto::RenderPixel& Sprite::get_pixel_at(glm::uvec2)
 {
     throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");
 }
 
-uint64_t Sprite::height()
+uint Sprite::height()
 {
-    return height_;
-}
-
-char Sprite::plane_orientation()
-{
-    return 'Z';
+    return shape_.y;
 }
 
 void Sprite::visible(const bool& v)
@@ -36,9 +31,9 @@ bool Sprite::visible()
     return visible_;
 }
 
-uint64_t Sprite::width()
+uint Sprite::width()
 {
-    return width_;
+    return shape_.x;
 }
 
 bool Sprite::collides()
@@ -51,7 +46,7 @@ bool Sprite::detect_collisions()
     return detect_collisions_;
 }
 
-bool Sprite::get_collision_at(uint64_t, uint64_t)
+bool Sprite::get_collision_at(glm::uvec2)
 {
     return false;
 }
@@ -90,36 +85,22 @@ double Sprite::mass()
     return mass_;
 }
 
-void Sprite::speed(const taeto::Speed& speed)
+void Sprite::speed(const glm::vec3& speed)
 {
     speed_ = speed;
 }
 
-void Sprite::apply_speed(const taeto::Speed& speed)
-{
-    speed_.z += speed.z;
-    speed_.y += speed.y;
-    speed_.x += speed.x;
-}
-
-taeto::Speed& Sprite::speed()
+glm::vec3& Sprite::speed()
 {
     return speed_;
 }
 
-void Sprite::set_force(const taeto::Force& force)
+void Sprite::force(const glm::vec3& force)
 {
     force_ = force;
 }
 
-void Sprite::apply_force(const taeto::Force& force)
-{
-    force_.z += force.z;
-    force_.y += force.y;
-    force_.x += force.x;
-}
-
-taeto::Force& Sprite::force()
+glm::vec3& Sprite::force()
 {
     return force_;
 }

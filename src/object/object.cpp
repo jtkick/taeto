@@ -1,26 +1,23 @@
 #include "object/object.hpp"
 
+#include <glm/glm.hpp>
+
 namespace taeto
 {
 
-taeto::Position& Object::position()
+glm::dvec3& Object::position()
 {
     return position_;
 }
 
-void Object::position(const taeto::Position& p)
+void Object::position(const glm::dvec3& p)
 {
     position_ = p;
 }
 
-void Object::move(double z, double y, double x)
+void Object::move(const glm::dvec3& diff)
 {
-    position_ += taeto::Position(z, y, x);
-}
-
-void Object::move(const taeto::Position& p)
-{
-    position_ += p;
+    position_ += diff;
 }
 
 }   // namespace taeto

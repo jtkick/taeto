@@ -8,7 +8,7 @@
 namespace taeto
 {
 
-class Camera : public Object
+class Camera : public taeto::Object
 {
 public:
 

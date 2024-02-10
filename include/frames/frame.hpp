@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 namespace taeto
 {
 
@@ -14,24 +16,13 @@ class Frame
 public:
     Frame()
     {
-        resize(0, 0, T());
+        resize(glm::uvec2(0, 0), T());
     };
 
-    Frame(unsigned long int h, unsigned long int w, T t = T())
+    Frame(glm::uvec2 shape, T t = T())
     {
-        resize(h, w, t);
+        resize(shape, t);
     };
-
-    // Frame(unsigned long int h, unsigned long int w)
-    // {
-    //     resize(h, w, T());
-    // };
-
-
-    // Frame(std::vector<std::vector<T>> v)
-    // {
-    //
-    // };
 
     /**
      * Returns the value at the given y and x coordinates.
@@ -40,7 +31,10 @@ public:
      * @param x Collumn of selected row to get value from.
      * @return T A reference to the value at the given location.
      */
-    inline constexpr T& at(int y, int x) { return values_.at(y).at(x); };
+    inline constexpr T& at(glm::uvec2 pos)
+    {
+        return values_.at(pos.y).at(pos.x);
+    };
     // inline constexpr const T& at(int y, int x) const { return values_.at(y).at(x); };
 
 
@@ -74,9 +68,9 @@ public:
      * @param w New width of the frame.
      * @param value Value of any new instances of the frame type.
      */
-    void resize(int h, int w, T t = T())
+    void resize(glm::uvec2 shape, T t = T())
     {
-        values_.resize(h, std::vector<T>(w, t));
+        values_.resize(shape.y, std::vector<T>(shape.x, t));
     };
 
 
@@ -88,10 +82,10 @@ public:
      * @param x Column to write to
      * @param frame Other frame
      */
-    void overwrite(const Frame<T>& frame, int y, int x)
+    void overwrite(const Frame<T>& frame, glm::uvec2 pos)
     {
         // Just use the apply function for simplicity
-        apply(frame, y, x, false, [](T t1, T t2){ return t2; });
+        apply(frame, pos.y, pos.x, false, [](T t1, T t2){ return t2; });
     };
 
 
@@ -144,18 +138,17 @@ protected:
      */
     void apply(
         Frame<T>& other,
-        int y,
-        int x,
+        glm::uvec2 pos,
         bool tile,
         std::function<const T&(const T&, const T&)> func)
     {
         // If tiling, dimensions are across the entire frame
-        unsigned int top = tile ? 0 : y;
+        unsigned int top = tile ? 0 : pos.y;
         unsigned int bottom =
-            tile ? height()-1 : std::min(y + other.height() - 1, height());
-        unsigned int left = tile ? 0 : x;
+            tile ? height()-1 : std::min(pos.y + other.height() - 1, height());
+        unsigned int left = tile ? 0 : pos.x;
         unsigned int right =
-            tile ? width()-1 : std::min(x + other.width() - 1, width());
+            tile ? width()-1 : std::min(pos.x + other.width() - 1, width());
 
         // Start applying values
         int o_h = other.height();

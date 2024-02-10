@@ -1,9 +1,9 @@
 #ifndef OBJECT_OBJECT_HPP_
 #define OBJECT_OBJECT_HPP_
 
-#include "object/position.hpp"
-
 #include <chrono>
+
+#include <glm/glm.hpp>
 
 namespace taeto
 {
@@ -11,20 +11,19 @@ namespace taeto
 class Object
 {
 public:
-    Object() : position_(taeto::Position(0.0, 0.0, 0.0)) { };
+    Object() : position_(glm::dvec3(0.0, 0.0, 0.0)) { };
 
-    Object(const taeto::Position& p) : position_(p) { };
+    Object(const glm::dvec3& p) : position_(p) { };
 
     // Since Object is the base class for the interfaces, it needs at least one
     // virtual method to be polymorphic
     ~Object() { };
 
-    taeto::Position& position();
+    glm::dvec3& position();
 
-    void position(const taeto::Position&);
+    void position(const glm::dvec3&);
 
-    inline void move(double, double, double);
-    inline void move(const taeto::Position&);
+    inline void move(const glm::dvec3&);
 
     // Called when the object is loaded into the engine
     // Allows object to load any necessary sub-objects
@@ -33,7 +32,7 @@ public:
     void animate() {};
 
 protected:
-    taeto::Position position_ { 0.0f, 0.0f, 0.0f };
+    glm::dvec3 position_ { 0.0f, 0.0f, 0.0f };
 };
 
 }   // namespace taeto

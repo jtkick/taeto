@@ -2,48 +2,63 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
+
+#include <glm/glm.hpp>
+
+#include "lodepng.h"
 
 namespace taeto
 {
 
 UCharFrame::UCharFrame()
 {
-    resize(0, 0, 0);
+
 }
 
-UCharFrame::UCharFrame(unsigned long int h, unsigned long int w, uint8_t v)
+UCharFrame::UCharFrame(glm::uvec2 shape, unsigned char c)
 {
-    resize(h, w, v);
+    resize(shape, c);
 }
 
-// UCharFrame::UCharFrame(
-//     const taeto::ColorFrame& cf, std::string method = "luminosity")
-// {
-//     for (int y = 0; y < height(); ++y)
-//     {
-//         for (int x = 0; x < width(); ++x)
-//         {
-//             const taeto::Color& curr_color = at(y, x);
-//             if (method == "luminosity")
-//                 values_.at(y, x) =
-//                     0.30 * curr_color.red() +
-//                     0.59 * curr_color.green() +
-//                     0.11 * curr_color.blue();
-//             else if (method == "average")
-//                 values_.at(y, x) =
-//                     ((uint16_t)curr_color.red() +
-//                      (uint16_t)curr_color.green() +
-//                      (uint16_t)curr_color.blue()) /
-//                     3;
-//             else
-//                 throw std::exception("Unknown conversion method.");
-//         }
-//     }
-// }
-
-UCharFrame::UCharFrame(const taeto::Frame<unsigned char>& f)
+UCharFrame::UCharFrame(std::string path)
 {
-    values_ = f.values_;
+    // Decode png file
+    unsigned int w, h = 0;
+    std::vector<unsigned char> image;
+    unsigned error = lodepng::decode(image, w, h, path);
+
+    // Print load error
+    if (error)
+        std::cerr << "PNG decoder error " << error << ": "
+                  << lodepng_error_text(error) << std::endl;
+
+    // Load values into vector
+    for (int i = 0; i < h; ++i)
+    {
+        // New row
+        std::vector<unsigned char> row = std::vector<unsigned char>();
+
+        for (int j = 0; j < w; ++j)
+        {
+            // Begininning of this pixel in image
+            int pixel_index = i*w*4 + j*4;
+
+            if (image.at(pixel_index == 255) &&
+                image.at(pixel_index+1 == 255) &&
+                image.at(pixel_index+2 == 255))
+                row.push_back(1);
+            else if (image.at(pixel_index == 0) &&
+                     image.at(pixel_index+1 == 0) &&
+                     image.at(pixel_index+2 == 0))
+                row.push_back(0);
+            else
+                throw std::runtime_error(
+                    "Expected fully black or fully white pixels.");
+        }
+
+        values_.push_back(row);
+    }
 }
 
 }   // namespace taeto

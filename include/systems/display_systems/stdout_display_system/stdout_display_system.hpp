@@ -1,10 +1,12 @@
-#ifndef SYSTEMS_DISPLAY_SYSTEM_HPP_
-#define SYSTEMS_DISPLAY_SYSTEM_HPP_
+#ifndef SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_STDOUT_DISPLAY_SYSTEM_HPP_
+#define SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_STDOUT_DISPLAY_SYSTEM_HPP_
 
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "frames/display_pixel_frame.hpp"
-#include "systems/system.hpp"
+#include "systems/display_systems/display_system.hpp"
 
 // Typical pixel
 const std::string BLANK_PIXEL_STRING =
@@ -33,12 +35,12 @@ const unsigned int TOTAL_PIXEL_STRING_LENGTH = 51;
 namespace taeto
 {
 
-class DisplaySystem: public System
+class StdoutDisplaySystem: public DisplaySystem
 {
 public:
-    DisplaySystem();
+    StdoutDisplaySystem();
 
-    ~DisplaySystem();
+    ~StdoutDisplaySystem();
 
     // Write entire frame to stdout
     void display_frame(taeto::DisplayPixelFrame&);
@@ -48,6 +50,8 @@ private:
     // Resize output buffer
     void resize(int, int);
 
+    std::string color_to_string(float);
+
     // The output buffer that will output on every frame to stdout
     std::string output_buffer;
     unsigned int height;
@@ -56,4 +60,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // SYSTEMS_DISPLAY_SYSTEM_HPP_
+#endif  // SYSTEMS_DISPLAY_SYSTEMS_STDOUT_DISPLAY_SYSTEM_STDOUT_DISPLAY_SYSTEM_HPP_

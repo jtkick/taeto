@@ -1,30 +1,28 @@
 #include "assets/lights/directional_light.hpp"
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
-#include "object/position.hpp"
+#include <glm/glm.hpp>
 
 namespace taeto
 {
 
 DirectionalLight::DirectionalLight()
 {
-    color_ = taeto::Color(255, 255, 255, 255);
-    vector_ = taeto::Vector(0, 0, 127);
+    color_ = glm::vec3(1.0, 1.0, 1.0);
+    vector_ = glm::vec3(0.0, 0.0, -1.0);
 }
 
-DirectionalLight::DirectionalLight(taeto::Color c, taeto::Vector v)
+DirectionalLight::DirectionalLight(glm::vec3 c, glm::vec3 v)
 {
     color_ = c;
     vector_ = v;
 }
 
-inline taeto::Color DirectionalLight::color(taeto::Position p)
+inline glm::vec3 DirectionalLight::color(glm::dvec3 p)
 {
     return color_;
 }
 
-inline taeto::Vector DirectionalLight::vector(taeto::Position p)
+inline glm::vec3 DirectionalLight::vector(glm::dvec3 p)
 {
     return vector_;
 }

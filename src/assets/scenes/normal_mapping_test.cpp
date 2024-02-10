@@ -5,6 +5,8 @@
 #include <chrono>
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "engine.hpp"
 #include "assets/lights/point_light.hpp"
 #include "assets/sprites/sphere.hpp"
@@ -23,9 +25,9 @@ NormalMappingTest::NormalMappingTest()
         std::chrono::system_clock::now().time_since_epoch());
     stopwatch_ = std::chrono::milliseconds(0);
     s_ = std::make_shared<taeto::Sphere>(51);
-    s_->position({-10, -((double)s_->height()/2), -((double)s_->width()/2)});
-    pl_ = std::make_shared<taeto::PointLight>(taeto::Color(255, 255, 255), 0.9999);
-    pl_->position({0, 0, 10});
+    s_->position({-((double)s_->width()/2), -((double)s_->height()/2), -10});
+    pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
+    pl_->position({10, 0, 0});
 }
 
 NormalMappingTest::~NormalMappingTest()
@@ -65,7 +67,7 @@ void NormalMappingTest::animate()
     // Move light in a circle about the box
     double x = (distance_ * cos(current_degree_ * PI / 180));
     double y = distance_ * sin(current_degree_ * PI / 180);
-    pl_->position({10, y, x});
+    pl_->position({x, y, 10});
 
 }
 

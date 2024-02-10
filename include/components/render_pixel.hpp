@@ -3,8 +3,7 @@
 
 #include <string>
 
-#include "components/color.hpp"
-#include "components/vector.hpp"
+#include <glm/glm.hpp>
 
 namespace taeto
 {
@@ -17,18 +16,18 @@ public:
 
     RenderPixel(char);
 
-    RenderPixel(char, taeto::Color, taeto::Color, bool);
+    RenderPixel(char, glm::vec4, glm::vec4, bool);
 
     RenderPixel(
         char,
-        taeto::Color,
-        taeto::Color,
+        glm::vec4,
+        glm::vec4,
         bool b,
         bool i,
         bool u,
         bool s,
-        taeto::Vector,
-        uint8_t);
+        glm::vec3,
+        float);
 
     taeto::RenderPixel operator & (const taeto::RenderPixel &p);
 
@@ -42,15 +41,19 @@ public:
     // Export to string
     std::string serialize();
 
+    // Whether or not this pixel should be rendered
+    // Useful for the edges of a sprite that isn't perfectly rectangular
+    bool render;
+
     // Actual character to print
     char c;
 
     // Color of this 'pixel'
     // Based on whatever color palette is set in the engine
-    taeto::Color foreground_color;
+    glm::vec4 fg_color;
 
     // Color of background of 'pixel'
-    taeto::Color background_color;
+    glm::vec4 bg_color;
 
     // Whether or not this 'pixel' should be printed in bold
     bool bold;
@@ -65,10 +68,10 @@ public:
     bool strikethrough;
 
     // Normal vector
-    taeto::Vector normal;
+    glm::vec3 normal;
 
     // How "shiny" this pixel is
-    uint8_t specularity;
+    float specularity;
 };
 
 }   // namespace taeto

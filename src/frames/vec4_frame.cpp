@@ -1,30 +1,29 @@
-#include "frames/color_frame.hpp"
-
-#include "components/color.hpp"
-#include "frames/uchar_frame.hpp"
+#include "frames/vec4_frame.hpp"
 
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
+#include <glm/glm.hpp>
 #include "lodepng.h"
+
+#include "frames/float_frame.hpp"
 
 namespace taeto
 {
 
-ColorFrame::ColorFrame()
+Vec4Frame::Vec4Frame()
 {
-    resize(0, 0, taeto::Color());
+    resize(glm::uvec2(), glm::vec4());
 }
 
-ColorFrame::ColorFrame(
-    unsigned long int h, unsigned long int w, taeto::Color c)
+Vec4Frame::Vec4Frame(glm::uvec2 shape, glm::vec4 v)
 {
-    resize(h, w, c);
+    resize(shape, v);
 }
 
-ColorFrame::ColorFrame(std::string path)
+Vec4Frame::Vec4Frame(std::string path)
 {
     // Decode png file
     unsigned int h, w = 0;
@@ -40,7 +39,7 @@ ColorFrame::ColorFrame(std::string path)
     for (int i = 0; i < h; ++i)
     {
         // New row
-        std::vector<taeto::Color> row = std::vector<taeto::Color>();
+        std::vector<glm::vec4> row = std::vector<glm::vec4>();
 
         for (int j = 0; j < w; ++j)
         {
@@ -48,11 +47,11 @@ ColorFrame::ColorFrame(std::string path)
             int pixel_index = i*w*4 + j*4;
 
             // Get color values
-            taeto::Color c = taeto::Color();
-            c.red = image.at(pixel_index);
-            c.green = image.at(pixel_index+1);
-            c.blue = image.at(pixel_index+2);
-            c.alpha = image.at(pixel_index+3);
+            glm::vec4 c = glm::vec4();
+            c.x = image.at(pixel_index);
+            c.y = image.at(pixel_index+1);
+            c.z = image.at(pixel_index+2);
+            c.w = image.at(pixel_index+3);
 
             // Add pixel to our color frame
             row.push_back(c);
@@ -62,83 +61,83 @@ ColorFrame::ColorFrame(std::string path)
     }
 }
 
-taeto::UCharFrame ColorFrame::reds()
+taeto::FloatFrame Vec4Frame::x()
 {
-    taeto::UCharFrame frame(height(), width());
+    taeto::FloatFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).red;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).x;
     return frame;
 }
 
-// const taeto::UCharFrame& ColorFrame::reds() const
+// const taeto::FloatFrame& Vec4Frame::x() const
 // {
-//     std::function<unsigned char(taeto::Color)> func =
-//         [](taeto::Color c){ return c.red; };
-//     return taeto::UCharFrame(extract_member_frame<unsigned char>(func));
+//     std::function<unsigned char(glm::vec4)> func =
+//         [](glm::vec4 c){ return c.x; };
+//     return taeto::FloatFrame(extract_member_frame<unsigned char>(func));
 // }
 
-void ColorFrame::reds(taeto::UCharFrame& f)
+void Vec4Frame::x(taeto::FloatFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).red = f.at(i, j);
+            at(glm::uvec2(j, i)).x = f.at(glm::uvec2(j, i));
 }
 
-taeto::UCharFrame ColorFrame::greens()
+taeto::FloatFrame Vec4Frame::y()
 {
-    taeto::UCharFrame frame(height(), width());
+    taeto::FloatFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).green;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).y;
     return frame;
 }
 
-void ColorFrame::greens(taeto::UCharFrame& f)
+void Vec4Frame::y(taeto::FloatFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).green = f.at(i, j);
+            at(glm::uvec2(j, i)).y = f.at(glm::uvec2(j, i));
 }
 
-taeto::UCharFrame ColorFrame::blues()
+taeto::FloatFrame Vec4Frame::z()
 {
-    taeto::UCharFrame frame(height(), width());
+    taeto::FloatFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).blue;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).z;
     return frame;
 }
 
-void ColorFrame::blues(taeto::UCharFrame& f)
+void Vec4Frame::z(taeto::FloatFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).blue = f.at(i, j);
+            at(glm::uvec2(j, i)).z = f.at(glm::uvec2(j, i));
 }
 
-taeto::UCharFrame ColorFrame::alphas()
+taeto::FloatFrame Vec4Frame::w()
 {
-    taeto::UCharFrame frame(height(), width());
+    taeto::FloatFrame frame(glm::uvec2(width(), height()));
     for (int i = 0; i < frame.height(); ++i)
         for (int j = 0; j < frame.width(); ++j)
-            frame.at(i, j) = at(i, j).alpha;
+            frame.at(glm::uvec2(j, i)) = at(glm::uvec2(j, i)).w;
     return frame;
 }
 
-void ColorFrame::alphas(taeto::UCharFrame& f)
+void Vec4Frame::w(taeto::FloatFrame& f)
 {
     assert(height() == f.height());
     assert(width() == f.width());
     for (int i = 0; i < height(); ++i)
         for (int j = 0; j < width(); ++j)
-            at(i, j).alpha = f.at(i, j);
+            at(glm::uvec2(j, i)).w = f.at(glm::uvec2(j, i));
 }
 
 }   // namespace taeto

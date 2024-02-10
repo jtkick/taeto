@@ -2,25 +2,26 @@
 #define FRAMES_DISPLAY_PIXEL_FRAME_HPP_
 
 #include "components/display_pixel.hpp"
-#include "frames/bool_frame.hpp"
 #include "frames/char_frame.hpp"
-#include "frames/color_frame.hpp"
 #include "frames/frame.hpp"
+#include "frames/uchar_frame.hpp"
+#include "frames/vec3_frame.hpp"
 
 namespace taeto
 {
 
 // Forward includes
-class BoolFrame;
 class CharFrame;
-class ColorFrame;
-
-class DisplayPixelFrame : public Frame<taeto::DisplayPixel>
+class Vec3Frame;
+class UCharFrame;
+class DisplayPixelFrame : public taeto::Frame<taeto::DisplayPixel>
 {
 public:
     DisplayPixelFrame();
 
-    DisplayPixelFrame(unsigned long int h, unsigned long int w, taeto::DisplayPixel d = taeto::DisplayPixel()): Frame(h, w, d) {};
+    DisplayPixelFrame(glm::uvec2 shape,
+                      taeto::DisplayPixel d = taeto::DisplayPixel())
+        : Frame(shape, d) { };
 
     ~DisplayPixelFrame() { };
 
@@ -28,29 +29,29 @@ public:
 
     void chars(taeto::CharFrame&);
 
-    taeto::ColorFrame foreground_colors();
+    taeto::Vec3Frame fg_colors();
 
-    void foreground_colors(taeto::ColorFrame&);
+    void fg_colors(taeto::Vec3Frame&);
 
-    taeto::ColorFrame background_colors();
+    taeto::Vec3Frame bg_colors();
 
-    void background_colors(taeto::ColorFrame&);
+    void bg_colors(taeto::Vec3Frame&);
 
-    taeto::BoolFrame bolds();
+    taeto::UCharFrame bolds();
 
-    void bolds(taeto::BoolFrame&);
+    void bolds(taeto::UCharFrame&);
 
-    taeto::BoolFrame italics();
+    taeto::UCharFrame italics();
 
-    void italics(taeto::BoolFrame&);
+    void italics(taeto::UCharFrame&);
 
-    taeto::BoolFrame underlines();
+    taeto::UCharFrame underlines();
 
-    void underlines(taeto::BoolFrame&);
+    void underlines(taeto::UCharFrame&);
 
-    taeto::BoolFrame strikethroughs();
+    taeto::UCharFrame strikethroughs();
 
-    void strikethroughs(taeto::BoolFrame&);
+    void strikethroughs(taeto::UCharFrame&);
 
     void add_string(int, int, std::string);
 };
