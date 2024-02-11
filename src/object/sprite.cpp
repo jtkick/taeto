@@ -11,7 +11,7 @@
 namespace taeto
 {
 
-const taeto::RenderPixel& Sprite::get_pixel_at(glm::uvec2)
+taeto::RenderPixel Sprite::get_pixel_at(glm::uvec2)
 {
     throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");
 }
@@ -112,7 +112,7 @@ void Sprite::animate()
 
 bool Sprite::respect_light_sources()
 {
-    return false;
+    return respect_light_sources_;
 }
 
 }   // namespace taeto

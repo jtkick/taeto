@@ -61,7 +61,7 @@ Sphere::Sphere(int diameter)
     }
 }
 
-const taeto::RenderPixel& Sphere::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel Sphere::get_pixel_at(glm::uvec2 pos)
 {
     return frame_.at(pos);
 }

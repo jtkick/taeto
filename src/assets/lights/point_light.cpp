@@ -19,7 +19,7 @@ PointLight::PointLight(glm::vec3 c, float f)
     fade_ = f;
 }
 
-inline glm::vec3 PointLight::color(glm::dvec3 p)
+glm::vec3 PointLight::color(glm::dvec3 p)
 {
     // Get distance between points
     // Multiply y difference by two plus a bit since characters are about twice
@@ -37,7 +37,7 @@ inline glm::vec3 PointLight::color(glm::dvec3 p)
     );
 }
 
-inline glm::vec3 PointLight::vector(glm::dvec3 p)
+glm::vec3 PointLight::vector(glm::dvec3 p)
 {
     return glm::vec3(position_.x - p.x, position_.y - p.y, position_.z - p.z);
 }

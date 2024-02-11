@@ -17,7 +17,7 @@ class Sphere: public taeto::Sprite
 public:
     Sphere(int);
 
-    const taeto::RenderPixel& get_pixel_at(glm::uvec2) override;
+    taeto::RenderPixel get_pixel_at(glm::uvec2) override;
 
     uint height() override;
     uint width() override;

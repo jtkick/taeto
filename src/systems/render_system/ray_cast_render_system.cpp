@@ -124,12 +124,12 @@ void RayCastRenderSystem::render_frame(
 
                         // Light color at this pixel location
                         glm::vec3 light_color =
-                            light->color(glm::dvec3(abs_z, abs_y, abs_x));
+                            light->color(glm::dvec3(abs_x, abs_y, abs_z));
 
                         // Get light vector and pixel normal
                         const glm::vec3 &pixel_normal = current_pixel.normal;
                         const glm::vec3 light_vector =
-                            light->vector(glm::dvec3(abs_z, abs_y, abs_x));
+                            light->vector(glm::dvec3(abs_x, abs_y, abs_z));
 
                         // TODO: PUT THIS IN A VECTOR OPERATOR METHOD
                         // Get vector components

@@ -16,9 +16,9 @@ public:
 
     Spotlight(glm::vec3, float, int);
 
-    inline glm::vec3 color(glm::dvec3);
+    glm::vec3 color(glm::dvec3);
 
-    inline glm::vec3 vector(glm::dvec3);
+    glm::vec3 vector(glm::dvec3);
 
 private:
     glm::vec3 color_;

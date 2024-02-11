@@ -19,6 +19,7 @@ public:
         mass_(0.0),
         speed_(0.0, 0.0, 0.0),
         force_(0.0, 0.0, 0.0),
+        respect_light_sources_(false),
         visible_(false),
         detect_collisions_(false),
         prev_timer_time_(0)
@@ -28,7 +29,7 @@ public:
      * This function returns the pixel at the given position relavtive to the
      * object's position.
      */
-    virtual const taeto::RenderPixel& get_pixel_at(glm::uvec2);
+    virtual taeto::RenderPixel get_pixel_at(glm::uvec2);
 
     /*
      * Returns the height of the sprite.
@@ -144,6 +145,8 @@ protected:
 
     // Forces applied to sprite in all directions
     glm::vec3 force_;
+
+    bool respect_light_sources_;
 
 private:
     // Whether or not the sprite is currently visible

@@ -19,7 +19,7 @@ SimpleX::SimpleX()
     );
 }
 
-const taeto::RenderPixel& SimpleX::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel SimpleX::get_pixel_at(glm::uvec2 pos)
 {
     return pixel_;
 }

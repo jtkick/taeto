@@ -16,7 +16,7 @@ class SimpleX: public taeto::Sprite
 public:
     SimpleX();
 
-    const taeto::RenderPixel& get_pixel_at(glm::uvec2) override;
+    taeto::RenderPixel get_pixel_at(glm::uvec2) override;
 
     bool respect_light_sources();
 
