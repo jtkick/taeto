@@ -13,6 +13,19 @@
 namespace taeto
 {
 
+class TaetoLogo : public Sprite
+{
+public:
+    TaetoLogo(glm::vec3 color);
+
+    ~TaetoLogo() { };
+
+    taeto::RenderPixel get_pixel_at(glm::uvec2) override;
+
+private:
+    taeto::RenderPixelFrame frame_;
+};
+
 class Stars : public Sprite
 {
 public:
@@ -54,6 +67,7 @@ public:
     void load();
 
 private:
+    std::shared_ptr<taeto::TaetoLogo> logo_;
     std::shared_ptr<taeto::VaporwaveSun> sun_;
     std::shared_ptr<taeto::Stars> stars_;
 };

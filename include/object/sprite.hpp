@@ -26,6 +26,12 @@ public:
     { }
 
     /*
+     * Operator used for sorting sprites by Z-position, as well as its render
+     * priority.
+     */
+    bool operator<(const Sprite& other) const;
+
+    /*
      * This function returns the pixel at the given position relavtive to the
      * object's position.
      */

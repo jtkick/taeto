@@ -11,6 +11,11 @@
 namespace taeto
 {
 
+bool Sprite::operator<(const Sprite& other) const
+{
+    return position_.z < other.position_.z;
+}
+
 taeto::RenderPixel Sprite::get_pixel_at(glm::uvec2)
 {
     throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");

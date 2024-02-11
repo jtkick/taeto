@@ -17,6 +17,34 @@
 namespace taeto
 {
 
+// For sorting vector of sprites
+bool compare_sprites(std::weak_ptr<taeto::Sprite> weak_sprite1,
+                     std::weak_ptr<taeto::Sprite> weak_sprite2)
+{
+    // Get shared pointers to both sprites
+    std::shared_ptr<taeto::Sprite> sprite1;
+    std::shared_ptr<taeto::Sprite> sprite2;
+    if (!(sprite1 = weak_sprite1.lock()) ||
+        !(sprite2 = weak_sprite2.lock()))
+        return false;
+
+    // Compare position
+    return sprite1->position().z < sprite2->position().z;
+}
+
+// Used for mixing colors with transparency
+inline glm::vec3 mix_colors(glm::vec4 dest_color, glm::vec4 src_color)
+{
+    float alpha = src_color.w > 1.0f ? 1.0f : src_color.w;
+    alpha = alpha < 0.0f ? 0.0f : alpha;
+
+    glm::vec3 ret;
+    ret.x = src_color.x * alpha + dest_color.x * (1.0f - alpha);
+    ret.y = src_color.y * alpha + dest_color.y * (1.0f - alpha);
+    ret.z = src_color.z * alpha + dest_color.z * (1.0f - alpha);
+    return ret;
+}
+
 void RayCastRenderSystem::render_frame(
     taeto::DisplayPixelFrame &rendered_frame,
     taeto::Camera &camera,
@@ -32,21 +60,13 @@ void RayCastRenderSystem::render_frame(
     ////////////////////////////////////////////////////////////////
 
     // Sort all sprites from closest to farthest
-
+    // Just going to assume std::sort() is smart enough to use insertion sort
+    // in this scenario (for now)
+    std::sort(sprites.begin(), sprites.end(), compare_sprites);
 
     ////////////////////////////////////////////////////////////////
     ////                         RENDER                         ////
     ////////////////////////////////////////////////////////////////
-
-    // Create frames needed for rendering
-    // I'm not making a class for these, I'm tired of always changing it
-    // taeto::Frame<int8_t> char_buffer(h, w);
-    // taeto::Frame<glm::vec4> fg_color_buffer(h, w);
-    // taeto::Frame<glm::vec4> bg_colors_buffer(h, w);
-    // taeto::Frame<bool> bold_buffer(h, w);
-    // taeto::Frame<bool> italic_buffer(h, w);
-    // taeto::Frame<bool> underline_buffer(h, w);
-    // taeto::Frame<bool> strikethrough_buffer(h, w);
 
     double half_frame_height = (double)h / 2;
     double half_frame_width = (double)w / 2;
@@ -56,9 +76,22 @@ void RayCastRenderSystem::render_frame(
     {
         for (int x = 0; x < w; x++)
         {
-            taeto::RenderPixel current_pixel = taeto::RenderPixel();
-
+            // Make sure to start with completely black pixel
             rendered_frame.at(glm::uvec2(x, y)).clear();
+
+            // // Go down sprites until we find one that is completely opaque
+            // int pixel_index = sprites.size()-1;
+            // while (pixel_index >= 0)
+            // {
+            //     // Get pointer if not dead
+            //     std::shared_ptr<taeto::Sprite> current_sprite;
+            //     if (!(current_sprite = current_sprite_weak_ptr.lock()))
+            //         continue;
+            //
+            //     // Stop here if sprite is completely opaque
+            //
+            //     if (current_sprite->get_pixel_at(glm::uvec2(x, y)))
+            // }
 
             // Render each sprite at a time
             for (std::weak_ptr<taeto::Sprite> current_sprite_weak_ptr : sprites)
@@ -68,9 +101,8 @@ void RayCastRenderSystem::render_frame(
                 if (!(current_sprite = current_sprite_weak_ptr.lock()))
                     continue;
 
-                // TEMP
-                // Clear rendered pixel
-                // rendered_frame.at(glm::uvec2(x, y)).clear();
+                // Assume it's invisible and update it as such
+                current_sprite->visible(false);
 
                 // Get distance between sprite and camera
                 double z_diff = (int64_t)camera.position().z -
@@ -84,8 +116,10 @@ void RayCastRenderSystem::render_frame(
 
                 // Map frame position to sprite plane position
                 double abs_z = (int64_t)current_sprite->position().z;
-                double abs_y = (((y - half_frame_height) * z_diff) / camera.focal_length()) + (int64_t)camera.position().y;
-                double abs_x = (((x - half_frame_width) * z_diff) / camera.focal_length()) + (int64_t)camera.position().x;
+                double abs_y = (((y - half_frame_height) * z_diff) /
+                    camera.focal_length()) + (int64_t)camera.position().y;
+                double abs_x = (((x - half_frame_width) * z_diff) /
+                    camera.focal_length()) + (int64_t)camera.position().x;
 
                 // Map to relative to sprite origin
                 double rel_y = abs_y - (int64_t)current_sprite->position().y;
@@ -96,11 +130,8 @@ void RayCastRenderSystem::render_frame(
                      rel_y < 0 || rel_y >= current_sprite->height())
                      continue;
 
-                // LMAO
-                double distance_to_camera = 10.0;
-
                 // Get pixel of interest
-                current_pixel =
+                taeto::RenderPixel current_pixel =
                     current_sprite->get_pixel_at(glm::uvec2(rel_x, rel_y));
 
                 // Now that we have a pixel from the sprite, we know that it's
@@ -171,56 +202,27 @@ void RayCastRenderSystem::render_frame(
                         current_pixel.bg_color * glm::vec4(received_light, 1.0);
                 }
 
-                // Add pixel to stack for combining into rendered pixel
-                // pixel_stack.push_back({current_pixel, distance_to_camera});
-
-                rendered_frame.at(glm::uvec2(x, y)) = current_pixel;
-				// rendered_frame.at(y, x).background_color = taeto::Color(current_pixel.normal.x()+127, current_pixel.normal.y()+127, current_pixel.normal.z()+127);
-
-                // If this sprite's pixel is fully opaque, we're done rendering this pixel
-                if (current_pixel.bg_color.w == 255)
-                    continue;
+                // Now combine this pixel with the previous one rendered
+                taeto::DisplayPixel& rendered_pixel =
+                    rendered_frame.at(glm::uvec2(x, y));
+                rendered_pixel.c = current_pixel.c;
+                rendered_pixel.fg_color = mix_colors(
+                    glm::vec4(rendered_pixel.fg_color, 1.0),
+                    current_pixel.fg_color);
+                rendered_pixel.bg_color = mix_colors(
+                    glm::vec4(rendered_pixel.bg_color, 1.0),
+                    current_pixel.bg_color);
+                // rendered_pixel.fg_color = mix_colors(
+                //     current_pixel.fg_color,
+                //     glm::vec4(rendered_pixel.fg_color, 1.0));
+                // rendered_pixel.bg_color = mix_colors(
+                //     current_pixel.bg_color,
+                //     glm::vec4(rendered_pixel.bg_color, 1.0));
+                rendered_pixel.bold = current_pixel.bold;
+                rendered_pixel.italic = current_pixel.italic;
+                rendered_pixel.underline = current_pixel.underline;
+                rendered_pixel.strikethrough = current_pixel.strikethrough;
             }
-            continue;
-            // // Add skybox pixel to stack
-            // // TODO: SKYBOXES
-            // // taeto::Pixel skybox_pixel = taeto::Pixel(' ', taeto::Color(255, 255, 255, 255), taeto::Color(0, 0, 0, 255), false);
-            // // pixel_stack.push_back(skybox_pixel);
-            //
-            //
-            //
-            // if (pixel_stack.size() == 0)
-            // {
-            //     rendered_frame.at(glm::uvec2(x, y)).clear();
-            //     continue;
-            // }
-            //
-            //
-            //
-            // // I SAY "FUCK IT"
-            //
-            // // Pixel is officially finished rendering, write to final frame
-            // rendered_frame.at(glm::uvec2(x, y)) = std::get<0>(pixel_stack.at(0));
-            // continue;
-            //
-            //
-            //
-            //
-            //
-            // // Now that we have all the rendered pixels, combine them together
-            // taeto::DisplayPixel rendered_pixel =
-            //     std::get<0>(pixel_stack.at(pixel_stack.size() - 1));
-            // for (int i = pixel_stack.size() - 2; i >= 0; --i)
-            // {
-            //     // Get new background color
-            //     taeto::Color bg = rendered_pixel.background_color &
-            //         std::get<0>(pixel_stack.at(i)).background_color;
-            //     rendered_pixel = std::get<0>(pixel_stack.at(i));
-            //     rendered_pixel.background_color = bg;
-            // }
-            //
-            // // Pixel is officially finished rendering, write to final frame
-            // rendered_frame.at(y, x) = rendered_pixel;
         }
     }
 
