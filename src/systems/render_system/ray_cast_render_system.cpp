@@ -58,6 +58,8 @@ void RayCastRenderSystem::render_frame(
         {
             taeto::RenderPixel current_pixel = taeto::RenderPixel();
 
+            rendered_frame.at(glm::uvec2(x, y)).clear();
+
             // Render each sprite at a time
             for (std::weak_ptr<taeto::Sprite> current_sprite_weak_ptr : sprites)
             {
@@ -68,7 +70,7 @@ void RayCastRenderSystem::render_frame(
 
                 // TEMP
                 // Clear rendered pixel
-                rendered_frame.at(glm::uvec2(x, y)).clear();
+                // rendered_frame.at(glm::uvec2(x, y)).clear();
 
                 // Get distance between sprite and camera
                 double z_diff = (int64_t)camera.position().z -
@@ -245,8 +247,8 @@ void RayCastRenderSystem::render_frame(
         }
 
         // Generate 2D Gaussian kernel
-        int kKernelSize = 10;
-        float kSigma = 1.5f;
+        int kKernelSize = 30;
+        float kSigma = 1.25f;
         std::vector<std::vector<float>> kernel;
         kernel.resize(kKernelSize * 2 + 1,
                       std::vector<float>(kKernelSize * 2 + 1));
