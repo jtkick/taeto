@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "assets/lights/point_light.hpp"
-#include "assets/lights/spotlight.hpp"
 #include "assets/sprites/checkerboard.hpp"
 #include "scenes/scene.hpp"
 
@@ -24,7 +23,7 @@ public:
 private:
     std::shared_ptr<taeto::Checkerboard> checkerboard_;
     std::shared_ptr<taeto::PointLight> red_light_;
-    std::shared_ptr<taeto::Spotlight> spotlight_;
+    std::shared_ptr<taeto::PointLight> spotlight_;
 };
 
 }   // namespace taeto

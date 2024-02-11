@@ -51,6 +51,9 @@ protected:
     // Number of tiles away from camera that sprites will be rendered
     unsigned int render_distance_;
 
+    // Whether or not to use high dynamic range when rendering
+    bool hdr_;
+
     // Number of sprites rendered in the last frame
     unsigned int drawn_sprites_;
 };

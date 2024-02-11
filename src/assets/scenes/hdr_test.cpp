@@ -6,7 +6,6 @@
 
 #include "engine.hpp"
 #include "assets/lights/point_light.hpp"
-#include "assets/lights/spotlight.hpp"
 #include "assets/sprites/checkerboard.hpp"
 
 namespace taeto
@@ -19,8 +18,8 @@ HDRTest::HDRTest()
         -((double)checkerboard_->width()/2),
         -((double)checkerboard_->height()/2),
         -10});
-    spotlight_ = std::make_shared<taeto::Spotlight>(
-        glm::vec3(1.0, 1.0, 1.0), 0.6, 20);
+    spotlight_ = std::make_shared<taeto::PointLight>(
+        glm::vec3(100.0, 100.0, 100.0), 0.8);
     spotlight_->position({25, 0, 0});
     red_light_ = std::make_shared<taeto::PointLight>(
         glm::vec3(1.0, 0.0, 0.0), 0.7);

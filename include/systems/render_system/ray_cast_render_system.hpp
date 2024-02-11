@@ -17,7 +17,7 @@ namespace taeto
 class RayCastRenderSystem : public RenderSystem
 {
 public:
-    RayCastRenderSystem() { };
+    RayCastRenderSystem() { hdr_ = true; };
 
     ~RayCastRenderSystem() { };
 

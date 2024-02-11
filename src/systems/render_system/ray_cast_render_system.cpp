@@ -225,6 +225,33 @@ void RayCastRenderSystem::render_frame(
     ////////////////////////////////////////////////////////////////
     ////                    POST-PROCESSING                     ////
     ////////////////////////////////////////////////////////////////
+
+    // Run tone mapping if HDR is on
+    if (hdr_)
+    {
+        // Gamma correction value
+        const float kGamma = 2.2f;
+
+        for (int y = 0; y < rendered_frame.height(); ++y)
+        {
+            for (int x = 0; x < rendered_frame.width(); ++x)
+            {
+                // Get pixel
+                taeto::DisplayPixel& pixel =
+                    rendered_frame.at(glm::uvec2(x, y));
+
+                // Map foreground color
+                glm::vec3 color = pixel.fg_color;
+                color = color / (color + glm::vec3(1.0));
+                pixel.fg_color = glm::pow(color, glm::vec3(1.0 / kGamma));
+
+                // Map background color
+                color = pixel.bg_color;
+                color = color / (color + glm::vec3(1.0));
+                pixel.bg_color = glm::pow(color, glm::vec3(1.0 / kGamma));
+            }
+        }
+    }
 }
 
 }   // namespace taeto
