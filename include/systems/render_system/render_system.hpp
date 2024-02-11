@@ -54,6 +54,9 @@ protected:
     // Whether or not to use high dynamic range when rendering
     bool hdr_;
 
+    // Whether of not to add bloom to rendered scene
+    bool bloom_;
+
     // Number of sprites rendered in the last frame
     unsigned int drawn_sprites_;
 };

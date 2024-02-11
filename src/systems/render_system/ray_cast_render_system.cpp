@@ -226,15 +226,103 @@ void RayCastRenderSystem::render_frame(
     ////                    POST-PROCESSING                     ////
     ////////////////////////////////////////////////////////////////
 
+    // Add bloom to scene
+    if (bloom_)
+    {
+        // Extract all bright pixels to separate buffer
+        std::vector<std::vector<glm::vec3>> bloom_frame;
+        bloom_frame.resize(h, std::vector<glm::vec3>(w, glm::vec3(0.0)));
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                glm::vec3 color = rendered_frame.at(glm::uvec2(x, y)).bg_color;
+                if (glm::length(color) > 1.5f)
+                    bloom_frame.at(y).at(x) = color;
+                else
+                    bloom_frame.at(y).at(x) = glm::vec3(0.0f);
+            }
+        }
+
+        // Generate 2D Gaussian kernel
+        int kKernelSize = 10;
+        float kSigma = 1.5f;
+        std::vector<std::vector<float>> kernel;
+        kernel.resize(kKernelSize * 2 + 1,
+                      std::vector<float>(kKernelSize * 2 + 1));
+        float sum = 0.0f;
+        for (int y = -kKernelSize; y <= kKernelSize; ++y)
+            for (int x = -kKernelSize; x <= kKernelSize; ++x)
+            {
+                float weight = exp(-(y * y + x/2 * x/2) / (2 * kSigma * kSigma));
+                kernel.at(y + kKernelSize).at(x + kKernelSize) = weight;
+                sum += weight;
+            }
+
+        // Normalize kernel
+        for (auto& row : kernel)
+            for (float& weight : row)
+                weight /= sum;
+
+        // Apply horizontal convolution
+        std::vector<std::vector<glm::vec3>> blurred_horizontal;
+        blurred_horizontal.reserve(bloom_frame.size());
+        for (const auto& row : bloom_frame)
+        {
+            std::vector<glm::vec3> result;
+            result.reserve(row.size());
+            for (std::size_t i = 0; i < row.size(); ++i)
+            {
+                glm::vec3 convolved_pixel(0.0f);
+                for (int j = -kKernelSize; j <= kKernelSize; ++j)
+                {
+                    int index = std::min(std::max(static_cast<int>(i) + j, 0),
+                        static_cast<int>(row.size()) - 1);
+                    convolved_pixel += row.at(index) *
+                        kernel.at(kKernelSize).at(j + kKernelSize);
+                }
+                result.push_back(convolved_pixel);
+            }
+            blurred_horizontal.push_back(result);
+        }
+
+        // Apply vertical convolution
+        std::vector<std::vector<glm::vec3>> blurred_vertical;
+        blurred_vertical.resize(blurred_horizontal.size());
+        for (std::size_t i = 0; i < blurred_horizontal.size(); ++i)
+        {
+            blurred_vertical.at(i).resize(blurred_horizontal.at(i).size());
+            for (std::size_t j = 0; j < blurred_horizontal.at(i).size(); ++j)
+            {
+                glm::vec3 convolved_pixel(0.0f);
+                for (int k = -kKernelSize; k <= kKernelSize; ++k)
+                {
+                    int index = std::min(std::max(static_cast<int>(i) + k, 0),
+                        static_cast<int>(blurred_horizontal.size()) - 1);
+                    convolved_pixel += blurred_horizontal.at(index).at(j) *
+                        kernel.at(kKernelSize + k).at(kKernelSize);
+                }
+                blurred_vertical.at(i).at(j) = convolved_pixel;
+            }
+        }
+
+        // Add blurred frame to the rendered frame
+        for (int y = 0; y < h; ++y)
+            for (int x = 0; x < w; ++x)
+                rendered_frame.at(glm::uvec2(x, y)).bg_color +=
+                    blurred_vertical.at(y).at(x);
+
+    }
+
     // Run tone mapping if HDR is on
     if (hdr_)
     {
         // Gamma correction value
         const float kGamma = 2.2f;
 
-        for (int y = 0; y < rendered_frame.height(); ++y)
+        for (int y = 0; y < h; ++y)
         {
-            for (int x = 0; x < rendered_frame.width(); ++x)
+            for (int x = 0; x < w; ++x)
             {
                 // Get pixel
                 taeto::DisplayPixel& pixel =
