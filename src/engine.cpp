@@ -45,7 +45,7 @@ namespace {
     taeto::Camera camera_ = taeto::Camera(10);
 
     // If set to true, engine will display FPS in top left corner
-    bool debug_mode_on_ = true;
+    bool debug_mode_on_ = false;
 
     // Time last the last frame was rendered, used for calculating FPS
     std::chrono::milliseconds last_frame_start_time_;
@@ -182,6 +182,14 @@ void run()
         spdlog::debug("Telling scene to animate.");
         if (scene_)
             scene_->animate();
+
+        // TODO: GET POINTERS TO ALL UNIQUE SHADERS, AND TELL THEM TO ANIMATE
+
+        // QUICK AND DIRTY
+        for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
+            if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
+                for (std::shared_ptr<taeto::Shader> sh : s->shaders())
+                    sh->animate();
 
 
         ////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@
 #include "components/render_pixel.hpp"
 #include "frames/frame.hpp"
 #include "frames/display_pixel_frame.hpp"
+#include "shaders/shader.hpp"
 #include "tools.hpp"
 
 namespace taeto
@@ -144,6 +145,10 @@ void RayCastRenderSystem::render_frame(
                 if (!current_pixel.render)
                     continue;
 
+                ////////////////////////////////////////////////////////////////
+                ////                      LIGHT PIXEL                       ////
+                ////////////////////////////////////////////////////////////////
+
                 // Compute lighting for this pixel
                 if (current_sprite->respect_light_sources())
                 {
@@ -201,6 +206,26 @@ void RayCastRenderSystem::render_frame(
                     current_pixel.bg_color =
                         current_pixel.bg_color * glm::vec4(received_light, 1.0);
                 }
+
+                ////////////////////////////////////////////////////////////////
+                ////                      SHADE PIXEL                       ////
+                ////////////////////////////////////////////////////////////////
+
+                // Gather all values to pass to shader
+                glm::uvec2 frame_shape = glm::uvec2(w, h);
+                glm::uvec2 pos_in_frame = glm::uvec2(x, y);
+                glm::dvec3 pos_in_world = glm::dvec3(abs_x, abs_y, abs_z);
+                glm::dvec3 camera_pos = camera.position();
+
+                // Apply shading to pixel
+                for (auto shader : current_sprite->shaders())
+                    current_pixel = shader->shade(
+                        current_pixel, frame_shape, pos_in_frame, pos_in_world,
+                        camera_pos);
+
+                ////////////////////////////////////////////////////////////////
+                ////                      APPLY PIXEL                       ////
+                ////////////////////////////////////////////////////////////////
 
                 // Now combine this pixel with the previous one rendered
                 taeto::DisplayPixel& rendered_pixel =

@@ -3,11 +3,13 @@
 
 #include <chrono>
 #include <memory>
+#include <vector>
 
 #include <glm/glm.hpp>
 
 #include "components/render_pixel.hpp"
 #include "object/object.hpp"
+#include "shaders/shader.hpp"
 
 namespace taeto
 {
@@ -140,6 +142,13 @@ public:
 
     virtual bool respect_light_sources();
 
+    /*
+     * Manipulate shaders.
+     */
+    void add_shader(std::shared_ptr<taeto::Shader>);
+    void remove_shader(std::shared_ptr<taeto::Shader>);
+    const std::vector<std::shared_ptr<taeto::Shader>>& shaders();
+
 protected:
     glm::uvec2 shape_;
 
@@ -153,6 +162,8 @@ protected:
     glm::vec3 force_;
 
     bool respect_light_sources_;
+
+    std::vector<std::shared_ptr<taeto::Shader>> shaders_;
 
 private:
     // Whether or not the sprite is currently visible

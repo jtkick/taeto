@@ -1,12 +1,15 @@
 #include "object/sprite.hpp"
 
-#include "components/render_pixel.hpp"
-#include "object/object.hpp"
-#include "tools.hpp"
-
+#include <algorithm>
 #include <chrono>
 #include <memory>
 #include <stdexcept>
+#include <vector>
+
+#include "components/render_pixel.hpp"
+#include "object/object.hpp"
+#include "shaders/shader.hpp"
+#include "tools.hpp"
 
 namespace taeto
 {
@@ -118,6 +121,27 @@ void Sprite::animate()
 bool Sprite::respect_light_sources()
 {
     return respect_light_sources_;
+}
+
+void Sprite::add_shader(std::shared_ptr<taeto::Shader> shader)
+{
+    shaders_.push_back(shader);
+}
+
+void Sprite::remove_shader(std::shared_ptr<taeto::Shader> shader)
+{
+    shaders_.erase(std::remove_if(
+        shaders_.begin(), shaders_.end(),
+        [shader](const std::shared_ptr<taeto::Shader>& ptr)
+        {
+            return ptr.get() == shader.get();
+        }),
+        shaders_.end());
+}
+
+const std::vector<std::shared_ptr<taeto::Shader>>& Sprite::shaders()
+{
+    return shaders_;
 }
 
 }   // namespace taeto
