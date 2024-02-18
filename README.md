@@ -54,7 +54,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![Demo](logos/demo.gif)
+<!-- ![Demo](logos/demo.gif) -->
+
+<div align="center">
+  <a href="https://gitlab.com/jtkick/taeto">
+    <img src="logos/demo.gif" alt="Logo" width="800" height="451">
+  </a>
+</div>
 
 TAETO is a personal project to create a game and animation engine to run in a terminal. It's still very much in the prototype phase and will likely change significantly in the future.
 
