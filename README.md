@@ -4,13 +4,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="taeto.jpg" alt="Logo" width="80" height="80">
+    <img src="logos/taeto_banner.png" alt="Logo" width="512" height="162">
   </a>
 
-  <h3 align="center">Taeto</h3>
-
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    An engine for running animations in the terminal.
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
@@ -56,7 +54,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![](logos/demo.mp4)
+
+<video autoplay loop muted playsinline>
+  <source src="logos/demo.mp4" type="video/mp4">
+</video>
 
 There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
