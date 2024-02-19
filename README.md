@@ -45,7 +45,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -63,6 +62,8 @@
 </div>
 
 TAETO is a personal project to create a game and animation engine to run in a terminal. It's still very much in the prototype phase and will likely change significantly in the future.
+
+By design, the engine does not use any 3D models. It is entirely sprite based and for the time being. It outputs each frame to the terminal using stdout and is formatted using the typical escape sequences that most terminal emulators support.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
