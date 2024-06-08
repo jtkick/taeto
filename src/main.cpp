@@ -111,20 +111,6 @@ int main(int argc, char** argv)
 
 
 
-
-
-    // Testing for glm library
-    glm::vec3 v = {0.1, 0.2, 0.3};
-    glm::vec2 v2 = {0.4, 0.5};
-
-
-
-
-
-
-
-
-
     taeto::run();
 
     // CharFrame f = CharFrame("/home/jared/load_png_test.png");
