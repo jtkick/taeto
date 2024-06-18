@@ -1,5 +1,5 @@
-#ifndef ASSETS_SPRITES_RECTANGLE_HPP_
-#define ASSETS_SPRITES_RECTANGLE_HPP_
+#ifndef ASSETS_SPRITES_ROFLCOPTER_HPP_
+#define ASSETS_SPRITES_ROFLCOPTER_HPP_
 
 #include <glm/glm.hpp>
 
@@ -9,10 +9,10 @@
 namespace taeto
 {
 
-class Rectangle: public taeto::Sprite
+class Roflcopter: public taeto::Sprite
 {
 public:
-    Rectangle(glm::uvec2 s, taeto::RenderPixel p);
+    Roflcopter(glm::uvec2 s, taeto::RenderPixel p);
 
     taeto::RenderPixel get_pixel_at(glm::uvec2 pos);
 
@@ -22,4 +22,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // ASSETS_SPRITES_RECTANGLE_HPP_
+#endif  // ASSETS_SPRITES_ROFLCOPTER_HPP_

@@ -9,10 +9,14 @@ endif()
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(Curses REQUIRED)
-find_package(spdlog REQUIRED)
+
+add_subdirectory(deps/SFML)
+add_subdirectory(deps/spdlog)
+add_subdirectory(deps/glm)
 
 include_directories("include"
-                    "deps/spdlog"
+                    "deps/glm"
+		    "deps/SFML/include"
                     "deps/tclap/include"
                     "deps/lodepng"
                     ${CURSES_INCLUDE_DIR})

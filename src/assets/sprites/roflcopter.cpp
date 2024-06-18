@@ -1,4 +1,4 @@
-#include "assets/sprites/rectangle.hpp"
+#include "assets/sprites/roflcopter.hpp"
 
 #include <glm/glm.hpp>
 
@@ -7,7 +7,7 @@
 namespace taeto
 {
 
-Rectangle::Rectangle(glm::uvec2 s, taeto::RenderPixel p)
+Roflcopter::Roflcopter(glm::uvec2 s, taeto::RenderPixel p)
 {
     std::vector<std::string> string_vector = {
         R"(ROFL:ROFL:LOL:FORL:ROFL )",
@@ -16,7 +16,7 @@ Rectangle::Rectangle(glm::uvec2 s, taeto::RenderPixel p)
         R"( LOL===           []\   )",
         R"(  L     \            \  )",
         R"(         \___________ ] )",
-        R"(           I        I)"
+        R"(           I        I   )"
     };
 
 
@@ -24,7 +24,7 @@ Rectangle::Rectangle(glm::uvec2 s, taeto::RenderPixel p)
     pixel_ = p;
 }
 
-taeto::RenderPixel Rectangle::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel Roflcopter::get_pixel_at(glm::uvec2 pos)
 {
     return pixel_;
 }

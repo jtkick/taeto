@@ -10,13 +10,13 @@ namespace taeto
 InputSystem::InputSystem()
 {
     // TODO: MAKE THIS VARIABLE
-    buttons_ = {{0, sf::Keyboard::A},
-                {1, sf::Keyboard::W},
-                {2, sf::Keyboard::S},
-                {3, sf::Keyboard::D},
-                {4, sf::Keyboard::Q},
-                {5, sf::Keyboard::E},
-                {6, sf::Keyboard::Space}};
+    buttons_ = {{0, sf::Keyboard::Key::A},
+                {1, sf::Keyboard::Key::W},
+                {2, sf::Keyboard::Key::S},
+                {3, sf::Keyboard::Key::D},
+                {4, sf::Keyboard::Key::Q},
+                {5, sf::Keyboard::Key::E},
+                {6, sf::Keyboard::Key::Space}};
 
     mapped_buttons_ = {{0, std::make_shared<bool>(false)},
                        {1, std::make_shared<bool>(false)},
