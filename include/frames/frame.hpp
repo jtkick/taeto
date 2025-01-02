@@ -61,6 +61,17 @@ public:
 
 
     /**
+     * Returns the dimensions of the frame with a uvec2.
+     *
+     * @return The height and width of the frame
+     */
+    inline glm::uvec2 size() const
+    {
+        return glm::uvec2(height(), width());
+    };
+
+
+    /**
      * Resizes the frame to the given height and width, with all new values
      * initialized with the given object.
      *

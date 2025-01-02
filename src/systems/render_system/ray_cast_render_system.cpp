@@ -1,6 +1,7 @@
 #include "systems/render_system/ray_cast_render_system.hpp"
 
 #include <memory>
+#include <csignal>
 #include <vector>
 
 #include <glm/vec3.hpp>

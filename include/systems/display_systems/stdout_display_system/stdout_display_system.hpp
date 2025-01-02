@@ -45,6 +45,7 @@ public:
     // Write entire frame to stdout
     void display_frame(taeto::DisplayPixelFrame&);
     void display_frame_old(taeto::DisplayPixelFrame&);
+    void optimized_display_frame(taeto::DisplayPixelFrame&);
 
 private:
     // Resize output buffer
@@ -56,6 +57,16 @@ private:
     std::string output_buffer;
     unsigned int height;
     unsigned int width;
+
+    // The previous frame that was printed
+    taeto::DisplayPixelFrame previous_frame;
+    bool hard_reset;
+
+    unsigned int prev_row;
+    unsigned int prev_col;
+    char prev_char;
+    glm::vec3 prev_fg_color;
+    glm::vec3 prev_bg_color;
 };
 
 }   // namespace taeto

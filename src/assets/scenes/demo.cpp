@@ -121,6 +121,8 @@ taeto::RenderPixel GridShader::shade(
         (color_ * (float)std::pow(1.0 - dist_from_center_ratio.y, 12)), 3.0);
 
     // Draw vertical lines
+    if (slope == 0)
+        return prev_pixel;
     if (std::abs((int)dist_from_center.x) % slope <= std::abs((int)(dist_from_center.x) / slope / 2))
         prev_pixel.c = '*';
 

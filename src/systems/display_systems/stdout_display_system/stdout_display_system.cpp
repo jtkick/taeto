@@ -34,6 +34,7 @@ namespace taeto
 {
 
 StdoutDisplaySystem::StdoutDisplaySystem()
+    : hard_reset(false)
 {
     // Open alternate terminal screen
     std::cout << "\e[?1049h";
@@ -201,6 +202,22 @@ void StdoutDisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
     // Print frame and flush output
     std::cout << output_buffer << std::flush;
 }
+
+
+// New optimized display function
+void StdoutDisplaySystem::optimized_display_frame(taeto::DisplayPixelFrame &frame)
+{
+    // If the frame sizes are not the same, output every pixel to be sure none
+    // got moved
+    if (previous_frame.size() != frame.size())
+    {
+        hard_reset = true;
+        previous_frame.resize(frame.size());
+    }
+
+
+}
+
 
 void StdoutDisplaySystem::resize(int h, int w)
 {

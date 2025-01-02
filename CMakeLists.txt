@@ -16,7 +16,7 @@ add_subdirectory(deps/glm)
 
 include_directories("include"
                     "deps/glm"
-		    "deps/SFML/include"
+		            "deps/SFML/include"
                     "deps/tclap/include"
                     "deps/lodepng"
                     ${CURSES_INCLUDE_DIR})
