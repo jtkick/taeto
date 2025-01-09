@@ -5,14 +5,14 @@
 #include "frames/char_frame.hpp"
 #include "frames/frame.hpp"
 #include "frames/uchar_frame.hpp"
-#include "frames/vec3_frame.hpp"
+#include "frames/vec4_frame.hpp"
 
 namespace taeto
 {
 
 // Forward includes
 class CharFrame;
-class Vec3Frame;
+class Vec4Frame;
 class UCharFrame;
 class DisplayPixelFrame : public taeto::Frame<taeto::DisplayPixel>
 {
@@ -29,13 +29,13 @@ public:
 
     void chars(taeto::CharFrame&);
 
-    taeto::Vec3Frame fg_colors();
+    taeto::Vec4Frame fg_colors();
 
-    void fg_colors(taeto::Vec3Frame&);
+    void fg_colors(taeto::Vec4Frame&);
 
-    taeto::Vec3Frame bg_colors();
+    taeto::Vec4Frame bg_colors();
 
-    void bg_colors(taeto::Vec3Frame&);
+    void bg_colors(taeto::Vec4Frame&);
 
     taeto::UCharFrame bolds();
 

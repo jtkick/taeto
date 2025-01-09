@@ -15,7 +15,7 @@ public:
         Checkerboard(s, {1.0, 1.0, 1.0})
         { }
 
-    Checkerboard(glm::uvec2, glm::vec3);
+    Checkerboard(glm::uvec2 s, glm::vec3 c, bool respect_light_sources = true);
 
     taeto::RenderPixel get_pixel_at(glm::uvec2 pos);
 

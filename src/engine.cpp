@@ -25,6 +25,8 @@
 #include "systems/display_systems/stdout_display_system/stdout_display_system.hpp"
 #include "systems/render_system/ray_cast_render_system.hpp"
 #include "systems/physics_system.hpp"
+#include "systems/window_system/widget.hpp"
+#include "tools.hpp"
 
 namespace taeto
 {
@@ -40,6 +42,9 @@ namespace {
 
     // Currently loaded scene
     std::shared_ptr<Scene> scene_;
+
+    // Windows to be displayed
+    std::vector<std::weak_ptr<taeto::Widget>> widgets_;
 
     // Engine camera
     taeto::Camera camera_ = taeto::Camera(10);
@@ -87,12 +92,12 @@ void load_light(std::weak_ptr<taeto::Light> light)
 {
     spdlog::debug("Adding light to engine.");
 
-    // Get shared pointer to object
+    // Get shared pointer to light
     std::shared_ptr<taeto::Light> l;
     if (!(l = light.lock()))
         return;
 
-    // Load object to main vector
+    // Load light to main vector
     lights_.push_back(light);
 }
 
@@ -104,6 +109,19 @@ void load_scene(std::shared_ptr<Scene> scene)
     spdlog::debug("Loading scene.");
     scene_ = scene;
     scene_->load();
+}
+
+void load_widget(std::weak_ptr<Widget> widget)
+{
+    spdlog::debug("Adding widget to engine.");
+
+    // Get shared pointer to widget
+    std::shared_ptr<taeto::Widget> w;
+    if (!(w = widget.lock()))
+        return;
+
+    // Load widget to main vector
+    widgets_.push_back(widget);
 }
 
 void run()
@@ -236,6 +254,41 @@ void run()
             frame.add_string(
                 5, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
         }
+
+
+        ////////////////////////////////////////////////////////////////
+        ////                       WINDOW STEP                      ////
+        ////////////////////////////////////////////////////////////////
+
+        // Draw all windows on the rendered frame
+        for (std::weak_ptr<taeto::Widget> widget : widgets_)
+        {
+            if (std::shared_ptr<taeto::Widget> w = widget.lock())
+            {
+                frame.apply(
+                    w->render(),
+                    glm::uvec2(w->pos().x, w->pos().y),
+                    false,
+                    [](DisplayPixel& a, DisplayPixel& b)->DisplayPixel&
+                    {
+                        a.c = b.c;
+                        a.fg_color = taeto::mix_colors(a.fg_color, b.fg_color);
+                        a.bg_color = taeto::mix_colors(a.bg_color, b.bg_color);
+                        a.bold = b.bold;
+                        a.italic = b.italic;
+                        a.underline = b.underline;
+                        a.strikethrough = b.strikethrough;
+                        return a;
+                    }
+                );
+            }
+        }
+
+
+
+
+
+
 
         spdlog::debug("Displaying frame.");
         display_system_->display_frame(frame);

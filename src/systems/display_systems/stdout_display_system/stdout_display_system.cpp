@@ -6,7 +6,9 @@
 
 #include <iostream>
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/compatibility.hpp>
 #include "spdlog/spdlog.h"
 
 #include "components/display_pixel.hpp"
@@ -111,7 +113,9 @@ void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
             current_pixel = frame.at(glm::uvec2(w, h));
 
             // Get background color
-            glm::vec3& c = current_pixel.bg_color;
+            glm::vec3 c = glm::vec3(current_pixel.bg_color.r,
+                                     current_pixel.bg_color.g,
+                                     current_pixel.bg_color.b);
 
             // BG red
             temp = color_to_string(c.x);
@@ -129,7 +133,9 @@ void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
             output_buffer.replace(pixel_start + BG_BLUE_OFFSET, 3, temp);
 
             // Get foreground color
-            c = current_pixel.fg_color;
+            c = glm::vec3(current_pixel.fg_color.r,
+                          current_pixel.fg_color.g,
+                          current_pixel.fg_color.b);
 
             // FG red
             temp = color_to_string(c.x);
@@ -183,13 +189,13 @@ void StdoutDisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
             DisplayPixel& current_pixel = frame.at(glm::uvec2(w, h));
 
             // Add background color
-            glm::vec3& c = current_pixel.bg_color;
+            glm::vec3 c(current_pixel.bg_color);
             output_buffer += "\033[48;2;" + color_to_string(c.x) + ";" +
                                             color_to_string(c.y) + ";" +
                                             color_to_string(c.z) + "m";
 
             // Add foreground color
-            c = current_pixel.fg_color;
+            c = glm::vec3(current_pixel.fg_color);
             output_buffer += "\033[38;2;" + color_to_string(c.x) + ";" +
                                             color_to_string(c.y) + ";" +
                                             color_to_string(c.z) + "m";

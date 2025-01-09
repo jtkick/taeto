@@ -12,6 +12,7 @@ using namespace std;
 // #include "assets/scenes/light_filter_test.h"
 #include "assets/scenes/normal_mapping_test.hpp"
 #include "assets/scenes/simple_test.hpp"
+#include "assets/scenes/window_test.hpp"
 // #include "assets/scenes/sprite_orientation_test.hpp"
 // #include "assets/scenes/test_scene.h"
 
@@ -69,18 +70,6 @@ int main(int argc, char** argv)
         throw "e";
     }
 
-
-    // Test export
-    //Zero z;
-    //z.serialize("/home/jared/zero.csv", true);
-    //return 0;
-
-
-    // taeto::Engine engine;
-
-
-    // if (test_scene == "collision_detection")
-    //     taeto::load_scene(std::make_shared<taeto::CollisionDetectionTest
     taeto::set_debug_mode(true);
     if (test_scene == "demo")
         taeto::load_scene(std::make_shared<taeto::Demo>());
@@ -90,34 +79,10 @@ int main(int argc, char** argv)
         taeto::load_scene(std::make_shared<taeto::NormalMappingTest>());
     else if (test_scene == "simple_test")
         taeto::load_scene(std::make_shared<taeto::SimpleTest>());
+    else if (test_scene == "window_test")
+        taeto::load_scene(std::make_shared<taeto::WindowTest>());
     else
         taeto::set_debug_mode(false);
-    // else if (test_scene == "light_mixing")
-    //     taeto::load_scene(std::make_shared<taeto::LightMixingTest>());
-    // else if (test_scene == "sprite_orientation")
-    //     taeto::load_scene(std::make_shared<taeto::SpriteOrientationTest>());
-
-    // else if (test_scene == "light_filter")
-    // {
-    //     shared_ptr<LightFilterTest> lft = make_shared<LightFilterTest>();
-    //     engine.load_scene(lft);
-    // }
-    // else
-    // {
-    //     // Load opening island
-    //     //shared_ptr<Opening_Island> oi = make_shared<Opening_Island>();
-    //     //engine.load_scene(oi);
-    //
-    //     shared_ptr<Test_Scene> ts = make_shared<Test_Scene>();
-    //     engine.load_scene(ts);
-    // }
-
-
 
     taeto::run();
-
-    // CharFrame f = CharFrame("/home/jared/load_png_test.png");
-    //
-    // f.print();
-
 }

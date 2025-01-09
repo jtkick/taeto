@@ -8,8 +8,8 @@ namespace taeto
 DisplayPixel::DisplayPixel()
 {
     c = ' ';
-    fg_color = glm::vec3(1.0, 1.0, 1.0);
-    bg_color = glm::vec3(0.0, 0.0, 0.0);
+    fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
     bold = false;
     italic = false;
     underline = false;
@@ -19,15 +19,15 @@ DisplayPixel::DisplayPixel()
 DisplayPixel::DisplayPixel(char character)
 {
     c = character;
-    fg_color = glm::vec3(1.0, 1.0, 1.0);
-    bg_color = glm::vec3(0.0, 0.0, 0.0);
+    fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
 }
 
-DisplayPixel::DisplayPixel(char ch, glm::vec3 fc, glm::vec3 bc, bool b)
+DisplayPixel::DisplayPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool b)
 {
     c = ch;
     fg_color = fc;
@@ -38,7 +38,7 @@ DisplayPixel::DisplayPixel(char ch, glm::vec3 fc, glm::vec3 bc, bool b)
     strikethrough = false;
 }
 
-DisplayPixel::DisplayPixel(char ch, glm::vec3 fc, glm::vec3 bc, bool b, bool i, bool u, bool s)
+DisplayPixel::DisplayPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool b, bool i, bool u, bool s)
 {
     c = ch;
     fg_color = fc;
@@ -65,8 +65,8 @@ DisplayPixel::DisplayPixel(taeto::RenderPixel rp)
 void DisplayPixel::clear()
 {
     c = ' ';
-    fg_color = glm::vec3(1.0, 1.0, 1.0);
-    bg_color = glm::vec3(0.0, 0.0, 0.0);
+    fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
     bold = false;
     italic = false;
     underline = false;

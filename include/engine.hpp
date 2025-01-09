@@ -16,6 +16,7 @@
 #include "object/object.hpp"
 #include "object/sprite.hpp"
 #include "scenes/scene.hpp"
+#include "systems/window_system/widget.hpp"
 
 namespace taeto
 {
@@ -41,6 +42,7 @@ taeto::Camera& get_camera();
  */
 void load_sprite(std::weak_ptr<Sprite>);
 void load_light(std::weak_ptr<Light>);
+void load_widget(std::weak_ptr<Widget>);
 
 /**
  * Loads a scene into the engine.
@@ -48,6 +50,14 @@ void load_light(std::weak_ptr<Light>);
  * @param scene A Scene object that the engine will load
  */
 void load_scene(std::shared_ptr<Scene>);
+
+/**
+ * Loads a widget, i.e., an in-game window that the user interacts with that
+ * is independent of and usually in front of the rendered game world.
+ *
+ * @param widget A weak pointer to the widget to be displayed
+ */
+ void load_widget(std::weak_ptr<Widget>);
 
 /**
  * Continually render and display frames until program stopped.

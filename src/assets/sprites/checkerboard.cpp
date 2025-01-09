@@ -7,11 +7,11 @@
 namespace taeto
 {
 
-Checkerboard::Checkerboard(glm::uvec2 s, glm::vec3 c)
+Checkerboard::Checkerboard(glm::uvec2 s, glm::vec3 c, bool respect_light_sources)
 {
     shape_ = s;
 
-    respect_light_sources_ = true;
+    respect_light_sources_ = respect_light_sources;
 
     light_color_ = glm::vec4(c, 1.0);
     dark_color_ = glm::vec4{c*0.75f, 1.0};

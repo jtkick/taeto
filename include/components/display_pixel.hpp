@@ -3,7 +3,7 @@
 
 #include "components/render_pixel.hpp"
 
-#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 namespace taeto
 {
@@ -16,9 +16,9 @@ public:
 
     DisplayPixel(char);
 
-    DisplayPixel(char, glm::vec3, glm::vec3, bool);
+    DisplayPixel(char, glm::vec4, glm::vec4, bool);
 
-    DisplayPixel(char, glm::vec3, glm::vec3, bool, bool, bool, bool);
+    DisplayPixel(char, glm::vec4, glm::vec4, bool, bool, bool, bool);
 
     DisplayPixel(taeto::RenderPixel);
 
@@ -33,10 +33,10 @@ public:
 
     // Color of this 'pixel'
     // Based on whatever color palette is set in the engine
-    glm::vec3 fg_color;
+    glm::vec4 fg_color;
 
     // Color of background of 'pixel'
-    glm::vec3 bg_color;
+    glm::vec4 bg_color;
 
     // Whether or not this 'pixel' should be printed in bold
     bool bold;

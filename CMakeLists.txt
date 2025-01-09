@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(taeto)
 
+set(CMAKE_CXX_STANDARD 17)
+
 if (NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif()
@@ -16,7 +18,7 @@ add_subdirectory(deps/glm)
 
 include_directories("include"
                     "deps/glm"
-		            "deps/SFML/include"
+		                "deps/SFML/include"
                     "deps/tclap/include"
                     "deps/lodepng"
                     ${CURSES_INCLUDE_DIR})

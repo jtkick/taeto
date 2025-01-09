@@ -147,11 +147,12 @@ protected:
      * @param x Collumn of the row to begin writing the second frame to.
      * @param tile True if the function should tile the second frame on.
      */
+public:
     void apply(
         Frame<T>& other,
         glm::uvec2 pos,
         bool tile,
-        std::function<const T&(const T&, const T&)> func)
+        std::function<T&(T&, T&)> func)
     {
         // If tiling, dimensions are across the entire frame
         unsigned int top = tile ? 0 : pos.y;
@@ -166,9 +167,9 @@ protected:
         int o_w = other.width();
         for (int i = top; i < bottom; ++i)
             for (int j = left; j < right; ++j)
-                at(i, j) = func(
-                    at(i, j),
-                    other.at((i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w)
+                at({i, j}) = func(
+                    at({i, j}),
+                    other.at({(i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w})
                 );
     }
 

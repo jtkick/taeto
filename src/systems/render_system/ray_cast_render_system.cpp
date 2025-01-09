@@ -4,8 +4,9 @@
 #include <csignal>
 #include <vector>
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtx/compatibility.hpp>
 #include "spdlog/spdlog.h"
 
 // #include "components/position.hpp"
@@ -32,19 +33,6 @@ bool compare_sprites(std::weak_ptr<taeto::Sprite> weak_sprite1,
 
     // Compare position
     return sprite1->position().z < sprite2->position().z;
-}
-
-// Used for mixing colors with transparency
-inline glm::vec3 mix_colors(glm::vec4 dest_color, glm::vec4 src_color)
-{
-    float alpha = src_color.w > 1.0f ? 1.0f : src_color.w;
-    alpha = alpha < 0.0f ? 0.0f : alpha;
-
-    glm::vec3 ret;
-    ret.x = src_color.x * alpha + dest_color.x * (1.0f - alpha);
-    ret.y = src_color.y * alpha + dest_color.y * (1.0f - alpha);
-    ret.z = src_color.z * alpha + dest_color.z * (1.0f - alpha);
-    return ret;
 }
 
 void RayCastRenderSystem::render_frame(
@@ -233,10 +221,10 @@ void RayCastRenderSystem::render_frame(
                     rendered_frame.at(glm::uvec2(x, y));
                 rendered_pixel.c = current_pixel.c;
                 rendered_pixel.fg_color = mix_colors(
-                    glm::vec4(rendered_pixel.fg_color, 1.0),
+                    rendered_pixel.fg_color,
                     current_pixel.fg_color);
                 rendered_pixel.bg_color = mix_colors(
-                    glm::vec4(rendered_pixel.bg_color, 1.0),
+                    rendered_pixel.bg_color,
                     current_pixel.bg_color);
                 // rendered_pixel.fg_color = mix_colors(
                 //     current_pixel.fg_color,
@@ -340,7 +328,7 @@ void RayCastRenderSystem::render_frame(
         for (int y = 0; y < h; ++y)
             for (int x = 0; x < w; ++x)
                 rendered_frame.at(glm::uvec2(x, y)).bg_color +=
-                    blurred_vertical.at(y).at(x);
+                    glm::vec4(blurred_vertical.at(y).at(x), 0.0f);
 
     }
 
@@ -361,12 +349,12 @@ void RayCastRenderSystem::render_frame(
                 // Map foreground color
                 glm::vec3 color = pixel.fg_color;
                 color = color / (color + glm::vec3(1.0));
-                pixel.fg_color = glm::pow(color, glm::vec3(1.0 / kGamma));
+                pixel.fg_color = glm::vec4(glm::pow(color, glm::vec3(1.0 / kGamma)), pixel.fg_color.w);
 
                 // Map background color
                 color = pixel.bg_color;
                 color = color / (color + glm::vec3(1.0));
-                pixel.bg_color = glm::pow(color, glm::vec3(1.0 / kGamma));
+                pixel.bg_color = glm::vec4(glm::pow(color, glm::vec3(1.0 / kGamma)), pixel.bg_color.w);
             }
         }
     }
