@@ -6,6 +6,7 @@
 #include "assets/sprites/checkerboard.hpp"
 #include "scenes/scene.hpp"
 #include "systems/window_system/widget.hpp"
+#include "systems/window_system/text_box.hpp"
 
 namespace taeto
 {
@@ -22,6 +23,7 @@ public:
 private:
     std::shared_ptr<Checkerboard> cb_;
     std::shared_ptr<Widget> w_;
+    std::shared_ptr<TextBox> tb_;
 };
 
 }   // namespace taeto

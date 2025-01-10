@@ -241,18 +241,20 @@ void run()
             frame.add_string(
                 2, 0, "NUM LIGHTS: " + std::to_string(lights_.size()));
             frame.add_string(
-                3, 0,
+                3, 0, "NUM WIDGETS: " + std::to_string(widgets_.size()));
+            frame.add_string(
+                4, 0,
                 "CAMERA LOCATION: ("
                     + std::to_string((int)camera_.position().z) + ", "
                     + std::to_string((int)camera_.position().y) + ", "
                     + std::to_string((int)camera_.position().x) + ")");
             frame.add_string(
-                4, 0,
+                5, 0,
                 "FRAME DIMENSIONS: "
                     + std::to_string(frame.height()) + "x"
                     + std::to_string(frame.width()));
             frame.add_string(
-                5, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
+                6, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
         }
 
 
@@ -267,7 +269,7 @@ void run()
             {
                 frame.apply(
                     w->render(),
-                    glm::uvec2(w->pos().x, w->pos().y),
+                    w->pos(),
                     false,
                     [](DisplayPixel& a, DisplayPixel& b)->DisplayPixel&
                     {

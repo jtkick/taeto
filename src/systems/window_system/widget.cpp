@@ -7,6 +7,21 @@
 namespace taeto
 {
 
+Widget::Widget()
+{
+
+}
+
+Widget::Widget(std::string name)
+{
+    this->name_ = name;
+}
+
+Widget::~Widget()
+{
+    
+}
+
 std::string Widget::name()
 {
     return this->name_;

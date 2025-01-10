@@ -10,19 +10,21 @@
 namespace taeto
 {
 
-class TextBox : Widget
+class TextBox : public Widget
 {
 public:
-    virtual ~TextBox() {}
+    TextBox();
 
-    virtual void text(std::vector<DisplayPixel> text);
+    ~TextBox();
 
-    virtual void set_geometry(int y, int x, int height, int width) = 0;
+    void text(DisplayPixelFrame& text);
 
-    virtual DisplayPixelFrame& render();
+    // virtual void set_geometry(int y, int x, int height, int width) = 0;
+
+    DisplayPixelFrame& render();
 
 protected:
-    std::vector<DisplayPixel> text_;
+    DisplayPixelFrame text_;
 };
 
 }   // namespace taeto

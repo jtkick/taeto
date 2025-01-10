@@ -23,6 +23,8 @@ double smoothstep(double x, double edge0 = 0.0f, double edge1 = 1.0f);
 
 glm::vec4 mix_colors(glm::vec4 dest_color, glm::vec4 src_color);
 
+int modulo(int a, int b);
+
 }   // namespace taeto
 
 #endif  // TOOLS_HPP_

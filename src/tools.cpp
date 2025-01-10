@@ -41,4 +41,12 @@ glm::vec4 mix_colors(glm::vec4 dest_color, glm::vec4 src_color)
     return ret;
 }
 
+int modulo(int a, int b)
+{
+    int result = a % b;
+    if (result < 0)
+        result += b;
+    return result;
+}
+
 }   // namespace taeto

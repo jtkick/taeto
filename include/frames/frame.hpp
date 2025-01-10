@@ -1,11 +1,14 @@
 #ifndef FRAMES_FRAME_HPP_
 #define FRAMES_FRAME_HPP_
 
+#include <algorithm>
 #include <functional>
 #include <string>
 #include <vector>
 
 #include <glm/glm.hpp>
+
+#include <tools.hpp>
 
 namespace taeto
 {
@@ -152,25 +155,19 @@ public:
         Frame<T>& other,
         glm::uvec2 pos,
         bool tile,
-        std::function<T&(T&, T&)> func)
+        std::function<T&(T&, T&)> combiner)
     {
-        // If tiling, dimensions are across the entire frame
-        unsigned int top = tile ? 0 : pos.y;
-        unsigned int bottom =
-            tile ? height()-1 : std::min(pos.y + other.height() - 1, height());
-        unsigned int left = tile ? 0 : pos.x;
-        unsigned int right =
-            tile ? width()-1 : std::min(pos.x + other.width() - 1, width());
-
-        // Start applying values
-        int o_h = other.height();
-        int o_w = other.width();
-        for (int i = top; i < bottom; ++i)
-            for (int j = left; j < right; ++j)
-                at({i, j}) = func(
-                    at({i, j}),
-                    other.at({(i % o_h + o_h) % o_h, (j % o_w + o_w) % o_w})
-                );
+        unsigned int zero = static_cast<unsigned int>(0);
+        unsigned int x_start = tile ? 0 : std::max(zero, pos.x);
+        unsigned int y_start = tile ? 0 : std::max(zero, pos.y);
+        unsigned int x_end = tile ? this->width() : std::min(pos.x + other.width(), this->width());
+        unsigned int y_end = tile ? this->height() : std::min(pos.y + other.height(), this->height());
+        for (int x = x_start; x < x_end; x++)
+            for (int y = y_start; y < y_end; y++)
+                this->at({x, y}) =
+                    combiner(this->at({x, y}),
+                             other.at({modulo(x-pos.x, other.width()),
+                                       modulo(y-pos.y, other.height())}));
     }
 
 

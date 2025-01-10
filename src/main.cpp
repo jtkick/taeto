@@ -20,6 +20,7 @@ using namespace std;
 
 #include <tclap/CmdLine.h>
 #include "spdlog/spdlog.h"
+#include <spdlog/sinks/basic_file_sink.h>
 
 
 // Temp
@@ -38,7 +39,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    spdlog::set_level(spdlog::level::warn);
+
 
     // shared_ptr<sf::Music> music = make_shared<sf::Music>();
     // if (!music->openFromFile("/home/jared/Desktop/Dream Sweet in Sea Major - truncated.wav"))
@@ -69,6 +70,12 @@ int main(int argc, char** argv)
         std::cerr << "Error: " << e.error() << " for arg " << e.argId() << std::endl;
         throw "e";
     }
+
+    // spdlog::set_level(spdlog::level::debug);
+    auto logger = spdlog::basic_logger_mt("logger", "logs/log.txt");
+    spdlog::set_default_logger(logger);
+    spdlog::flush_on(spdlog::level::debug);
+
 
     taeto::set_debug_mode(true);
     if (test_scene == "demo")
