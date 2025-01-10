@@ -23,7 +23,7 @@ public:
 
     void position(const glm::dvec3&);
 
-    inline void move(const glm::dvec3&);
+    void move(const glm::dvec3&);
 
     // Called when the object is loaded into the engine
     // Allows object to load any necessary sub-objects

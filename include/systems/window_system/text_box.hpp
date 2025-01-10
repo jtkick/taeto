@@ -21,7 +21,7 @@ public:
 
     // virtual void set_geometry(int y, int x, int height, int width) = 0;
 
-    DisplayPixelFrame& render();
+    DisplayPixelFrame render();
 
 protected:
     DisplayPixelFrame text_;

@@ -8,7 +8,7 @@ using namespace std;
 // #include "assets/scenes/collision_detection_test.hpp"
 #include "assets/scenes/demo.hpp"
 #include "assets/scenes/hdr_test.hpp"
-// #include "assets/scenes/light_mixing_test.hpp"
+#include "assets/scenes/light_mixing_test.hpp"
 // #include "assets/scenes/light_filter_test.h"
 #include "assets/scenes/normal_mapping_test.hpp"
 #include "assets/scenes/simple_test.hpp"
@@ -88,6 +88,8 @@ int main(int argc, char** argv)
         taeto::load_scene(std::make_shared<taeto::SimpleTest>());
     else if (test_scene == "window_test")
         taeto::load_scene(std::make_shared<taeto::WindowTest>());
+    else if (test_scene == "light_mixing")
+        taeto::load_scene(std::make_shared<taeto::LightMixingTest>());
     else
         taeto::set_debug_mode(false);
 

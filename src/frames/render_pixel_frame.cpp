@@ -18,11 +18,6 @@ RenderPixelFrame::RenderPixelFrame()
 
 }
 
-RenderPixelFrame::RenderPixelFrame(glm::uvec2 size)
-{
-    resize(size, taeto::RenderPixel());
-}
-
 taeto::CharFrame RenderPixelFrame::chars()
 {
     taeto::CharFrame frame(glm::uvec2(width(), height()));

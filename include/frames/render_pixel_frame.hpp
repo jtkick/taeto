@@ -23,7 +23,9 @@ class RenderPixelFrame : public taeto::Frame<taeto::RenderPixel>
 public:
     RenderPixelFrame();
 
-    RenderPixelFrame(glm::uvec2 shape);
+    RenderPixelFrame(glm::uvec2 shape,
+                     taeto::RenderPixel d = taeto::RenderPixel())
+        : Frame(shape, d) { };
 
     RenderPixelFrame(const taeto::Vec4Frame&);
 

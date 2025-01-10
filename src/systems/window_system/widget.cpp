@@ -40,14 +40,14 @@ void Widget::name(std::string s)
 //     this->width_ = width;
 // }
 
-glm::ivec2 Widget::pos()
+glm::ivec2 Widget::position()
 {
-    return pos_;
+    return position_;
 }
 
-void Widget::pos(glm::ivec2 v)
+void Widget::position(glm::ivec2 v)
 {
-    pos_ = v;
+    position_ = v;
 }
 
 glm::uvec2 Widget::size()
@@ -60,7 +60,7 @@ void Widget::size(glm::uvec2 v)
     size_ = v;
 }
 
-DisplayPixelFrame& Widget::render()
+DisplayPixelFrame Widget::render()
 {
 
 }

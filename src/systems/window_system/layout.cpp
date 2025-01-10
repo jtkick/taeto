@@ -12,11 +12,29 @@ void Layout::add_widget(std::shared_ptr<Widget> widget, int stretch = 0)
     this->children_.push_back({widget, stretch});
 }
 
-void Layout::render()
+DisplayPixelFrame Layout::render()
 {
-    for (auto& child : this->children_)
+    DisplayPixelFrame result(this->size());
+    for (auto& child : children_)
     {
-        child.first->render();
+        DisplayPixelFrame render = child.first->render();
+        result.apply(
+            render,
+            child.first->position(),
+            false,
+            [](DisplayPixel& a, DisplayPixel& b)->DisplayPixel&
+            {
+                a.c = b.c;
+                a.fg_color = taeto::mix_colors(a.fg_color, b.fg_color);
+                a.bg_color = taeto::mix_colors(a.bg_color, b.bg_color);
+                a.bold = b.bold;
+                a.italic = b.italic;
+                a.underline = b.underline;
+                a.strikethrough = b.strikethrough;
+                return a;
+            }
+        );
+        return result;
     }
 }
 

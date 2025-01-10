@@ -35,15 +35,15 @@ public:
      */
     // void geometry(int, int, int, int);
 
-    glm::ivec2 pos();
-    void pos(glm::ivec2);
+    glm::ivec2 position();
+    void position(glm::ivec2);
 
     glm::uvec2 size();
     void size(glm::uvec2);
 
-    virtual DisplayPixelFrame& render();
+    virtual DisplayPixelFrame render();
 
-private:
+protected:
     /**
      * Name of this object.
      */
@@ -52,7 +52,7 @@ private:
     /**
      * Widget dimensions.
      */
-    glm::vec2 pos_;
+    glm::vec2 position_;
     glm::uvec2 size_;
 };
 

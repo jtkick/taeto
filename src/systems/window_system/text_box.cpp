@@ -20,7 +20,7 @@ void TextBox::text(DisplayPixelFrame& text)
     text_ = text;
 }
 
-DisplayPixelFrame& TextBox::render()
+DisplayPixelFrame TextBox::render()
 {
     return text_;
 }

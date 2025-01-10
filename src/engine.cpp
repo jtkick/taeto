@@ -228,7 +228,37 @@ void run()
 
 
         ////////////////////////////////////////////////////////////////
-        ////                  POST-PROCESSING STEP                  ////
+        ////                       WINDOW STEP                      ////
+        ////////////////////////////////////////////////////////////////
+
+        // Draw all windows on the rendered frame
+        for (std::weak_ptr<taeto::Widget> widget : widgets_)
+        {
+            if (std::shared_ptr<taeto::Widget> w = widget.lock())
+            {
+                DisplayPixelFrame render = w->render();
+                frame.apply(
+                    render,
+                    w->position(),
+                    false,
+                    [](DisplayPixel& a, DisplayPixel& b)->DisplayPixel&
+                    {
+                        a.c = b.c;
+                        a.fg_color = taeto::mix_colors(a.fg_color, b.fg_color);
+                        a.bg_color = taeto::mix_colors(a.bg_color, b.bg_color);
+                        a.bold = b.bold;
+                        a.italic = b.italic;
+                        a.underline = b.underline;
+                        a.strikethrough = b.strikethrough;
+                        return a;
+                    }
+                );
+            }
+        }
+
+
+        ////////////////////////////////////////////////////////////////
+        ////                       DEBUG STEP                       ////
         ////////////////////////////////////////////////////////////////
 
         // Print debug information if flag is true
@@ -256,41 +286,6 @@ void run()
             frame.add_string(
                 6, 0, "CURRENT FRAME: " + std::to_string(frame_number_++));
         }
-
-
-        ////////////////////////////////////////////////////////////////
-        ////                       WINDOW STEP                      ////
-        ////////////////////////////////////////////////////////////////
-
-        // Draw all windows on the rendered frame
-        for (std::weak_ptr<taeto::Widget> widget : widgets_)
-        {
-            if (std::shared_ptr<taeto::Widget> w = widget.lock())
-            {
-                frame.apply(
-                    w->render(),
-                    w->pos(),
-                    false,
-                    [](DisplayPixel& a, DisplayPixel& b)->DisplayPixel&
-                    {
-                        a.c = b.c;
-                        a.fg_color = taeto::mix_colors(a.fg_color, b.fg_color);
-                        a.bg_color = taeto::mix_colors(a.bg_color, b.bg_color);
-                        a.bold = b.bold;
-                        a.italic = b.italic;
-                        a.underline = b.underline;
-                        a.strikethrough = b.strikethrough;
-                        return a;
-                    }
-                );
-            }
-        }
-
-
-
-
-
-
 
         spdlog::debug("Displaying frame.");
         display_system_->display_frame(frame);

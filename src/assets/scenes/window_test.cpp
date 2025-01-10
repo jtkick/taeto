@@ -7,6 +7,7 @@
 #include "assets/lights/point_light.hpp"
 #include "assets/sprites/checkerboard.hpp"
 #include "components/display_pixel.hpp"
+#include "systems/window_system/horizontal_layout.hpp"
 #include "systems/window_system/widget.hpp"
 #include "systems/window_system/text_box.hpp"
 
@@ -22,7 +23,7 @@ WindowTest::WindowTest()
         -10});
 
     w_ = std::make_shared<Widget>("main");
-    w_->pos({20, 5});
+    w_->position({20, 5});
     w_->size({20, 2});
 
     DisplayPixelFrame t({14, 1});
@@ -34,7 +35,7 @@ WindowTest::WindowTest()
     }
     tb_ = std::make_shared<TextBox>();
     tb_->text(t);
-    tb_->pos({-2, 10});
+    tb_->position({-2, 10});
 
 }
 
