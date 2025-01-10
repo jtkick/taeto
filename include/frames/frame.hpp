@@ -153,15 +153,14 @@ protected:
 public:
     void apply(
         Frame<T>& other,
-        glm::uvec2 pos,
+        glm::ivec2 pos,
         bool tile,
         std::function<T&(T&, T&)> combiner)
     {
-        unsigned int zero = static_cast<unsigned int>(0);
-        unsigned int x_start = tile ? 0 : std::max(zero, pos.x);
-        unsigned int y_start = tile ? 0 : std::max(zero, pos.y);
-        unsigned int x_end = tile ? this->width() : std::min(pos.x + other.width(), this->width());
-        unsigned int y_end = tile ? this->height() : std::min(pos.y + other.height(), this->height());
+        int x_start = tile ? 0 : std::max(0, pos.x);
+        int y_start = tile ? 0 : std::max(0, pos.y);
+        int x_end = tile ? this->width() : std::min(pos.x + other.width(), this->width());
+        int y_end = tile ? this->height() : std::min(pos.y + other.height(), this->height());
         for (int x = x_start; x < x_end; x++)
             for (int y = y_start; y < y_end; y++)
                 this->at({x, y}) =

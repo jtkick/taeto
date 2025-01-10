@@ -34,7 +34,7 @@ WindowTest::WindowTest()
     }
     tb_ = std::make_shared<TextBox>();
     tb_->text(t);
-    tb_->pos({10, 10});
+    tb_->pos({-2, 10});
 
 }
 

@@ -35,8 +35,8 @@ public:
      */
     // void geometry(int, int, int, int);
 
-    glm::vec2 pos();
-    void pos(glm::vec2);
+    glm::ivec2 pos();
+    void pos(glm::ivec2);
 
     glm::uvec2 size();
     void size(glm::uvec2);

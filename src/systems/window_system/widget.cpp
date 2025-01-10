@@ -19,7 +19,7 @@ Widget::Widget(std::string name)
 
 Widget::~Widget()
 {
-    
+
 }
 
 std::string Widget::name()
@@ -40,12 +40,12 @@ void Widget::name(std::string s)
 //     this->width_ = width;
 // }
 
-glm::vec2 Widget::pos()
+glm::ivec2 Widget::pos()
 {
     return pos_;
 }
 
-void Widget::pos(glm::vec2 v)
+void Widget::pos(glm::ivec2 v)
 {
     pos_ = v;
 }
