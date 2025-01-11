@@ -13,18 +13,14 @@ namespace taeto
 class TextBox : public Widget
 {
 public:
-    TextBox();
+    TextBox(std::string s) { text_ = s; };
 
-    ~TextBox();
-
-    void text(DisplayPixelFrame& text);
-
-    // virtual void set_geometry(int y, int x, int height, int width) = 0;
+    ~TextBox() {};
 
     DisplayPixelFrame render();
 
 protected:
-    DisplayPixelFrame text_;
+    std::string text_;
 };
 
 }   // namespace taeto

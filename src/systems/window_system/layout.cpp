@@ -15,6 +15,7 @@ void Layout::add_widget(std::shared_ptr<Widget> widget, int stretch = 0)
 DisplayPixelFrame Layout::render()
 {
     DisplayPixelFrame result(this->size());
+    int x = 0, y = 0;
     for (auto& child : children_)
     {
         DisplayPixelFrame render = child.first->render();
@@ -34,8 +35,8 @@ DisplayPixelFrame Layout::render()
                 return a;
             }
         );
-        return result;
     }
+    return result;
 }
 
 }   // namespace taeto

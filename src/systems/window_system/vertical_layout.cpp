@@ -5,6 +5,8 @@ namespace taeto
 
 void VerticalLayout::size(glm::uvec2 v)
 {
+    size_ = v;
+    
     int total_stretch = 0;
     for (auto& child : children_)
         total_stretch += child.second;

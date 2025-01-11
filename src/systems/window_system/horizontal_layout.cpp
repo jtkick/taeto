@@ -5,6 +5,8 @@ namespace taeto
 
 void HorizontalLayout::size(glm::uvec2 v)
 {
+    size_ = v;
+
     int total_stretch = 0;
     for (auto& child : children_)
         total_stretch += child.second;
@@ -18,7 +20,7 @@ void HorizontalLayout::size(glm::uvec2 v)
             child_width = (v.x * stretch) / total_stretch;
         else
             child_width = v.x / children_.size();
-        child.first->position({current_x, this->position().y});
+        child.first->position({current_x, 0});
         child.first->size({child_width, v.y});
         current_x += child_width;
     }
