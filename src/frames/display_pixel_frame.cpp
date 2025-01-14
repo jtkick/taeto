@@ -1,12 +1,12 @@
-#include "frames/display_pixel_frame.hpp"
+#include "taeto/frames/display_pixel_frame.hpp"
 
 #include <cassert>
 
 #include <glm/glm.hpp>
 
-#include "frames/char_frame.hpp"
-#include "frames/uchar_frame.hpp"
-#include "frames/vec4_frame.hpp"
+#include "taeto/frames/char_frame.hpp"
+#include "taeto/frames/uchar_frame.hpp"
+#include "taeto/frames/vec4_frame.hpp"
 
 namespace taeto
 {

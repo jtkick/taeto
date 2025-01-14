@@ -1,4 +1,4 @@
-#include "systems/physics_system.hpp"
+#include "taeto/systems/physics_system.hpp"
 
 #include <chrono>
 #include <memory>
@@ -6,8 +6,8 @@
 #include <glm/glm.hpp>
 #include "spdlog/spdlog.h"
 
-#include "object/sprite.hpp"
-#include "tools.hpp"
+#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/tools.hpp"
 
 namespace taeto
 {

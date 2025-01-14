@@ -1,14 +1,14 @@
-#include "systems/render_system/drawing_render_system.hpp"
+#include "taeto/systems/render_system/drawing_render_system.hpp"
 
 #include <memory>
 #include <vector>
 
 #include "spdlog/spdlog.h"
 
-#include "components/camera.hpp"
-#include "frames/display_pixel_frame.hpp"
-#include "object/light.hpp"
-#include "object/sprite.hpp"
+#include "taeto/objects/camera.hpp"
+#include "taeto/frames/display_pixel_frame.hpp"
+#include "taeto/objects/lights/light.hpp"
+#include "taeto/objects/sprites/sprite.hpp"
 // #include "components/position.hpp"
 
 namespace taeto

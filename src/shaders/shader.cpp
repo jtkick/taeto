@@ -1,6 +1,6 @@
-#include "shaders/shader.hpp"
+#include "taeto/shaders/shader.hpp"
 
-#include "components/render_pixel.hpp"
+#include "taeto/components/render_pixel.hpp"
 
 namespace taeto
 {

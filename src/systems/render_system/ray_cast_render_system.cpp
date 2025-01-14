@@ -1,4 +1,4 @@
-#include "systems/render_system/ray_cast_render_system.hpp"
+#include "taeto/systems/render_system/ray_cast_render_system.hpp"
 
 #include <memory>
 #include <csignal>
@@ -10,12 +10,12 @@
 #include "spdlog/spdlog.h"
 
 // #include "components/position.hpp"
-#include "components/display_pixel.hpp"
-#include "components/render_pixel.hpp"
-#include "frames/frame.hpp"
-#include "frames/display_pixel_frame.hpp"
-#include "shaders/shader.hpp"
-#include "tools.hpp"
+#include "taeto/components/display_pixel.hpp"
+#include "taeto/components/render_pixel.hpp"
+#include "taeto/frames/frame.hpp"
+#include "taeto/frames/display_pixel_frame.hpp"
+#include "taeto/shaders/shader.hpp"
+#include "taeto/tools.hpp"
 
 namespace taeto
 {

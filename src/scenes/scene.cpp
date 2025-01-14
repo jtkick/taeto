@@ -1,4 +1,4 @@
-#include "scenes/scene.hpp"
+#include "taeto/scenes/scene.hpp"
 
 namespace taeto
 {

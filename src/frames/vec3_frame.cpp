@@ -1,4 +1,4 @@
-#include "frames/vec3_frame.hpp"
+#include "taeto/frames/vec3_frame.hpp"
 
 #include <cassert>
 #include <vector>
@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include "lodepng.h"
 
-#include "frames/float_frame.hpp"
+#include "taeto/frames/float_frame.hpp"
 
 namespace taeto
 {

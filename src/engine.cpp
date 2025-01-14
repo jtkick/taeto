@@ -1,4 +1,4 @@
-#include "engine.hpp"
+#include "taeto/engine.hpp"
 
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -10,23 +10,23 @@
 #include <glm/glm.hpp>
 #include "spdlog/spdlog.h"
 
-#include "components/display_pixel.hpp"
+#include "taeto/components/display_pixel.hpp"
 
-#include "components/camera.hpp"
-#include "frames/display_pixel_frame.hpp"
-#include "frames/render_pixel_frame.hpp"
-#include "object/light.hpp"
-#include "object/object.hpp"
-#include "object/sprite.hpp"
-#include "scenes/scene.hpp"
-#include "systems/audio_system.hpp"
-#include "systems/input_system.hpp"
-#include "systems/display_systems/display_system.hpp"
-#include "systems/display_systems/stdout_display_system/stdout_display_system.hpp"
-#include "systems/render_system/ray_cast_render_system.hpp"
-#include "systems/physics_system.hpp"
-#include "systems/window_system/widget.hpp"
-#include "tools.hpp"
+#include "taeto/objects/camera.hpp"
+#include "taeto/frames/display_pixel_frame.hpp"
+#include "taeto/frames/render_pixel_frame.hpp"
+#include "taeto/objects/lights/light.hpp"
+#include "taeto/objects/object.hpp"
+#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/scenes/scene.hpp"
+#include "taeto/systems/audio_system.hpp"
+#include "taeto/systems/input_system.hpp"
+#include "taeto/systems/display_systems/display_system.hpp"
+#include "taeto/systems/display_systems/stdout_display_system/stdout_display_system.hpp"
+#include "taeto/systems/render_system/ray_cast_render_system.hpp"
+#include "taeto/systems/physics_system.hpp"
+#include "taeto/widgets/widget.hpp"
+#include "taeto/tools.hpp"
 
 namespace taeto
 {

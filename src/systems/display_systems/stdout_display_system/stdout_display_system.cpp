@@ -1,4 +1,4 @@
-#include "systems/display_systems/stdout_display_system/stdout_display_system.hpp"
+#include "taeto/systems/display_systems/stdout_display_system/stdout_display_system.hpp"
 
 #include <cstdlib>
 #include <signal.h>
@@ -11,8 +11,8 @@
 #include <glm/gtx/compatibility.hpp>
 #include "spdlog/spdlog.h"
 
-#include "components/display_pixel.hpp"
-#include "frames/display_pixel_frame.hpp"
+#include "taeto/components/display_pixel.hpp"
+#include "taeto/frames/display_pixel_frame.hpp"
 
 void signal_callback_handler(int signum)
 {
