@@ -1,5 +1,5 @@
-#ifndef ASSETS_SPRITES_SPHERE_H_
-#define ASSETS_SPRITES_SPHERE_H_
+#ifndef ASSETS_SPRITES_CIRCLE_H_
+#define ASSETS_SPRITES_CIRCLE_H_
 
 #include <memory>
 
@@ -12,17 +12,17 @@
 namespace taeto
 {
 
-class Sphere: public taeto::Sprite
+class Circle: public taeto::Sprite
 {
 public:
-    Sphere(int);
+    Circle(
+        int diameter,
+        taeto::RenderPixel r = taeto::RenderPixel(),
+        bool spherical_normals = false);
 
     taeto::RenderPixel get_pixel_at(glm::uvec2) override;
 
-    uint height() override;
-    uint width() override;
-
-    bool respect_light_sources() override;
+    bool respect_light_sources();
 
 private:
     taeto::RenderPixelFrame frame_;
@@ -30,4 +30,4 @@ private:
 
 }   // namespace taeto
 
-#endif  // ASSETS_SPRITES_SPHERE_H_
+#endif  // ASSETS_SPRITES_CIRCLE_H_

@@ -5,6 +5,9 @@
 namespace taeto
 {
 
+namespace shaders
+{
+
 Shader::Shader()
 {
 
@@ -29,5 +32,7 @@ taeto::RenderPixel Shader::shade(
 {
 
 }
+
+}   // namespace shaders
 
 }   // namespace taeto

@@ -206,7 +206,7 @@ void run()
         // QUICK AND DIRTY
         for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
             if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
-                for (std::shared_ptr<taeto::Shader> sh : s->shaders())
+                for (std::shared_ptr<taeto::shaders::Shader> sh : s->shaders())
                     sh->animate();
 
 

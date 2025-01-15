@@ -8,9 +8,15 @@ project(Taeto VERSION 0.0.0 LANGUAGES CXX)
 file(GLOB_RECURSE SOURCES
     "src/*.cpp" "deps/lodepng/lodepng.cpp"
 )
-add_library(Taeto STATIC
+add_library(Taeto STATIC 
     ${SOURCES}
 )
+
+# Optional tests to build
+option(BUILD_TESTS "Build test executables" ON)
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
 # Set include directories
 target_include_directories(Taeto PUBLIC

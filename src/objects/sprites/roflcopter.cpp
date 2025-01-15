@@ -10,13 +10,14 @@ namespace taeto
 Roflcopter::Roflcopter(glm::uvec2 s, taeto::RenderPixel p)
 {
     std::vector<std::string> string_vector = {
-        R"(ROFL:ROFL:LOL:FORL:ROFL )",
-        R"(           ^            )",
-        R"(  L   /-------------    )",
-        R"( LOL===           []\   )",
-        R"(  L     \            \  )",
-        R"(         \___________ ] )",
-        R"(           I        I   )"
+        R"(ROFL:ROFL:LOL:ROFL:ROFL)",
+        R"(           ^           )",
+        R"(  L   /--------        )",
+        R"( LOL===      []\       )",
+        R"(  L     \       \      )",
+        R"(         \_______]     )",
+        R"(           I   I       )",
+        R"(         ----------/   )"
     };
 
 

@@ -140,14 +140,15 @@ public:
     // TODO: MAYBE MOVE THIS TO taeto::Object?
     virtual void animate();
 
-    virtual bool respect_light_sources();
+    bool respect_light_sources();
+    void respect_light_sources(bool rls);
 
     /*
      * Manipulate shaders.
      */
-    void add_shader(std::shared_ptr<taeto::Shader>);
-    void remove_shader(std::shared_ptr<taeto::Shader>);
-    const std::vector<std::shared_ptr<taeto::Shader>>& shaders();
+    void add_shader(std::shared_ptr<taeto::shaders::Shader>);
+    void remove_shader(std::shared_ptr<taeto::shaders::Shader>);
+    const std::vector<std::shared_ptr<taeto::shaders::Shader>>& shaders();
 
 protected:
     glm::uvec2 shape_;
@@ -163,7 +164,7 @@ protected:
 
     bool respect_light_sources_;
 
-    std::vector<std::shared_ptr<taeto::Shader>> shaders_;
+    std::vector<std::shared_ptr<taeto::shaders::Shader>> shaders_;
 
 private:
     // Whether or not the sprite is currently visible

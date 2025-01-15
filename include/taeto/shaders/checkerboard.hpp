@@ -1,8 +1,9 @@
-#ifndef SHADERS_SHADER_HPP_
-#define SHADERS_SHADER_HPP_
+#ifndef SHADERS_CHECKERBOARD_HPP_
+#define SHADERS_CHECKERBOARD_HPP_
 
 #include <glm/glm.hpp>
 
+#include "taeto/shaders/shader.hpp"
 #include "taeto/components/render_pixel.hpp"
 
 namespace taeto
@@ -11,16 +12,14 @@ namespace taeto
 namespace shaders
 {
 
-class Shader
+class Checkerboard : public Shader
 {
 public:
-    Shader();
+    Checkerboard() { };
 
-    ~Shader();
+    ~Checkerboard() { };
 
-    virtual void animate();
-
-    virtual taeto::RenderPixel shade(
+    taeto::RenderPixel shade(
         taeto::RenderPixel prev_pixel,
         glm::uvec2 frame_shape,
         glm::uvec2 pos_in_frame,
@@ -32,4 +31,4 @@ public:
 
 }   // namespace taeto
 
-#endif  // SHADERS_SHADER_HPP_
+#endif  // SHADERS_CHECKERBOARD_HPP_

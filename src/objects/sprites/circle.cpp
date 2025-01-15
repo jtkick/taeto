@@ -1,4 +1,4 @@
-#include "taeto/objects/sprites/sphere.hpp"
+#include "taeto/objects/sprites/circle.hpp"
 
 #include <memory>
 
@@ -12,10 +12,11 @@
 namespace taeto
 {
 
-Sphere::Sphere(int diameter)
+Circle::Circle(int diameter, taeto::RenderPixel r, bool spherical_normals)
 {
     uint height = (int)(diameter / 2.5);
     uint width = diameter;
+    shape_ = {width, height};
 
     double radius = (double)diameter / 2.0f;
 
@@ -27,9 +28,7 @@ Sphere::Sphere(int diameter)
         for (int j = 0; j < width; ++j)
         {
             taeto::RenderPixel& pixel = frame_.at(glm::uvec2(j, i));
-            pixel.c = ' ';
-            pixel.fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-            pixel.bg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+            pixel = r;
 
             // For calculating normals, correct y value to make it easier
             double y_loc = (i * 2.5) + 1.5;
@@ -51,6 +50,9 @@ Sphere::Sphere(int diameter)
             if (distance >= radius)
                 pixel.render = false;
 
+            if (!spherical_normals)
+                continue;
+
             // Calculate normal
             pixel.normal = glm::vec3(
                 (x_loc/diameter) - 0.5,
@@ -61,24 +63,9 @@ Sphere::Sphere(int diameter)
     }
 }
 
-taeto::RenderPixel Sphere::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel Circle::get_pixel_at(glm::uvec2 pos)
 {
     return frame_.at(pos);
-}
-
-uint Sphere::height()
-{
-    return frame_.height();
-}
-
-uint Sphere::width()
-{
-    return frame_.width();
-}
-
-bool Sphere::respect_light_sources()
-{
-    return true;
 }
 
 }   // namespace taeto
