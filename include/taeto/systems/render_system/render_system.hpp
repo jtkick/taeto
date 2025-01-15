@@ -59,6 +59,8 @@ protected:
 
     // Number of sprites rendered in the last frame
     unsigned int drawn_sprites_;
+
+    bool render_normals_;
 };
 
 }   // namespace taeto

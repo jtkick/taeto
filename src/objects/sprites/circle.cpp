@@ -30,35 +30,21 @@ Circle::Circle(int diameter, taeto::RenderPixel r, bool spherical_normals)
             taeto::RenderPixel& pixel = frame_.at(glm::uvec2(j, i));
             pixel = r;
 
-            // For calculating normals, correct y value to make it easier
-            double y_loc = (i * 2.5) + 1.5;
-            double x_loc = j + 0.5;
+            float x_radius = (float)width / 2;
+            float y_radius = (float)height / 2;
 
-            double y_dist = y_loc - radius;
-            double x_dist = x_loc - radius;
+            float x_norm = (static_cast<float>(j) + 0.5 - x_radius) / x_radius;
+            float y_norm = (static_cast<float>(i) + 0.5 - y_radius) / y_radius;
+            float xy_squared = x_norm * x_norm + y_norm * y_norm;
 
-            // Get normal vector in relation to the radius
-            double y_comp = y_dist / radius;
-            double x_comp = x_dist / radius;
-            double z_comp = std::cos(
-                (std::sqrt(y_dist*y_dist + x_dist*x_dist) / radius) *
-                1.57079632679);
-
-            // If no z component, we've gone off the edge of the sphere, so
-            // make all of these pixels fully transparent
-            double distance = std::sqrt(y_dist*y_dist + x_dist*x_dist);
-            if (distance >= radius)
+            if (xy_squared > 1.0f)
                 pixel.render = false;
 
             if (!spherical_normals)
                 continue;
 
-            // Calculate normal
-            pixel.normal = glm::vec3(
-                (x_loc/diameter) - 0.5,
-                (y_loc/diameter) - 0.5,
-                z_comp/2
-            );
+            float z_norm = std::sqrt(1.0f - xy_squared);
+            pixel.normal = glm::normalize(glm::vec3(x_norm, y_norm, z_norm));
         }
     }
 }

@@ -154,33 +154,14 @@ void RayCastRenderSystem::render_frame(
                             light->color(glm::dvec3(abs_x, abs_y, abs_z));
 
                         // Get light vector and pixel normal
-                        const glm::vec3 &pixel_normal = current_pixel.normal;
-                        const glm::vec3 light_vector =
-                            light->vector(glm::dvec3(abs_x, abs_y, abs_z));
+                        const glm::vec3 light_vec = glm::normalize(light->vector(glm::vec3(abs_x, abs_y, abs_z)));
+                        const glm::vec3 pixel_vec = glm::normalize(current_pixel.normal);
 
-                        // TODO: PUT THIS IN A VECTOR OPERATOR METHOD
-                        // Get vector components
-                        double x1 = pixel_normal.x;
-                        double y1 = pixel_normal.y;
-                        double z1 = pixel_normal.z;
-                        double x2 = light_vector.x;
-                        double y2 = light_vector.y;
-                        double z2 = light_vector.z;
+                        // Compute how much the two vectors align
+                        double brightness = (1.0f - glm::dot(light_vec, pixel_vec)) * 0.5f;
 
-                        // Calculate angle between the two
-                        // float angle = acos((x1 * x2 + y1 * y2 + z1 * z2) /
-                        //                    (sqrt(pow(x1, 2) + pow(y1, 2) + pow(z1, 2)) *
-                        //                     sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2))));
-                        double dot = x1*x2 + y1*y2 + z1*z2;
-                        double len_sq1 = x1*x1 + y1*y1 + z1*z1;
-                        double len_sq2 = x2*x2 + y2*y2 + z2*z2;
-                        double angle = acos(dot / sqrt(len_sq1 * len_sq2));
-
-                        // Scale from 0 to pi, to between 0 and 255
-                        // unsigned char brightness = 255 - (unsigned char)(angle * 81.1690378636);
-
-                        // Scale from 0 to pi, to between 0 and 1 and compute smoothstep
-                        double brightness = taeto::smoothstep(1.0 - (angle / 3.1415927));
+                        // Apply smoothstep function to pixel
+                        brightness = taeto::smoothstep(brightness, 0.5, 1.0);
 
                         // Adjust light brightness accordingly
                         light_color *= brightness;
@@ -219,23 +200,30 @@ void RayCastRenderSystem::render_frame(
                 // Now combine this pixel with the previous one rendered
                 taeto::DisplayPixel& rendered_pixel =
                     rendered_frame.at(glm::uvec2(x, y));
-                rendered_pixel.c = current_pixel.c;
-                rendered_pixel.fg_color = mix_colors(
-                    rendered_pixel.fg_color,
-                    current_pixel.fg_color);
-                rendered_pixel.bg_color = mix_colors(
-                    rendered_pixel.bg_color,
-                    current_pixel.bg_color);
-                // rendered_pixel.fg_color = mix_colors(
-                //     current_pixel.fg_color,
-                //     glm::vec4(rendered_pixel.fg_color, 1.0));
-                // rendered_pixel.bg_color = mix_colors(
-                //     current_pixel.bg_color,
-                //     glm::vec4(rendered_pixel.bg_color, 1.0));
-                rendered_pixel.bold = current_pixel.bold;
-                rendered_pixel.italic = current_pixel.italic;
-                rendered_pixel.underline = current_pixel.underline;
-                rendered_pixel.strikethrough = current_pixel.strikethrough;
+
+                if (render_normals_)
+                {
+                    rendered_pixel.c = ' ';
+                    glm::vec3 scaled = (current_pixel.normal / glm::vec3(2.0)) + glm::vec3(0.5);
+                    rendered_pixel.bg_color = glm::vec4(
+                        scaled.r, scaled.g, scaled.b, 1.0
+                    );
+                }
+                else
+                {
+                    // Default, combine this with previous pixel
+                    rendered_pixel.c = current_pixel.c;
+                    rendered_pixel.fg_color = mix_colors(
+                        rendered_pixel.fg_color,
+                        current_pixel.fg_color);
+                    rendered_pixel.bg_color = mix_colors(
+                        rendered_pixel.bg_color,
+                        current_pixel.bg_color);
+                    rendered_pixel.bold = current_pixel.bold;
+                    rendered_pixel.italic = current_pixel.italic;
+                    rendered_pixel.underline = current_pixel.underline;
+                    rendered_pixel.strikethrough = current_pixel.strikethrough;
+                }
             }
         }
     }

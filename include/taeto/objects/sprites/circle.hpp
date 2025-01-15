@@ -22,8 +22,6 @@ public:
 
     taeto::RenderPixel get_pixel_at(glm::uvec2) override;
 
-    bool respect_light_sources();
-
 private:
     taeto::RenderPixelFrame frame_;
 };

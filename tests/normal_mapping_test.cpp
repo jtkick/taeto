@@ -1,74 +1,79 @@
-#include "assets/scenes/normal_mapping_test.hpp"
-
-#include <math.h>
-
 #include <chrono>
+#include <math.h>
 #include <memory>
 
 #include <glm/glm.hpp>
 
-#include "engine.hpp"
-#include "assets/lights/point_light.hpp"
-#include "assets/sprites/sphere.hpp"
+#include "taeto/engine.hpp"
+#include "taeto/tools.hpp"
+#include "taeto/components/render_pixel.hpp"
+#include "taeto/objects/lights/point_light.hpp"
+#include "taeto/objects/sprites/circle.hpp"
+#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/scenes/scene.hpp"
 
-int const PI = 3.1415927;
+int const TWO_PI = 6.283;
 
-namespace taeto
+class NormalMappingTest : public taeto::Scene
 {
-
-NormalMappingTest::NormalMappingTest()
-{
-    distance_ = 60;
-    speed_ = 3.0;
-    current_degree_ = 0.0;
-    last_animate_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch());
-    stopwatch_ = std::chrono::milliseconds(0);
-    s_ = std::make_shared<taeto::Sphere>(51);
-    s_->position({-((double)s_->width()/2), -((double)s_->height()/2), -10});
-    pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
-    pl_->position({10, 0, 0});
-}
-
-NormalMappingTest::~NormalMappingTest()
-{
-
-}
-
-void NormalMappingTest::load()
-{
-    // Load circle
-    taeto::load_sprite(s_);
-
-    // Load point light
-    taeto::load_light(pl_);
-}
-
-void NormalMappingTest::animate()
-{
-    stopwatch_ += std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()) -
-        last_animate_;
-
-    last_animate_ = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch());
-
-    while (stopwatch_ > std::chrono::milliseconds(30))
+public:
+    NormalMappingTest()
     {
-        stopwatch_ -= std::chrono::milliseconds(30);
+        distance_ = 60;
+        speed_ = 0.075;
+        current_degree_ = 0.0;
+        last_animate_ = taeto::ms_since_epoch();
+        stopwatch_ = std::chrono::milliseconds(0);
+        s_ = std::make_shared<taeto::Circle>(51, taeto::RenderPixel(' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false),true);
+        s_->position({-((double)s_->width()/2), -((double)s_->height()/2), -10});
+        s_->respect_light_sources(true);
+        pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
+        pl_->position({10, 0, 0});
+    };
 
-        current_degree_ += speed_;
-        current_degree_ = fmod(current_degree_, 360.0);
-    }
+    ~NormalMappingTest() { };
 
-    // num_frames =
+    void animate()
+    {
+        stopwatch_ += taeto::ms_since_epoch() - last_animate_;
+        last_animate_ = taeto::ms_since_epoch();
+        while (stopwatch_ > std::chrono::milliseconds(30))
+        {
+            stopwatch_ -= std::chrono::milliseconds(30);
+            current_degree_ += speed_;
+            if (current_degree_ > 1000.0)
+                current_degree_ = 0.0;
+        }
 
+        // Move light in a circle about the box
+        double x = distance_ * cos(current_degree_);
+        double y = distance_ * sin(current_degree_);
+        pl_->position({x, y, -50});
+    };
 
-    // Move light in a circle about the box
-    double x = (distance_ * cos(current_degree_ * PI / 180));
-    double y = distance_ * sin(current_degree_ * PI / 180);
-    pl_->position({x, y, 10});
+    void load()
+    {
+        taeto::load_sprite(s_);
+        taeto::load_light(pl_);
+    };
 
+private:
+    int distance_ = 50;
+
+    float speed_ = 5.0;
+
+    float current_degree_ = 0.0;
+
+    std::chrono::milliseconds last_animate_;
+    std::chrono::milliseconds stopwatch_;
+
+    // Assets
+    std::shared_ptr<taeto::Circle> s_;
+    std::shared_ptr<taeto::PointLight> pl_;
+};
+
+int main()
+{
+    taeto::load_scene(std::make_shared<NormalMappingTest>());
+    taeto::run();
 }
-
-}   // namespace taeto
