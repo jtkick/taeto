@@ -39,7 +39,7 @@ glm::vec3 PointLight::color(glm::dvec3 p)
 
 glm::vec3 PointLight::vector(glm::dvec3 p)
 {
-    return glm::vec3(position_.x - p.x, position_.y - p.y, position_.z - p.z);
+    return glm::vec3(p.x - position_.x, p.y - position_.y, p.z - position_.z);
 }
 
 }   // namespace taeto

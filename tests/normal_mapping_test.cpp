@@ -7,6 +7,7 @@
 #include "taeto/engine.hpp"
 #include "taeto/tools.hpp"
 #include "taeto/components/render_pixel.hpp"
+#include "taeto/objects/lights/directional_light.hpp"
 #include "taeto/objects/lights/point_light.hpp"
 #include "taeto/objects/sprites/circle.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
@@ -29,6 +30,7 @@ public:
         s_->respect_light_sources(true);
         pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
         pl_->position({10, 0, 0});
+        dl_ = std::make_shared<taeto::DirectionalLight>(glm::vec3(0.05, 0.05, 0.05), glm::vec3(0.0, 0.0, -1.0));
     };
 
     ~NormalMappingTest() { };
@@ -48,13 +50,14 @@ public:
         // Move light in a circle about the box
         double x = distance_ * cos(current_degree_);
         double y = distance_ * sin(current_degree_);
-        pl_->position({x, y, -50});
+        pl_->position({x, y, 50});
     };
 
     void load()
     {
         taeto::load_sprite(s_);
         taeto::load_light(pl_);
+        taeto::load_light(dl_);
     };
 
 private:
@@ -70,10 +73,12 @@ private:
     // Assets
     std::shared_ptr<taeto::Circle> s_;
     std::shared_ptr<taeto::PointLight> pl_;
+    std::shared_ptr<taeto::DirectionalLight> dl_;
 };
 
 int main()
 {
+    taeto::set_debug_mode(true);
     taeto::load_scene(std::make_shared<NormalMappingTest>());
     taeto::run();
 }

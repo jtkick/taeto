@@ -50,7 +50,7 @@ glm::vec3 Spotlight::color(glm::dvec3 p)
 glm::vec3 Spotlight::vector(glm::dvec3 p)
 {
     // For now, spotlights point directly into the frame
-    return glm::vec3(0.0, 0.0, 1.0);
+    return glm::vec3(0.0, 0.0, -1.0);
 }
 
 }   // namespace taeto

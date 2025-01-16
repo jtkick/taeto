@@ -23,10 +23,10 @@ public:
         rectangle_->respect_light_sources(true);
         rectangle_->add_shader(std::make_shared<taeto::shaders::Checkerboard>());
         spotlight_ = std::make_shared<taeto::PointLight>(
-            glm::vec3(100.0, 100.0, 100.0), 0.8);
+            glm::vec3(200.0, 200.0, 200.0), 0.8);
         spotlight_->position({25, 0, 0});
         red_light_ = std::make_shared<taeto::PointLight>(
-            glm::vec3(1.0, 0.0, 0.0), 0.7);
+            glm::vec3(0.5, 0.0, 0.0), 0.7);
         red_light_->position({-25, 0, 0});
     };
 
@@ -47,6 +47,7 @@ private:
 
 int main()
 {
+    taeto::set_debug_mode(true);
     taeto::load_scene(std::make_shared<HDRTest>());
     taeto::run();
 }

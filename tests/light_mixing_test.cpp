@@ -51,6 +51,7 @@ private:
 
 int main()
 {
+    taeto::set_debug_mode(true);
     taeto::load_scene(std::make_shared<LightMixingTest>());
     taeto::run();
 }

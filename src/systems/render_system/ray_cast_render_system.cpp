@@ -161,7 +161,7 @@ void RayCastRenderSystem::render_frame(
                         double brightness = (1.0f - glm::dot(light_vec, pixel_vec)) * 0.5f;
 
                         // Apply smoothstep function to pixel
-                        brightness = taeto::smoothstep(brightness, 0.5, 1.0);
+                        brightness = taeto::smoothstep(brightness, 0.45, 1.0);
 
                         // Adjust light brightness accordingly
                         light_color *= brightness;

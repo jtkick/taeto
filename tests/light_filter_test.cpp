@@ -49,6 +49,7 @@ private:
 
 int main()
 {
+    taeto::set_debug_mode(true);
     taeto::load_scene(std::make_shared<LightFilterTest>());
     taeto::run();
 }
