@@ -25,6 +25,10 @@ target_link_libraries(light_mixing_test PUBLIC Taeto)
 add_executable(normal_mapping_test normal_mapping_test.cpp)
 target_link_libraries(normal_mapping_test PUBLIC Taeto)
 
+# Window Test
+add_executable(window_test window_test.cpp)
+target_link_libraries(window_test PUBLIC Taeto)
+
 # Output tests to 'build' directory
 set_target_properties(
     demo hdr_test input_test light_filter_test light_mixing_test normal_mapping_test PROPERTIES
