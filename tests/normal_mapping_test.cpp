@@ -12,6 +12,7 @@
 #include "taeto/objects/sprites/circle.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/scenes/scene.hpp"
+#include "taeto/widgets/selector.hpp"
 
 int const TWO_PI = 6.283;
 
@@ -31,6 +32,10 @@ public:
         pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
         pl_->position({10, 0, 0});
         dl_ = std::make_shared<taeto::DirectionalLight>(glm::vec3(0.05, 0.05, 0.05), glm::vec3(0.0, 0.0, -1.0));
+
+        sl_ = std::make_shared<taeto::widgets::Selector>(std::vector<std::string>({"OFF", "ON"}));
+        sl_->size({20, 1});
+        sl_->position({20, 20});
     };
 
     ~NormalMappingTest() { };
@@ -58,6 +63,7 @@ public:
         taeto::load_sprite(s_);
         taeto::load_light(pl_);
         taeto::load_light(dl_);
+        taeto::load_widget(sl_);
     };
 
 private:
@@ -74,6 +80,7 @@ private:
     std::shared_ptr<taeto::Circle> s_;
     std::shared_ptr<taeto::PointLight> pl_;
     std::shared_ptr<taeto::DirectionalLight> dl_;
+    std::shared_ptr<taeto::widgets::Selector> sl_;
 };
 
 int main()

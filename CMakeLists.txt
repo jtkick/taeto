@@ -27,11 +27,12 @@ target_include_directories(Taeto PUBLIC
 
 # Add dependencies in /deps directory
 add_subdirectory(deps/glm)
+add_subdirectory(deps/SDL)
 add_subdirectory(deps/SFML)
 add_subdirectory(deps/spdlog)
 
 # Link dependencies to the library
-target_link_libraries(Taeto PUBLIC ncurses sfml-window sfml-audio spdlog_header_only)
+target_link_libraries(Taeto PUBLIC ncurses sfml-window sfml-audio spdlog_header_only SDL2)
 
 # Specify C++ standard
 target_compile_features(Taeto PUBLIC cxx_std_17)

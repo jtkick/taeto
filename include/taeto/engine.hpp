@@ -26,12 +26,15 @@ namespace taeto
  *
  * @param ID number of the button to get a reference to.
  */
-std::shared_ptr<bool> get_button_reference(int);
+// std::shared_ptr<bool> get_button_reference(int);
 
 /**
  * Returns the camera object that the engine is using.
  */
 taeto::Camera& get_camera();
+
+float key_state(int id);
+int key_presses(int id);
 
 /**
  * Loads an object into the engine.

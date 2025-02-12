@@ -20,7 +20,8 @@
 #include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/systems/audio_system.hpp"
-#include "taeto/systems/input_system.hpp"
+#include "taeto/systems/input_systems/input_system.hpp"
+#include "taeto/systems/input_systems/sfml_input_system.hpp"
 #include "taeto/systems/display_systems/display_system.hpp"
 #include "taeto/systems/display_systems/stdout_display_system/stdout_display_system.hpp"
 #include "taeto/systems/render_system/ray_cast_render_system.hpp"
@@ -62,17 +63,28 @@ namespace {
     unsigned long current_fps_;
 
     // Systems
-    taeto::InputSystem input_system_ = taeto::InputSystem();
+    std::unique_ptr<taeto::InputSystem> input_system_ =
+        std::make_unique<taeto::SFMLInputSystem>(taeto::SFMLInputSystem());
 }
 
-std::shared_ptr<bool> get_button_reference(int id)
-{
-    return input_system_.get_button_reference(id);
-}
+// std::shared_ptr<bool> get_button_reference(int id)
+// {
+//     return input_system_.get_button_reference(id);
+// }
 
 taeto::Camera& get_camera()
 {
     return camera_;
+}
+
+float key_state(int id)
+{
+    return input_system_->key_state(id);
+}
+
+int key_presses(int id)
+{
+    return input_system_->key_presses(id);
 }
 
 void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
@@ -184,7 +196,7 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         spdlog::debug("Polling inputs.");
-        input_system_.poll_inputs();
+        input_system_->poll_inputs();
 
 
         ////////////////////////////////////////////////////////////////

@@ -1,0 +1,30 @@
+#ifndef SYSTEMS_INPUT_SYSTEMS_SFML_INPUT_SYSTEM_HPP_
+#define SYSTEMS_INPUT_SYSTEMS_SFML_INPUT_SYSTEM_HPP_
+
+#include "taeto/systems/input_systems/input_system.hpp"
+
+namespace taeto
+{
+
+class SFMLInputSystem: public InputSystem
+{
+public:
+    SFMLInputSystem();
+
+    ~SFMLInputSystem();
+
+    // Polls any key the engine want to keep tabs on
+    void poll_inputs();
+
+    float key_state(int id);
+
+    int key_presses(int id);
+
+private:
+    std::map<int, float> key_states_ = { };
+    std::map<int, int> key_presses_ = { };
+};
+
+}   // namespace taeto
+
+#endif  // SYSTEMS_INPUT_SYSTEMS_SFML_INPUT_SYSTEM_HPP_

@@ -9,6 +9,10 @@ target_link_libraries(demo PUBLIC Taeto)
 add_executable(hdr_test hdr_test.cpp)
 target_link_libraries(hdr_test PUBLIC Taeto)
 
+# Input System Test
+add_executable(input_test input_test.cpp)
+target_link_libraries(input_test PUBLIC Taeto)
+
 # Light Filter Test
 add_executable(light_filter_test light_filter_test.cpp)
 target_link_libraries(light_filter_test PUBLIC Taeto)
@@ -23,6 +27,6 @@ target_link_libraries(normal_mapping_test PUBLIC Taeto)
 
 # Output tests to 'build' directory
 set_target_properties(
-    demo hdr_test light_filter_test light_mixing_test normal_mapping_test PROPERTIES
+    demo hdr_test input_test light_filter_test light_mixing_test normal_mapping_test PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/tests"
 )

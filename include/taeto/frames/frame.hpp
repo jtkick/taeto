@@ -169,6 +169,15 @@ public:
                                        modulo(y-pos.y, other.height())}));
     }
 
+    void overwrite(
+        Frame<T>& other,
+        glm::ivec2 pos,
+        bool tile
+    )
+    {
+        this->apply(other, pos, tile, [](T& a, T& b)->T& { a = b;});
+    }
+
 
     /**
      * Serializes the frame into a format that can be used to initialize
