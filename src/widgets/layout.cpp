@@ -7,7 +7,10 @@
 namespace taeto
 {
 
-void Layout::add_widget(std::shared_ptr<Widget> widget, int stretch = 0)
+namespace widgets
+{
+
+void Layout::add_widget(std::shared_ptr<taeto::widgets::Widget> widget, int stretch = 0)
 {
     this->children_.push_back({widget, stretch});
 }
@@ -38,5 +41,7 @@ DisplayPixelFrame Layout::render()
     }
     return result;
 }
+
+}   // namespace widgets
 
 }   // namespace taeto

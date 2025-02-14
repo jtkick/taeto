@@ -10,6 +10,9 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 class TextBox : public Widget
 {
 public:
@@ -22,6 +25,8 @@ public:
 protected:
     std::string text_;
 };
+
+}   // namespace widgets
 
 }   // namespace taeto
 

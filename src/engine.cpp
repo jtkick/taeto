@@ -45,7 +45,7 @@ namespace {
     std::shared_ptr<Scene> scene_;
 
     // Windows to be displayed
-    std::vector<std::weak_ptr<taeto::Widget>> widgets_;
+    std::vector<std::weak_ptr<taeto::widgets::Widget>> widgets_;
 
     // Engine camera
     taeto::Camera camera_ = taeto::Camera(10);
@@ -123,12 +123,12 @@ void load_scene(std::shared_ptr<Scene> scene)
     scene_->load();
 }
 
-void load_widget(std::weak_ptr<Widget> widget)
+void load_widget(std::weak_ptr<taeto::widgets::Widget> widget)
 {
     spdlog::debug("Adding widget to engine.");
 
     // Get shared pointer to widget
-    std::shared_ptr<taeto::Widget> w;
+    std::shared_ptr<taeto::widgets::Widget> w;
     if (!(w = widget.lock()))
         return;
 
@@ -244,9 +244,9 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         // Draw all windows on the rendered frame
-        for (std::weak_ptr<taeto::Widget> widget : widgets_)
+        for (std::weak_ptr<taeto::widgets::Widget> widget : widgets_)
         {
-            if (std::shared_ptr<taeto::Widget> w = widget.lock())
+            if (std::shared_ptr<taeto::widgets::Widget> w = widget.lock())
             {
                 DisplayPixelFrame render = w->render();
                 frame.apply(

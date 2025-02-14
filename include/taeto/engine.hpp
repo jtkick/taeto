@@ -45,7 +45,7 @@ int key_presses(int id);
  */
 void load_sprite(std::weak_ptr<Sprite>);
 void load_light(std::weak_ptr<Light>);
-void load_widget(std::weak_ptr<Widget>);
+void load_widget(std::weak_ptr<taeto::widgets::Widget>);
 
 /**
  * Loads a scene into the engine.
@@ -60,7 +60,7 @@ void load_scene(std::shared_ptr<Scene>);
  *
  * @param widget A weak pointer to the widget to be displayed
  */
- void load_widget(std::weak_ptr<Widget>);
+ void load_widget(std::weak_ptr<taeto::widgets::Widget>);
 
 /**
  * Continually render and display frames until program stopped.

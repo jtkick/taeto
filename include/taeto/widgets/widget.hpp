@@ -10,6 +10,9 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 class Widget
 {
 public:
@@ -55,6 +58,8 @@ protected:
     glm::vec2 position_;
     glm::uvec2 size_;
 };
+
+}   // namespace widgets
 
 }   // namespace taeto
 

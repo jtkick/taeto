@@ -6,11 +6,16 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 class HorizontalLayout : public Layout
 {
 public:
     void size(glm::uvec2 v);
 };
+
+}   // namespace widgets
 
 }   // namespace taeto
 

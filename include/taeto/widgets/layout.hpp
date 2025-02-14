@@ -10,18 +10,23 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 class Layout : public Widget
 {
 public:
     virtual ~Layout() {}
 
-    virtual void add_widget(std::shared_ptr<Widget> widget, int stretch);
+    virtual void add_widget(std::shared_ptr<taeto::widgets::Widget> widget, int stretch);
 
     DisplayPixelFrame render();
 
 protected:
     std::vector<std::pair<std::shared_ptr<Widget>, int>> children_;
 };
+
+}   // namespace widgets
 
 }   // namespace taeto
 

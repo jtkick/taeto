@@ -6,6 +6,9 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 DisplayPixelFrame TextBox::render()
 {
     DisplayPixelFrame t(
@@ -16,5 +19,7 @@ DisplayPixelFrame TextBox::render()
         t.at({i%size().x, i/size().x}).c = text_.at(i);
     return t;
 }
+
+}   // namespace widgets
 
 }   // namespace taeto

@@ -1,7 +1,7 @@
 #include "taeto/engine.hpp"
 #include "taeto/scenes/scene.hpp"
 
-class Button : public taeto::Widget
+class Button : public taeto::widgets::Widget
 {
 public:
     Button(char c) : c_(c), highlighted_(false)
@@ -59,19 +59,19 @@ public:
 
     void animate()
     {
-        if (taeto::key_state('W') > 0.75)
+        if (taeto::key_state('w') > 0.75)
             w_button_->set_highlighted(true);
         else
             w_button_->set_highlighted(false);
-        if (taeto::key_state('A') > 0.75)
+        if (taeto::key_state('a') > 0.75)
             a_button_->set_highlighted(true);
         else
             a_button_->set_highlighted(false);
-        if (taeto::key_state('S') > 0.75)
+        if (taeto::key_state('s') > 0.75)
             s_button_->set_highlighted(true);
         else
             s_button_->set_highlighted(false);
-        if (taeto::key_state('D') > 0.75)
+        if (taeto::key_state('d') > 0.75)
             d_button_->set_highlighted(true);
         else
             d_button_->set_highlighted(false);

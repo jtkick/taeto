@@ -8,17 +8,19 @@
 #include "taeto/engine.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/shaders/checkerboard.hpp"
-#include "taeto/widgets/horizontal_layout.hpp"
+#include "taeto/widgets/vertical_layout.hpp"
 #include "taeto/widgets/widget.hpp"
+#include "taeto/widgets/selector.hpp"
 #include "taeto/widgets/text_box.hpp"
 
-class TestWindow : public taeto::Widget
+class TestWindow : public taeto::widgets::Widget
 {
 public:
     TestWindow()
     {
-        hl_.add_widget(std::make_shared<taeto::TextBox>("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."), 1);
-        hl_.add_widget(std::make_shared<taeto::TextBox>("THIS IS A TEST"), 1);
+        vl_.add_widget(std::make_shared<taeto::widgets::Selector>(std::vector<std::string>({"Low", "Medium", "High"})), 0);
+        vl_.add_widget(std::make_shared<taeto::widgets::TextBox>("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."), 1);
+        vl_.add_widget(std::make_shared<taeto::widgets::TextBox>("THIS IS A TEST"), 1);
     };
 
     ~TestWindow() {};
@@ -26,7 +28,7 @@ public:
     void size(glm::uvec2 v)
     {
         size_ = v;
-        hl_.size(v - glm::uvec2(4, 2));
+        vl_.size(v - glm::uvec2(4, 2));
     };
 
     glm::uvec2 size()
@@ -51,7 +53,7 @@ public:
             }
         }
 
-        taeto::DisplayPixelFrame l = hl_.render();
+        taeto::DisplayPixelFrame l = vl_.render();
         result.apply(
             l,
             glm::uvec2(2, 1),
@@ -73,7 +75,7 @@ public:
     };
 
 protected:
-    taeto::HorizontalLayout hl_;
+    taeto::widgets::VerticalLayout vl_;
 };
 
 class WindowTest : public taeto::Scene

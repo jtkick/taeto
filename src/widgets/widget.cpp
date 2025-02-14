@@ -7,6 +7,9 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 Widget::Widget()
 {
 
@@ -64,5 +67,7 @@ DisplayPixelFrame Widget::render()
 {
 
 }
+
+}   // namespace widgets
 
 }   // namespace taeto

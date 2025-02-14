@@ -3,6 +3,9 @@
 namespace taeto
 {
 
+namespace widgets
+{
+
 void HorizontalLayout::size(glm::uvec2 v)
 {
     size_ = v;
@@ -25,5 +28,7 @@ void HorizontalLayout::size(glm::uvec2 v)
         current_x += child_width;
     }
 }
+
+}   // namespace widgets
 
 }   // namespace taeto

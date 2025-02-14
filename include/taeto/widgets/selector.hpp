@@ -13,7 +13,7 @@ namespace taeto
 namespace widgets
 {
 
-class Selector : public taeto::Widget
+class Selector : public taeto::widgets::Widget
 {
 public:
     Selector(
