@@ -16,3 +16,6 @@
 [submodule "deps/SDL"]
 	path = deps/SDL
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "deps/protobuf"]
+	path = deps/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
