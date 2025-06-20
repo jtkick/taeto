@@ -25,6 +25,10 @@ target_link_libraries(light_mixing_test PUBLIC Taeto)
 add_executable(normal_mapping_test normal_mapping_test.cpp)
 target_link_libraries(normal_mapping_test PUBLIC Taeto)
 
+# Physics Test
+add_executable(physics_test physics_test.cpp)
+target_link_libraries(physics_test PUBLIC Taeto)
+
 # Window Test
 add_executable(window_test window_test.cpp)
 target_link_libraries(window_test PUBLIC Taeto)

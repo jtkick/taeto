@@ -94,7 +94,7 @@ private:
 
 int main()
 {
-    taeto::set_debug_mode(true);
+    taeto::debug_mode(true);
     taeto::load_scene(std::make_shared<InputTest>());
     taeto::run();
 }

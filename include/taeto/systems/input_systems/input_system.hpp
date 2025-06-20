@@ -20,8 +20,6 @@ public:
     virtual void poll_inputs() = 0;
 
     virtual float key_state(int id) = 0;
-
-    virtual int key_presses(int id) = 0;
 };
 
 }   // namespace taeto

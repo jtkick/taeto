@@ -16,14 +16,50 @@
 #include "taeto/objects/lights/light.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/systems/system.hpp"
+#include "taeto/tools.hpp"
 
 namespace taeto
 {
 
+/**
+ * This struct contains all of the relevant settings for a render system.
+ */
+struct RenderSettings {
+    // How far away from the camera a pixel can be before it's not rendered
+    double render_distance;
+
+    // Whether or not to consider light sources for lighting pixels
+    bool dynamic_lighting = true;
+
+    // Whether or not to use consider pixel normals for lighting calculations
+    bool normal_mapping = true;
+
+    // Curve that relates light source angle to the normal of the pixel
+    std::function<double(double)> diffusion_curve;
+
+    // Bloom strength, 0.0 for no bloom computing
+    double bloom;
+
+    // Whether or not to use high-dynamic range
+    bool hdr;
+
+    // Default values constructor
+    RenderSettings() {
+        render_distance = 10000000.0;
+        dynamic_lighting = true;
+        normal_mapping = true;
+        diffusion_curve = [](double brightness){
+            return smoothstep(brightness, 0.45, 1.0);
+        };
+        bloom = 1.0;
+        hdr = true;
+    }
+};
+
 class RenderSystem : public System
 {
 public:
-    RenderSystem() : render_distance_(1000000000) { };
+    RenderSystem() : settings_() { };
 
     ~RenderSystem() { };
 
@@ -38,29 +74,18 @@ public:
         taeto::Camera&,
         std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
         std::vector<std::weak_ptr<taeto::Light>>& lights
-    ) { throw std::runtime_error("bro"); };
+    ) { };
+
+    /**
+     * @brief Returns the settings struct for the render system.
+     *
+     * @return RenderSettings& A reference to the settings currently being
+     * used.
+     */
+    RenderSettings& settings() { return settings_; };
 
 protected:
-    // First rendered frame: pixels before lighting applied with additional data
-    // typedef std::vector<std::vector<std::vector<std::tuple<
-    //     taeto::DisplayPixel, taeto::Position>>>> AlbedoFrame;
-
-    // Currently loaded skybox
-    // taeto::Skybox skybox_;
-
-    // Number of tiles away from camera that sprites will be rendered
-    unsigned int render_distance_;
-
-    // Whether or not to use high dynamic range when rendering
-    bool hdr_;
-
-    // Whether of not to add bloom to rendered scene
-    bool bloom_;
-
-    // Number of sprites rendered in the last frame
-    unsigned int drawn_sprites_;
-
-    bool render_normals_;
+    RenderSettings settings_;
 };
 
 }   // namespace taeto

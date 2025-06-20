@@ -19,6 +19,7 @@ public:
     RenderPixel(char, glm::vec4, glm::vec4, bool);
 
     RenderPixel(
+        bool,
         char,
         glm::vec4,
         glm::vec4,
@@ -27,7 +28,8 @@ public:
         bool u,
         bool s,
         glm::vec3,
-        float);
+        float,
+        bool);
 
     taeto::RenderPixel operator & (const taeto::RenderPixel &p);
 
@@ -72,7 +74,13 @@ public:
 
     // How "shiny" this pixel is
     float specularity;
+
+    bool collision;
 };
+
+// extern RenderPixel clear;
+extern RenderPixel solid_black;
+extern RenderPixel solid_white;
 
 }   // namespace taeto
 

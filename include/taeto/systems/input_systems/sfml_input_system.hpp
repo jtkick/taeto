@@ -17,9 +17,7 @@ public:
     void poll_inputs();
 
     float key_state(int id);
-
-    int key_presses(int id);
-
+    
 private:
     std::map<int, float> key_states_ = { };
     std::map<int, int> key_presses_ = { };

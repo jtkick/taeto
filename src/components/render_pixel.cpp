@@ -10,13 +10,14 @@ RenderPixel::RenderPixel()
     render = true;
     c = ' ';
     fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
+    bg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
     normal = glm::vec3(0, 0, 1);
     specularity = 0.0;
+    collision = false;
 }
 
 RenderPixel::RenderPixel(char character)
@@ -24,13 +25,14 @@ RenderPixel::RenderPixel(char character)
     render = true;
     c = character;
     fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
+    bg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
     normal = glm::vec3(0.0, 0.0, 1.0);
     specularity = 0.0;
+    collision = false;
 }
 
 RenderPixel::RenderPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool b)
@@ -45,20 +47,23 @@ RenderPixel::RenderPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool b)
     strikethrough = false;
     normal = glm::vec3(0.0, 0.0, 1.0);
     specularity = 0.0;
+    collision = false;
 }
 
 RenderPixel::RenderPixel(
-    char ch,
-    glm::vec4 fc,
-    glm::vec4 bc,
-    bool b,
-    bool i,
-    bool u,
-    bool s,
-    glm::vec3 n,
-    float sp)
+    bool r ,
+    char ch = ' ',
+    glm::vec4 fc = glm::vec4(1.0, 1.0, 1.0, 1.0),
+    glm::vec4 bc = glm::vec4(1.0, 1.0, 1.0, 1.0),
+    bool b = false,
+    bool i = false,
+    bool u = false,
+    bool s = false,
+    glm::vec3 n = glm::vec3(0.0, 0.0, 1.0),
+    float sp = 1.0,
+    bool c = false)
 {
-    render = true;
+    render = r;
     c = ch;
     fg_color = fc;
     bg_color = bc;
@@ -68,6 +73,7 @@ RenderPixel::RenderPixel(
     strikethrough = s;
     normal = n;
     specularity = sp;
+    collision = c;
 }
 
 // Helper functions
@@ -75,16 +81,61 @@ RenderPixel::RenderPixel(
 void RenderPixel::clear()
 {
     render = true;
-    c = ' ';
+    c = 'X';
     fg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    bg_color = glm::vec4(0.0, 0.0, 0.0, 0.0);
+    bg_color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     bold = false;
     italic = false;
     underline = false;
     strikethrough = false;
     normal = glm::vec3(0.0, 0.0, 1.0);
     specularity = 0.0;
+    collision = false;
 }
+
+
+// RenderPixel clear(
+//     true,  // render
+//     ' ',    // c
+//     glm::vec4(1.0, 0.0, 1.0,1.0),  // fg_color
+//     glm::vec4(1.0, 0.0, 1.0, 0.0),  // bg_color
+//     false,  // bold
+//     false,  // italic
+//     false,  // underline
+//     false,  // strikethrough
+//     glm::vec3(0.0, 0.0, 0.0),   // normal
+//     0.0,    // specularity
+//     false   // collision
+// );
+
+RenderPixel solid_black(
+    true,  // render
+    'X',    // c
+    glm::vec4(1.0, 0.0, 1.0, 1.0),  // fg_color
+    glm::vec4(0.0, 0.0, 0.0, 1.0),  // bg_color
+    false,  // bold
+    false,  // italic
+    false,  // underline
+    false,  // strikethrough
+    glm::vec3(0.0, 0.0, 1.0),   // normal
+    0.0,    // specularity
+    false   // collision
+);
+
+RenderPixel solid_white(
+    true,  // render
+    'X',    // c
+    glm::vec4(1.0, 0.0, 1.0, 1.0),  // fg_color
+    glm::vec4(1.0, 1.0, 1.0, 1.0),  // bg_color
+    false,  // bold
+    false,  // italic
+    false,  // underline
+    false,  // strikethrough
+    glm::vec3(0.0, 0.0, 0.0),   // normal
+    0.0,    // specularity
+    false   // collision
+);
+
 
 /*
 bool operator == (const Pixel& p1, const Pixel& p2)

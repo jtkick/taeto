@@ -341,7 +341,7 @@ public:
         stars_shader_ = std::make_shared<taeto::StarsGradient>(glm::vec3(1.0, 0.1, 1.0));
         stars_->add_shader(stars_shader_);
 
-        taeto::Camera& camera = taeto::get_camera();
+        taeto::Camera& camera = taeto::camera();
         camera.position().z = -10;
     };
 

@@ -1,0 +1,23 @@
+# This file is processed by CMake to generate the final Doxyfile
+
+PROJECT_NAME           = "@PROJECT_NAME@"
+PROJECT_BRIEF          = "A terminal animation engine."
+PROJECT_LOGO           =
+
+OUTPUT_DIRECTORY       = "@CMAKE_BINARY_DIR@/html_docs"
+INPUT                  = "@CMAKE_SOURCE_DIR@/src" "@CMAKE_SOURCE_DIR@/include"
+
+FILE_PATTERNS          = *.hpp *.cpp
+RECURSIVE              = YES
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO # Set to YES if you want LaTeX/PDF
+
+# Graphviz settings (uncomment and configure if you have Graphviz installed)
+HAVE_DOT               = YES
+DOT_PATH               = "" # Doxygen often finds it if in PATH, otherwise specify full path here.
+UML_LOOK               = YES

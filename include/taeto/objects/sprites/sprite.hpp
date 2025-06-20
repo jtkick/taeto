@@ -93,6 +93,8 @@ public:
      */
     virtual bool on_collision(std::shared_ptr<taeto::Sprite>);
 
+    bool collides_with(std::shared_ptr<taeto::Sprite> other);
+
     /*
      * Returns the given number of frames that have passed since the last time
      * this method was called.
@@ -111,23 +113,23 @@ public:
      * Sets speed of the object.
      * @param speed The sprite's new speed.
      */
-    void speed(const glm::vec3& speed);
+    void speed(const glm::dvec3& speed);
 
     /*
      * Returns the current speed of the sprite.
      */
-    glm::vec3& speed();
+    glm::dvec3 speed();
 
     /*
      * Sets force on the object.
      * @param force The sprite's new force.
      */
-    void force(const glm::vec3& force);
+    void force(const glm::dvec3& force);
 
     /*
      * Returns the forces currently applied to the sprite.
      */
-    glm::vec3& force();
+    glm::dvec3 force();
 
     /*
      * Returns height and width of the sprite as a uvec2
@@ -152,6 +154,8 @@ public:
 
 protected:
     glm::uvec2 shape_;
+
+    float restitution_;
 
     // Mass of the sprite for calculating speeds
     float mass_;

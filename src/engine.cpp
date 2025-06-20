@@ -47,6 +47,9 @@ namespace {
     // Windows to be displayed
     std::vector<std::weak_ptr<taeto::widgets::Widget>> widgets_;
 
+    // Gravity fields
+    std::vector<std::weak_ptr<taeto::GravityField>> gravity_fields_;
+
     // Engine camera
     taeto::Camera camera_ = taeto::Camera(10);
 
@@ -67,12 +70,7 @@ namespace {
         std::make_unique<taeto::SFMLInputSystem>(taeto::SFMLInputSystem());
 }
 
-// std::shared_ptr<bool> get_button_reference(int id)
-// {
-//     return input_system_.get_button_reference(id);
-// }
-
-taeto::Camera& get_camera()
+Camera& camera()
 {
     return camera_;
 }
@@ -80,11 +78,6 @@ taeto::Camera& get_camera()
 float key_state(int id)
 {
     return input_system_->key_state(id);
-}
-
-int key_presses(int id)
-{
-    return input_system_->key_presses(id);
 }
 
 void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
@@ -228,7 +221,8 @@ void run()
 
         // Physics
         spdlog::debug("Applying forces to sprites.");
-        physics_system_.detect_collisions(sprites_);
+        physics_system_.apply_forces(sprites_, gravity_fields_);
+        physics_system_.apply_speeds(sprites_);
 
 
         ////////////////////////////////////////////////////////////////
@@ -306,9 +300,14 @@ void run()
     endwin();
 }
 
-void set_debug_mode(bool debug_mode_on)
+void debug_mode(bool debug_mode_on)
 {
     debug_mode_on_ = debug_mode_on;
+}
+
+bool debug_mode()
+{
+    return debug_mode_on_;
 }
 
 }   // namespace taeto

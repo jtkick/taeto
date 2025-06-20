@@ -74,7 +74,7 @@ StdoutDisplaySystem::~StdoutDisplaySystem()
     tcsetattr(0, TCSANOW, &t);
 }
 
-void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
+void StdoutDisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
 {
     // First, resize buffer if wrong size
     if (frame.height() != height || frame.width() != width)
@@ -169,7 +169,7 @@ void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
 
 
 
-void StdoutDisplaySystem::display_frame_old(taeto::DisplayPixelFrame &frame)
+void StdoutDisplaySystem::display_frame(taeto::DisplayPixelFrame &frame)
 {
     output_buffer = "";
 

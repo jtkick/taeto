@@ -62,14 +62,10 @@ void StdinInputSystem::poll_inputs()
 
 float StdinInputSystem::key_state(int id)
 {
-    // id = std::toupper(static_cast<unsigned char>(id));
-    // id = (int)static_cast<sf::Keyboard::Key>(id - 'A');
-    return key_states_[id];
-}
-
-int StdinInputSystem::key_presses(int id)
-{
-
+    auto it = key_states_.find(id);
+    if (it != key_states_.end())
+        return it->second;
+    throw std::invalid_argument("Not a valid ID.");
 }
 
 }   // namespace taeto

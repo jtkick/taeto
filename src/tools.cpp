@@ -50,4 +50,12 @@ int modulo(int a, int b)
     return result;
 }
 
+unsigned int Timer::reset()
+{
+    unsigned int now = ms_since_epoch().count();
+    unsigned int ret = now - time_;
+    time_ = now;
+    return ret;
+}
+
 }   // namespace taeto

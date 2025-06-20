@@ -1,3 +1,9 @@
+/**
+ * @file engine.hpp
+ *
+ * @brief This file defines the main interaction points to control the engine.
+ */
+
 #ifndef ENGINE_HPP_
 #define ENGINE_HPP_
 
@@ -11,56 +17,88 @@
 
 #include "spdlog/spdlog.h"
 
+#include "systems/physics_system.hpp"
 #include "taeto/objects/camera.hpp"
 #include "taeto/objects/lights/light.hpp"
 #include "taeto/objects/object.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/scenes/scene.hpp"
+#include "taeto/systems/render_system/render_system.hpp"
 #include "taeto/widgets/widget.hpp"
 
 namespace taeto
 {
 
 /**
- * Returns a reference to a boolean that will change as button inputs change.
- *
- * @param ID number of the button to get a reference to.
+ * This struct contains all of the engine's settings, including the settings
+ * options of the component systems within the engine.
  */
-// std::shared_ptr<bool> get_button_reference(int);
+struct EngineSettings {
+    // Engine system settings
+    // AudioSettings audio_settings;
+    // ChemistrySettings chemistry_settings;
+    // DisplaySettings display_settings;
+    // InputSettings input_settings;
+    // PhysicsSettings physics_settings;
+    RenderSettings render_settings;
+    // TimingSettings timing_settings;
+    // Engine specific settings
+    bool debug_mode = false;
+    
+};
 
 /**
- * Returns the camera object that the engine is using.
+ * Gets the camera object that the engine is currently using to render a scene.
+ *
+ * @returns A reference to the camera object.
  */
-taeto::Camera& get_camera();
+Camera& camera();
 
+/**
+ * Gets the current state of the input with the given ID.
+ * 
+ * @param[in] id The ID number of the input being requested.
+ * @return The state of the input where 1.0 is fully pressed and 0.0 is not
+ * pressed at all.
+ * @throws std::invalid_argument If the given ID does not relate to an
+ * input that has been mapped to a key yet.
+ */
 float key_state(int id);
-int key_presses(int id);
 
 /**
- * Loads an object into the engine.
- * Is a weak pointer because the owner of the object can destroy the
- * object at any time and the engine will drop its weak pointer.
+ * Loads an sprite into the engine. If the sprite has already been loaded, it
+ * will simply be ignored. Unloading is done by destroying the source shared
+ * pointer to the sprite.
  *
- * @param object_ptr A weak_ptr to the object to be loaded.
+ * @param sprite_ptr A weak_ptr to the sprite to be loaded.
  */
-void load_sprite(std::weak_ptr<Sprite>);
-void load_light(std::weak_ptr<Light>);
-void load_widget(std::weak_ptr<taeto::widgets::Widget>);
+void load_sprite(std::weak_ptr<Sprite> sprite_ptr);
 
 /**
- * Loads a scene into the engine.
+ * Loads a light into the engine. If the light has already been loaded, it will
+ * simply be ignored. Unloading is done by destroying the source shared pointer
+ * to the light.
  *
- * @param scene A Scene object that the engine will load
+ * @param light_ptr A weak_ptr to the light to be loaded.
  */
-void load_scene(std::shared_ptr<Scene>);
+void load_light(std::weak_ptr<Light> light_ptr);
 
 /**
- * Loads a widget, i.e., an in-game window that the user interacts with that
- * is independent of and usually in front of the rendered game world.
+ * Loads a widget into the engine. If the widget has already been loaded, it
+ * will simply be ignored. Unloading is done by destroying the source shared
+ * pointer to the widget.
  *
- * @param widget A weak pointer to the widget to be displayed
+ * @param sprite_ptr A weak_ptr to the widget to be loaded.
  */
- void load_widget(std::weak_ptr<taeto::widgets::Widget>);
+void load_widget(std::weak_ptr<widgets::Widget> widget_ptr);
+
+/**
+ * Loads a scene into the engine. When loaded, any previous scene will be
+ * dropped, along with all objects that had been loaded with that scene.
+ *
+ * @param scene_ptr A weak_ptr to the scene to be loaded.
+ */
+void load_scene(std::shared_ptr<Scene> scene_ptr);
 
 /**
  * Continually render and display frames until program stopped.
@@ -68,12 +106,19 @@ void load_scene(std::shared_ptr<Scene>);
 void run();
 
 /**
+ * Gets whether or not debug mode is currently on.
+ *
+ * @return True is debug mode is on.
+ */
+bool debug_mode();
+
+/**
  * Set whether or not debug information will be printed to screen, as well as
  * logging at the debug level instead of the info level.
  *
  * @param debug_mode_on Whether or not the engine should print debug info.
  */
-void set_debug_mode(bool);
+void debug_mode(bool);
 
 }   // namespace taeto
 

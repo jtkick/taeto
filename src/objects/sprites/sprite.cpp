@@ -64,6 +64,39 @@ bool Sprite::on_collision(std::shared_ptr<taeto::Sprite>)
     return false;
 }
 
+bool Sprite::collides_with(std::shared_ptr<taeto::Sprite> other)
+{
+    if (this->position().z != other->position().z)
+        return false;
+
+    // For simplicity, do everything at global positions
+    glm::ivec2 this_tl = {this->position().x, this->position().y};
+    glm::ivec2 other_tl = {other->position().x, other->position().y};
+    glm::ivec2 this_br = this_tl + glm::ivec2(this->shape());
+    glm::ivec2 other_br = other_tl + glm::ivec2(other->shape());
+
+    // Get overlap
+    glm::ivec2 tl = {std::max(this_tl.y, other_tl.y),
+                     std::max(this_tl.x, other_tl.x)};
+    glm::ivec2 br = {std::min(this_br.y, other_br.y),
+                     std::min(this_br.x, other_br.x)};
+
+    // Now check every overlapping pixel to see if they collide
+    // If they don't overlap at all, this should just fall through
+    for (int y = tl.y; y < br.y - 1; y++)
+    {
+        for (int x = tl.x; x < br.x - 1; x++)
+        {
+            glm::ivec2 global_pos = glm::ivec2(x, y);
+            if (this->get_pixel_at(global_pos - this_tl).collision &&
+                other->get_pixel_at(global_pos - other_tl).collision)
+                return true;
+        }
+    }
+    
+    return false;
+}
+
 int Sprite::frame_timer(int frame_rate, bool refresh)
 {
     // Get number of milliseconds per frame
@@ -93,24 +126,29 @@ double Sprite::mass()
     return mass_;
 }
 
-void Sprite::speed(const glm::vec3& speed)
+void Sprite::speed(const glm::dvec3& speed)
 {
     speed_ = speed;
 }
 
-glm::vec3& Sprite::speed()
+glm::dvec3 Sprite::speed()
 {
     return speed_;
 }
 
-void Sprite::force(const glm::vec3& force)
+void Sprite::force(const glm::dvec3& force)
 {
     force_ = force;
 }
 
-glm::vec3& Sprite::force()
+glm::dvec3 Sprite::force()
 {
     return force_;
+}
+
+glm::uvec2& Sprite::shape()
+{
+    return shape_;
 }
 
 void Sprite::animate()

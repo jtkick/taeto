@@ -3,6 +3,7 @@
 // #include <SFML2/SFML.h>
 #include <cctype>
 #include <SFML/Window/Keyboard.hpp>
+#include <stdexcept>
 #include <vector>
 
 namespace taeto
@@ -35,12 +36,10 @@ float SFMLInputSystem::key_state(int id)
 {
     id = std::toupper(static_cast<unsigned char>(id));
     id = (int)static_cast<sf::Keyboard::Key>(id - 'A');
-    return key_states_[id];
-}
-
-int SFMLInputSystem::key_presses(int id)
-{
-
+    auto it = key_states_.find(id);
+    if (it != key_states_.end())
+        return it->second;
+    throw std::invalid_argument("Not a valid ID.");
 }
 
 }   // namespace taeto

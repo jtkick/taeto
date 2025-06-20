@@ -18,6 +18,45 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
+# Optional documentation to build
+option(BUILD_DOCS "Build Doxygen documentation" ON)
+find_package(Doxygen)
+if(BUILD_DOCS AND DOXYGEN_FOUND)
+    # Configure the Doxyfile.in template
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/docs/Doxyfile.in
+        ${CMAKE_BINARY_DIR}/Doxyfile
+        @ONLY
+    )
+
+    # Add a custom target to run Doxygen
+    add_custom_target(docs ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generating Doxygen documentation..."
+        VERBATIM
+    )
+     
+    # Make it easier to open the HTML documentation
+    if(UNIX) # For Linux and macOS
+        add_custom_target(open_docs
+            COMMAND xdg-open ${CMAKE_BINARY_DIR}/html_docs/index.html
+            COMMENT "Opening Doxygen HTML documentation..."
+        )
+    elseif(WIN32) # For Windows
+        add_custom_target(open_docs
+            COMMAND cmd.exe /C start ${CMAKE_BINARY_DIR}/html_docs/index.html
+            COMMENT "Opening Doxygen HTML documentation..."
+        )
+    endif()
+
+    # Add the documentation directory to the list of installable files
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/html_docs DESTINATION share/doc/${PROJECT_NAME})
+
+else()
+    message(STATUS "Doxygen documentation will not be built (BUILD_DOCS is OFF or Doxygen not found).")
+endif()
+
 # Set include directories
 target_include_directories(Taeto PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps/lodepng>

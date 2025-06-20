@@ -101,7 +101,7 @@ void RayCastRenderSystem::render_frame(
                 // Make sure sprite is at least in front of the camera and
                 // within rendering distance
                 // Also handle case where z-diff is 0 to prevent divide by zero error
-                if (z_diff <= 0 || z_diff > render_distance_)
+                if (z_diff <= 0 || z_diff > settings_.render_distance)
                     continue;
 
                 // Map frame position to sprite plane position
@@ -129,8 +129,6 @@ void RayCastRenderSystem::render_frame(
                 current_sprite->visible(true);
 
                 // Determine if pixel should be drawn
-                // If the foreground alpha channel is anything but 0, it will be
-                // drawn
                 if (!current_pixel.render)
                     continue;
 
@@ -201,7 +199,7 @@ void RayCastRenderSystem::render_frame(
                 taeto::DisplayPixel& rendered_pixel =
                     rendered_frame.at(glm::uvec2(x, y));
 
-                if (render_normals_)
+                if (false) // TODO: ADD THE OPTION TO RENDER NORMALS, ETC.
                 {
                     rendered_pixel.c = ' ';
                     glm::vec3 scaled = (current_pixel.normal / glm::vec3(2.0)) + glm::vec3(0.5);
@@ -213,12 +211,14 @@ void RayCastRenderSystem::render_frame(
                 {
                     // Default, combine this with previous pixel
                     rendered_pixel.c = current_pixel.c;
-                    rendered_pixel.fg_color = mix_colors(
-                        rendered_pixel.fg_color,
-                        current_pixel.fg_color);
-                    rendered_pixel.bg_color = mix_colors(
-                        rendered_pixel.bg_color,
-                        current_pixel.bg_color);
+                    // rendered_pixel.fg_color = mix_colors(
+                    //     rendered_pixel.fg_color,
+                    //     current_pixel.fg_color);
+                    // rendered_pixel.bg_color = mix_colors(
+                    //     rendered_pixel.bg_color,
+                    //     current_pixel.bg_color);
+                    rendered_pixel.fg_color = current_pixel.fg_color;
+                    rendered_pixel.bg_color = current_pixel.bg_color;
                     rendered_pixel.bold = current_pixel.bold;
                     rendered_pixel.italic = current_pixel.italic;
                     rendered_pixel.underline = current_pixel.underline;
@@ -233,7 +233,7 @@ void RayCastRenderSystem::render_frame(
     ////////////////////////////////////////////////////////////////
 
     // Add bloom to scene
-    if (bloom_)
+    if (settings_.bloom > 0.0)
     {
         // Extract all bright pixels to separate buffer
         std::vector<std::vector<glm::vec3>> bloom_frame;
@@ -321,7 +321,7 @@ void RayCastRenderSystem::render_frame(
     }
 
     // Run tone mapping if HDR is on
-    if (hdr_)
+    if (settings_.hdr)
     {
         // Gamma correction value
         const float kGamma = 2.2f;

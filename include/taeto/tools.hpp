@@ -25,6 +25,19 @@ glm::vec4 mix_colors(glm::vec4 dest_color, glm::vec4 src_color);
 
 int modulo(int a, int b);
 
+class Timer
+{
+public:
+    Timer() : time_(ms_since_epoch().count()) { };
+
+    ~Timer() { };
+
+    unsigned int reset();
+
+private:
+    unsigned int time_;
+};
+
 }   // namespace taeto
 
 #endif  // TOOLS_HPP_
