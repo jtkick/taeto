@@ -1,0 +1,47 @@
+/*! \mainpage Main Page
+
+---
+
+## Project Overview
+
+Taeto is a game and animation engine written in C++, that renders images using
+ASCII art in a terminal.
+
+**Key Features:
+
+* **Sprite Management:** Easily load, manipulate, and render sprites with support for various image formats.
+
+* **Rendering Pipeline:** Efficient 3D rendering of 2D sprites.
+
+* **Input Handling:** Support for keyboard, mouse, and gamepad input.
+
+* **Basic Physics:** Automatic collision detection.
+
+---
+
+## Example Usage
+
+Below is a basic example for rendering a rectangle.
+
+\code
+#include <taeto/engine.hpp>
+#include <taeto/objects/sprites/rectangle.hpp>
+
+int main()
+{
+    // Create a rectangle sprite object
+    auto rect = std::make_shared<taeto::Rectangle>(glm::uvec2(10, 5));
+    
+    // Load rectangle into the game engine
+    taeto::load_sprite(rect);
+
+    // Turn off dynamic lighting
+    taeto::settings().render_settings.dynamic_lighting = false;
+    taeto::settings().debug_mode = true;
+
+    // Start rendering
+    taeto::run();
+}
+\endcode
+
+*/

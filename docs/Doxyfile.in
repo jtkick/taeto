@@ -5,9 +5,9 @@ PROJECT_BRIEF          = "A terminal animation engine."
 PROJECT_LOGO           =
 
 OUTPUT_DIRECTORY       = "@CMAKE_BINARY_DIR@/html_docs"
-INPUT                  = "@CMAKE_SOURCE_DIR@/src" "@CMAKE_SOURCE_DIR@/include"
+INPUT                  = "@CMAKE_SOURCE_DIR@/docs" "@CMAKE_SOURCE_DIR@/src" "@CMAKE_SOURCE_DIR@/include"
 
-FILE_PATTERNS          = *.hpp *.cpp
+FILE_PATTERNS          = *.dox *.hpp *.cpp
 RECURSIVE              = YES
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = YES
@@ -15,9 +15,9 @@ EXTRACT_STATIC         = YES
 EXTRACT_LOCAL_CLASSES  = YES
 
 GENERATE_HTML          = YES
-GENERATE_LATEX         = NO # Set to YES if you want LaTeX/PDF
+GENERATE_LATEX         = NO
 
-# Graphviz settings (uncomment and configure if you have Graphviz installed)
+# Graphviz settings
 HAVE_DOT               = YES
-DOT_PATH               = "" # Doxygen often finds it if in PATH, otherwise specify full path here.
+DOT_PATH               = ""
 UML_LOOK               = YES

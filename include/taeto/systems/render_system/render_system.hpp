@@ -59,7 +59,7 @@ struct RenderSettings {
 class RenderSystem : public System
 {
 public:
-    RenderSystem() : settings_() { };
+    RenderSystem(RenderSettings& settings) : settings_(settings) { };
 
     ~RenderSystem() { };
 
@@ -85,7 +85,7 @@ public:
     RenderSettings& settings() { return settings_; };
 
 protected:
-    RenderSettings settings_;
+    RenderSettings& settings_;
 };
 
 }   // namespace taeto

@@ -12,7 +12,8 @@ namespace taeto
 class Rectangle: public taeto::Sprite
 {
 public:
-    Rectangle(glm::uvec2 s, taeto::RenderPixel p);
+    Rectangle(glm::uvec2 s, taeto::RenderPixel p = taeto::RenderPixel(
+        ' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false));
 
     taeto::RenderPixel get_pixel_at(glm::uvec2 pos);
 

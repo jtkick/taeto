@@ -35,6 +35,8 @@ namespace taeto
 // Private data
 namespace {
 
+    EngineSettings settings_;
+
     // Sprites to be rendered
     std::vector<std::weak_ptr<taeto::Sprite>> sprites_;
 
@@ -80,7 +82,7 @@ float key_state(int id)
     return input_system_->key_state(id);
 }
 
-void load_sprite(std::weak_ptr<taeto::Sprite> sprite)
+void load_sprite(std::weak_ptr<Sprite> sprite)
 {
     spdlog::debug("Adding object to engine.");
 
@@ -135,7 +137,8 @@ void run()
     spdlog::info("Constructing engine systems.");
     taeto::AudioSystem audio_system_ = taeto::AudioSystem();
     // taeto::InputSystem input_system_ = taeto::InputSystem();
-    taeto::RayCastRenderSystem render_system_ = taeto::RayCastRenderSystem();
+    taeto::RayCastRenderSystem render_system_ =
+        taeto::RayCastRenderSystem(settings_.render_settings);
     std::shared_ptr<taeto::DisplaySystem> display_system_ =
         std::make_shared<taeto::StdoutDisplaySystem>(
             taeto::StdoutDisplaySystem());
@@ -308,6 +311,11 @@ void debug_mode(bool debug_mode_on)
 bool debug_mode()
 {
     return debug_mode_on_;
+}
+
+EngineSettings& settings()
+{
+    return settings_;
 }
 
 }   // namespace taeto

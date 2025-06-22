@@ -1,9 +1,3 @@
-/**
- * @file engine.hpp
- *
- * @brief This file defines the main interaction points to control the engine.
- */
-
 #ifndef ENGINE_HPP_
 #define ENGINE_HPP_
 
@@ -66,39 +60,50 @@ Camera& camera();
 float key_state(int id);
 
 /**
- * Loads an sprite into the engine. If the sprite has already been loaded, it
+ * @brief Loads a sprite into the engine.
+ * 
+ * @details Loads a sprite game object into the engine world to be rendered and
+ * otherwise interact with other objects. If the sprite has already been loaded, it
  * will simply be ignored. Unloading is done by destroying the source shared
  * pointer to the sprite.
  *
- * @param sprite_ptr A weak_ptr to the sprite to be loaded.
+ * @param sprite A weak_ptr to the sprite to be loaded.
+ *
+ * @code
+ * // Create a sprite using std::shared_ptr
+ * auto rect = std::make_shared<taeto::Rectangle>(10, 10);
+ *
+ * // Load into the engine for rendering
+ * taeto::load_sprite(rect);
+ * @endcode
  */
-void load_sprite(std::weak_ptr<Sprite> sprite_ptr);
+void load_sprite(std::weak_ptr<Sprite> sprite);
 
 /**
- * Loads a light into the engine. If the light has already been loaded, it will
+ * @brief Loads a light into the engine. If the light has already been loaded, it will
  * simply be ignored. Unloading is done by destroying the source shared pointer
  * to the light.
  *
- * @param light_ptr A weak_ptr to the light to be loaded.
+ * @param light A weak_ptr to the light to be loaded.
  */
-void load_light(std::weak_ptr<Light> light_ptr);
+void load_light(std::weak_ptr<Light> light);
 
 /**
  * Loads a widget into the engine. If the widget has already been loaded, it
  * will simply be ignored. Unloading is done by destroying the source shared
  * pointer to the widget.
  *
- * @param sprite_ptr A weak_ptr to the widget to be loaded.
+ * @param sprite A weak_ptr to the widget to be loaded.
  */
-void load_widget(std::weak_ptr<widgets::Widget> widget_ptr);
+void load_widget(std::weak_ptr<widgets::Widget> widget);
 
 /**
  * Loads a scene into the engine. When loaded, any previous scene will be
  * dropped, along with all objects that had been loaded with that scene.
  *
- * @param scene_ptr A weak_ptr to the scene to be loaded.
+ * @param scene A weak_ptr to the scene to be loaded.
  */
-void load_scene(std::shared_ptr<Scene> scene_ptr);
+void load_scene(std::shared_ptr<Scene> scene);
 
 /**
  * Continually render and display frames until program stopped.
@@ -119,6 +124,8 @@ bool debug_mode();
  * @param debug_mode_on Whether or not the engine should print debug info.
  */
 void debug_mode(bool);
+
+EngineSettings& settings();
 
 }   // namespace taeto
 
