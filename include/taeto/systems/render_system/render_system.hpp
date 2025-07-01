@@ -67,14 +67,17 @@ public:
      * Render a PixelFrame with all known objects in the engine. Uses a
      * ray-casting type method and deferred lighting.
      *
-     * @param rendered_frame Frame to write rendered pixels to.
-    */
-    void render_frame(
+     * @param[in,out] rendered_frame Frame to write rendered pixels to.
+     * @param[in] camera Camera used to render the frame.
+     * @param[in] sprites List of sprites that should be rendered in the frame.
+     * @param[in] lights List of lights that should be used to light the scene.
+     */
+    virtual void render_frame(
         taeto::DisplayPixelFrame&,
         taeto::Camera&,
         std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
         std::vector<std::weak_ptr<taeto::Light>>& lights
-    ) { };
+    );
 
     /**
      * @brief Returns the settings struct for the render system.
