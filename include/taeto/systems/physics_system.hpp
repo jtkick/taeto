@@ -1,3 +1,10 @@
+/**
+ * @file physics_system.hpp
+ * @brief Definition of the physics system.
+ * @details This file contains the definitions that a system must define in
+ * order to manipulate objects such that they mimic physical world objects.
+ */
+
 #ifndef SYSTEM_PHYSICS_SYSTEM_HPP_
 #define SYSTEM_PHYSICS_SYSTEM_HPP_
 
@@ -7,36 +14,13 @@
 
 #include "spdlog/spdlog.h"
 
-#include "taeto/objects/object.hpp"
+#include "taeto/objects/iphysical.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/systems/system.hpp"
 #include "taeto/tools.hpp"
 
 namespace taeto
 {
-
-class GravityField : public Object
-{
-public:
-    GravityField() { };
-
-    ~GravityField() { };
-
-    glm::dvec3 vector(const glm::dvec3& position) { };
-};
-
-class DirectionalGravityField : public GravityField
-{
-public:
-    DirectionalGravityField(glm::dvec3 vector = glm::dvec3(0.0, 0.0, 0.0)) : vector_(vector) { };
-
-    ~DirectionalGravityField() { };
-
-    glm::dvec3 vector(const glm::dvec3& position) { return vector_; };
-
-private:
-    glm::dvec3 vector_;
-};
 
 class PhysicsSystem: public System
 {
@@ -45,13 +29,20 @@ public:
 
     ~PhysicsSystem() { };
 
-    // Apply physics to all known sprites
-    void apply_forces(
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-        std::vector<std::weak_ptr<taeto::GravityField>>& fields);
+    /**
+     * @brief Applies forces acting on objects in order to change their speed.
+     * @param objects All of the objects to update.
+     */
+    void apply_forces(std::vector<std::weak_ptr<IPhysical>>& objects);
 
-    void apply_speeds(
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites);
+    /**
+     * @brief Moves all objects according to their speeds.
+     * @details This function takes all object speeds, and moves them while
+     * simultaneously checking for collisions and changing their speeds
+     * accordingly.
+     * @param sprites All sprites that move or have collision.
+     */
+    void move_objects(std::vector<std::weak_ptr<IPhysical>>& sprites);
 
 private:
     std::shared_ptr<spdlog::logger> logger_;

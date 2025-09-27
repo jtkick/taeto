@@ -1,7 +1,14 @@
+/**
+ * @file object.hpp
+ * @brief Definition of the Taeto Object class.
+ * @details This Taeto Object class is the basis for just about every other
+ * object used in the Taeto engine. Because of this, it defines the methods
+ * that every object must have in order to be used, as well as acting as a flag
+ * class that lets systems know that this object is built for the Taeto engine.
+ */
+
 #ifndef OBJECT_OBJECT_HPP_
 #define OBJECT_OBJECT_HPP_
-
-#include <chrono>
 
 #include <glm/glm.hpp>
 
@@ -11,28 +18,23 @@ namespace taeto
 class Object
 {
 public:
-    Object() : position_(glm::dvec3(0.0, 0.0, 0.0)) { };
+    /**
+     * @brief Called when object is loaded into the Taeto engine.
+     * @details This function is overridden by sub-classes when they must do
+     * additional processing once loaded into the Taeto engine, such as loading
+     * in other dependent objects.
+     */
+    virtual void load() { };
 
-    Object(const glm::dvec3& p) : position_(p) { };
+    /**
+     * @brief Called at the beginning of each frame.
+     * @details This function is overridden by sub-classes when they must do
+     * additional processing on each frame. It is called by the Taeto engine at
+     * the beginning of each frame.
+     */
+    virtual void animate() { };
 
-    // Since Object is the base class for the interfaces, it needs at least one
-    // virtual method to be polymorphic
-    ~Object() { };
-
-    glm::dvec3& position();
-
-    void position(const glm::dvec3&);
-
-    void move(const glm::dvec3&);
-
-    // Called when the object is loaded into the engine
-    // Allows object to load any necessary sub-objects
-    void load() {};
-
-    void animate() {};
-
-protected:
-    glm::dvec3 position_ { 0.0f, 0.0f, 0.0f };
+    virtual ~Object() = default;
 };
 
 }   // namespace taeto

@@ -7,21 +7,7 @@
 namespace taeto
 {
 
-Spotlight::Spotlight()
-{
-    color_ = glm::vec3(1.0, 1.0, 1.0);
-    fade_ = 0.8;
-    radius_ = 30;
-}
-
-Spotlight::Spotlight(glm::vec3 c, float f, int i)
-{
-    color_ = c;
-    fade_ = f;
-    radius_ = i;
-}
-
-glm::vec3 Spotlight::color(glm::dvec3 p)
+glm::vec3 Spotlight::color(const glm::dvec3& pos)
 {
     // Get distance between points
     // Multiply y difference by two since characters are about twice as tall
@@ -30,9 +16,10 @@ glm::vec3 Spotlight::color(glm::dvec3 p)
     // eye
     // As a spotlight, z distance has no effect, since it goes on forever on
     // that axis
+    glm::dvec3 position = this->position();
     double distance = sqrt(
-        (position_.x - p.x) * (position_.x - p.x) +
-        (2.5 * (position_.y - p.y)) * (2.5 * (position_.y - p.y))
+        (position.x - pos.x) * (position.x - pos.x) +
+        (2.5 * (position.y - pos.y)) * (2.5 * (position.y - pos.y))
     ) - radius_;
 
     // For sanity's sake
@@ -47,8 +34,11 @@ glm::vec3 Spotlight::color(glm::dvec3 p)
     );
 }
 
-glm::vec3 Spotlight::vector(glm::dvec3 p)
+glm::vec3 Spotlight::vector(const glm::dvec3& pos)
 {
+    // We don't need the position to determine the vector; silence the warning
+    (void)pos;
+
     // For now, spotlights point directly into the frame
     return glm::vec3(0.0, 0.0, -1.0);
 }

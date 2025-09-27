@@ -8,6 +8,10 @@
 #ifndef OBJECT_IPHYSICAL_HPP_
 #define OBJECT_IPHYSICAL_HPP_
 
+#include <glm/glm.hpp>
+
+#include "taeto/objects/ipositionable.hpp"
+
 namespace taeto
 {
 
@@ -16,7 +20,7 @@ namespace taeto
  * @brief An interface defining how an object implements handling forces and
  * speeds.
  */
-class IPhysical
+class IPhysical : public IPositionable
 {
 public:
     /**
@@ -59,7 +63,7 @@ private:
      * @brief The speed of the object in 3D space.
      */
     glm::dvec3 speed_;
-}
+};
 
 }   // namespace taeto
 

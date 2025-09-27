@@ -1,40 +1,36 @@
-#ifndef COMPONENTS_CAMERA_HPP_
-#define COMPONENTS_CAMERA_HPP_
+#ifndef OBJECT_CAMERA_HPP_
+#define OBJECT_CAMERA_HPP_
 
-#include <stdint.h>
-
+#include "taeto/objects/ipositionable.hpp"
 #include "taeto/objects/object.hpp"
 
 namespace taeto
 {
 
-class Camera : public Object
+class Camera : public Object, public IPositionable
 {
 public:
-
-    Camera();
-
-    Camera(int);
+    Camera(double l) : focal_length_(l) { };
 
     ~Camera();
 
     /**
      * Get the distance of the drawing plane from the camera.
      */
-    unsigned int focal_length();
+    double focal_length() { return focal_length_; };
 
     /**
      * Set the distance of the drawing plane from the camera.
      */
-    void focal_length(unsigned int);
+    void focal_length(double length) { focal_length_ = length; };
 
 private:
     /**
      * Distance to the drawing plane.
      */
-    unsigned int focal_length_;
+    double focal_length_;
 };
 
 }   // namespace taeto
 
-#endif  // COMPONENTS_CAMERA_HPP_
+#endif  // OBJECT_CAMERA_HPP_

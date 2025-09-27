@@ -53,7 +53,7 @@ protected:
      * @brief Where the object currently resides in 3D or screen space.
      */
     glm::dvec3 position_ {0.0f, 0.0f, 0.0f};
-}
+};
 
 }   // namespace taeto
 

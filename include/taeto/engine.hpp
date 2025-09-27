@@ -15,7 +15,6 @@
 #include "taeto/objects/camera.hpp"
 #include "taeto/objects/lights/light.hpp"
 #include "taeto/objects/object.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/systems/render_system/render_system.hpp"
 #include "taeto/widgets/widget.hpp"
@@ -60,50 +59,33 @@ Camera& camera();
 float key_state(int id);
 
 /**
- * @brief Loads a sprite into the engine.
+ * @brief Loads an object into the engine.
  * 
- * @details Loads a sprite game object into the engine world to be rendered and
- * otherwise interact with other objects. If the sprite has already been loaded, it
+ * @details Loads a game object into the engine world to be rendered and
+ * otherwise interact with other objects. If the object has already been loaded, it
  * will simply be ignored. Unloading is done by destroying the source shared
- * pointer to the sprite.
+ * pointer to the object.
  *
- * @param sprite A weak_ptr to the sprite to be loaded.
+ * @param object A weak_ptr to the object to be loaded.
  *
  * @code
- * // Create a sprite using std::shared_ptr
+ * // Create an object using std::shared_ptr
  * auto rect = std::make_shared<taeto::Rectangle>(10, 10);
  *
  * // Load into the engine for rendering
- * taeto::load_sprite(rect);
+ * taeto::load_object(rect);
  * @endcode
  */
-void load_sprite(std::weak_ptr<Sprite> sprite);
-
-/**
- * @brief Loads a light into the engine. If the light has already been loaded, it will
- * simply be ignored. Unloading is done by destroying the source shared pointer
- * to the light.
- *
- * @param light A weak_ptr to the light to be loaded.
- */
-void load_light(std::weak_ptr<Light> light);
+void load_object(std::weak_ptr<Object> object);
 
 /**
  * Loads a widget into the engine. If the widget has already been loaded, it
  * will simply be ignored. Unloading is done by destroying the source shared
  * pointer to the widget.
  *
- * @param sprite A weak_ptr to the widget to be loaded.
+ * @param widget A weak_ptr to the widget to be loaded.
  */
-void load_widget(std::weak_ptr<widgets::Widget> widget);
-
-/**
- * Loads a scene into the engine. When loaded, any previous scene will be
- * dropped, along with all objects that had been loaded with that scene.
- *
- * @param scene A weak_ptr to the scene to be loaded.
- */
-void load_scene(std::shared_ptr<Scene> scene);
+void load_widget(std::weak_ptr<Object> widget);
 
 /**
  * Continually render and display frames until program stopped.

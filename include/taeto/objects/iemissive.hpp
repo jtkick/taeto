@@ -38,7 +38,7 @@ public:
      * being rendered at.
      */
     virtual glm::vec3 vector(const glm::dvec3& pos);
-}
+};
 
 }   // namespace taeto
 

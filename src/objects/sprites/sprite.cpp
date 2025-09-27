@@ -1,190 +1,190 @@
-#include "taeto/objects/sprites/sprite.hpp"
+// #include "taeto/objects/sprites/sprite.hpp"
 
-#include <algorithm>
-#include <chrono>
-#include <memory>
-#include <stdexcept>
-#include <vector>
+// #include <algorithm>
+// #include <chrono>
+// #include <memory>
+// #include <stdexcept>
+// #include <vector>
 
-#include "taeto/components/render_pixel.hpp"
-#include "taeto/objects/object.hpp"
-#include "taeto/shaders/shader.hpp"
-#include "taeto/tools.hpp"
+// #include "taeto/components/render_pixel.hpp"
+// #include "taeto/objects/object.hpp"
+// #include "taeto/shaders/shader.hpp"
+// #include "taeto/tools.hpp"
 
-namespace taeto
-{
+// namespace taeto
+// {
 
-bool Sprite::operator<(const Sprite& other) const
-{
-    return position_.z < other.position_.z;
-}
+// bool Sprite::operator<(const Sprite& other) const
+// {
+//     return position_.z < other.position_.z;
+// }
 
-taeto::RenderPixel Sprite::get_pixel_at(glm::uvec2)
-{
-    throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");
-}
+// taeto::RenderPixel Sprite::get_pixel_at(glm::uvec2)
+// {
+//     throw std::runtime_error("'get_pixel_at()' not defined for this sprite.");
+// }
 
-uint Sprite::height()
-{
-    return shape_.y;
-}
+// uint Sprite::height()
+// {
+//     return shape_.y;
+// }
 
-void Sprite::visible(const bool& v)
-{
-    visible_ = v;
-}
+// void Sprite::visible(const bool& v)
+// {
+//     visible_ = v;
+// }
 
-bool Sprite::visible()
-{
-    return visible_;
-}
+// bool Sprite::visible()
+// {
+//     return visible_;
+// }
 
-uint Sprite::width()
-{
-    return shape_.x;
-}
+// uint Sprite::width()
+// {
+//     return shape_.x;
+// }
 
-bool Sprite::collides()
-{
-    return false;
-}
+// bool Sprite::collides()
+// {
+//     return false;
+// }
 
-bool Sprite::detect_collisions()
-{
-    return detect_collisions_;
-}
+// bool Sprite::detect_collisions()
+// {
+//     return detect_collisions_;
+// }
 
-bool Sprite::get_collision_at(glm::uvec2)
-{
-    return false;
-}
+// bool Sprite::get_collision_at(glm::uvec2)
+// {
+//     return false;
+// }
 
-bool Sprite::on_collision(std::shared_ptr<taeto::Sprite>)
-{
-    return false;
-}
+// bool Sprite::on_collision(std::shared_ptr<taeto::Sprite>)
+// {
+//     return false;
+// }
 
-bool Sprite::collides_with(std::shared_ptr<taeto::Sprite> other)
-{
-    if (this->position().z != other->position().z)
-        return false;
+// bool Sprite::collides_with(std::shared_ptr<taeto::Sprite> other)
+// {
+//     if (this->position().z != other->position().z)
+//         return false;
 
-    // For simplicity, do everything at global positions
-    glm::ivec2 this_tl = {this->position().x, this->position().y};
-    glm::ivec2 other_tl = {other->position().x, other->position().y};
-    glm::ivec2 this_br = this_tl + glm::ivec2(this->shape());
-    glm::ivec2 other_br = other_tl + glm::ivec2(other->shape());
+//     // For simplicity, do everything at global positions
+//     glm::ivec2 this_tl = {this->position().x, this->position().y};
+//     glm::ivec2 other_tl = {other->position().x, other->position().y};
+//     glm::ivec2 this_br = this_tl + glm::ivec2(this->shape());
+//     glm::ivec2 other_br = other_tl + glm::ivec2(other->shape());
 
-    // Get overlap
-    glm::ivec2 tl = {std::max(this_tl.y, other_tl.y),
-                     std::max(this_tl.x, other_tl.x)};
-    glm::ivec2 br = {std::min(this_br.y, other_br.y),
-                     std::min(this_br.x, other_br.x)};
+//     // Get overlap
+//     glm::ivec2 tl = {std::max(this_tl.y, other_tl.y),
+//                      std::max(this_tl.x, other_tl.x)};
+//     glm::ivec2 br = {std::min(this_br.y, other_br.y),
+//                      std::min(this_br.x, other_br.x)};
 
-    // Now check every overlapping pixel to see if they collide
-    // If they don't overlap at all, this should just fall through
-    for (int y = tl.y; y < br.y - 1; y++)
-    {
-        for (int x = tl.x; x < br.x - 1; x++)
-        {
-            glm::ivec2 global_pos = glm::ivec2(x, y);
-            if (this->get_pixel_at(global_pos - this_tl).collision &&
-                other->get_pixel_at(global_pos - other_tl).collision)
-                return true;
-        }
-    }
+//     // Now check every overlapping pixel to see if they collide
+//     // If they don't overlap at all, this should just fall through
+//     for (int y = tl.y; y < br.y - 1; y++)
+//     {
+//         for (int x = tl.x; x < br.x - 1; x++)
+//         {
+//             glm::ivec2 global_pos = glm::ivec2(x, y);
+//             if (this->get_pixel_at(global_pos - this_tl).collision &&
+//                 other->get_pixel_at(global_pos - other_tl).collision)
+//                 return true;
+//         }
+//     }
     
-    return false;
-}
+//     return false;
+// }
 
-int Sprite::frame_timer(int frame_rate, bool refresh)
-{
-    // Get number of milliseconds per frame
-    int frame_time = 1000 / frame_rate;
+// int Sprite::frame_timer(int frame_rate, bool refresh)
+// {
+//     // Get number of milliseconds per frame
+//     int frame_time = 1000 / frame_rate;
 
-    // Get difference in time between now and last time timer was called
-    std::chrono::milliseconds time_diff = ms_since_epoch() - prev_timer_time_;
+//     // Get difference in time between now and last time timer was called
+//     std::chrono::milliseconds time_diff = ms_since_epoch() - prev_timer_time_;
 
-    // Get number of frames that have passed
-    int num_frames = time_diff.count() / frame_time;
+//     // Get number of frames that have passed
+//     int num_frames = time_diff.count() / frame_time;
 
-    // Update timer for these new frames
-    if (refresh)
-        prev_timer_time_ += std::chrono::milliseconds(frame_time * num_frames);
+//     // Update timer for these new frames
+//     if (refresh)
+//         prev_timer_time_ += std::chrono::milliseconds(frame_time * num_frames);
 
-    // Return number of frames that have passed
-    return num_frames;
-}
+//     // Return number of frames that have passed
+//     return num_frames;
+// }
 
-void Sprite::mass(double mass)
-{
-    mass_ = mass;
-}
+// void Sprite::mass(double mass)
+// {
+//     mass_ = mass;
+// }
 
-double Sprite::mass()
-{
-    return mass_;
-}
+// double Sprite::mass()
+// {
+//     return mass_;
+// }
 
-void Sprite::speed(const glm::dvec3& speed)
-{
-    speed_ = speed;
-}
+// void Sprite::speed(const glm::dvec3& speed)
+// {
+//     speed_ = speed;
+// }
 
-glm::dvec3 Sprite::speed()
-{
-    return speed_;
-}
+// glm::dvec3 Sprite::speed()
+// {
+//     return speed_;
+// }
 
-void Sprite::force(const glm::dvec3& force)
-{
-    force_ = force;
-}
+// void Sprite::force(const glm::dvec3& force)
+// {
+//     force_ = force;
+// }
 
-glm::dvec3 Sprite::force()
-{
-    return force_;
-}
+// glm::dvec3 Sprite::force()
+// {
+//     return force_;
+// }
 
-glm::uvec2& Sprite::shape()
-{
-    return shape_;
-}
+// glm::uvec2& Sprite::shape()
+// {
+//     return shape_;
+// }
 
-void Sprite::animate()
-{
+// void Sprite::animate()
+// {
 
-}
+// }
 
-bool Sprite::respect_light_sources()
-{
-    return respect_light_sources_;
-}
+// bool Sprite::respect_light_sources()
+// {
+//     return respect_light_sources_;
+// }
 
-void Sprite::respect_light_sources(bool rls)
-{
-    respect_light_sources_ = rls;
-}
+// void Sprite::respect_light_sources(bool rls)
+// {
+//     respect_light_sources_ = rls;
+// }
 
-void Sprite::add_shader(std::shared_ptr<taeto::shaders::Shader> shader)
-{
-    shaders_.push_back(shader);
-}
+// void Sprite::add_shader(std::shared_ptr<taeto::shaders::Shader> shader)
+// {
+//     shaders_.push_back(shader);
+// }
 
-void Sprite::remove_shader(std::shared_ptr<taeto::shaders::Shader> shader)
-{
-    shaders_.erase(std::remove_if(
-        shaders_.begin(), shaders_.end(),
-        [shader](const std::shared_ptr<taeto::shaders::Shader>& ptr)
-        {
-            return ptr.get() == shader.get();
-        }),
-        shaders_.end());
-}
+// void Sprite::remove_shader(std::shared_ptr<taeto::shaders::Shader> shader)
+// {
+//     shaders_.erase(std::remove_if(
+//         shaders_.begin(), shaders_.end(),
+//         [shader](const std::shared_ptr<taeto::shaders::Shader>& ptr)
+//         {
+//             return ptr.get() == shader.get();
+//         }),
+//         shaders_.end());
+// }
 
-const std::vector<std::shared_ptr<taeto::shaders::Shader>>& Sprite::shaders()
-{
-    return shaders_;
-}
+// const std::vector<std::shared_ptr<taeto::shaders::Shader>>& Sprite::shaders()
+// {
+//     return shaders_;
+// }
 
-}   // namespace taeto
+// }   // namespace taeto

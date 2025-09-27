@@ -7,27 +7,16 @@
 namespace taeto
 {
 
-PointLight::PointLight()
-{
-    color_ = glm::vec3(1.0, 1.0, 1.0);
-    fade_ = 0;
-}
-
-PointLight::PointLight(glm::vec3 c, float f)
-{
-    color_ = c;
-    fade_ = f;
-}
-
-glm::vec3 PointLight::color(glm::dvec3 p)
+glm::vec3 PointLight::color(const glm::dvec3& pos)
 {
     // Get distance between points
     // Multiply y difference by two plus a bit since characters are about twice
     // as tall as they are wide
+    glm::dvec3 p = this->position();
     double distance = std::sqrt(
-        (position_.x - p.x) * (position_.x - p.x) +
-        (2.5 * (position_.y - p.y)) * (2.5 * (position_.y - p.y)) +
-        (position_.z - p.z) * (position_.z - p.z));
+        (p.x - pos.x) * (p.x - pos.x) +
+        (2.5 * (p.y - pos.y)) * (2.5 * (p.y - pos.y)) +
+        (p.z - pos.z) * (p.z - pos.z));
 
     // Construct new color based on the distance
     return glm::vec3(
@@ -37,9 +26,10 @@ glm::vec3 PointLight::color(glm::dvec3 p)
     );
 }
 
-glm::vec3 PointLight::vector(glm::dvec3 p)
+glm::vec3 PointLight::vector(const glm::dvec3& pos)
 {
-    return glm::vec3(p.x - position_.x, p.y - position_.y, p.z - position_.z);
+    return pos - this->position();
+    // return glm::vec3(p.x - position_.x, p.y - position_.y, p.z - position_.z);
 }
 
 }   // namespace taeto

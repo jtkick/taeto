@@ -17,7 +17,6 @@
 #include "taeto/frames/render_pixel_frame.hpp"
 #include "taeto/objects/lights/light.hpp"
 #include "taeto/objects/object.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/systems/audio_system.hpp"
 #include "taeto/systems/input_systems/input_system.hpp"
@@ -38,22 +37,13 @@ namespace {
     EngineSettings settings_;
 
     // Sprites to be rendered
-    std::vector<std::weak_ptr<taeto::Sprite>> sprites_;
-
-    // Light sources
-    std::vector<std::weak_ptr<taeto::Light>> lights_;
-
-    // Currently loaded scene
-    std::shared_ptr<Scene> scene_;
+    std::vector<std::weak_ptr<Object>> objects_;
 
     // Windows to be displayed
-    std::vector<std::weak_ptr<taeto::widgets::Widget>> widgets_;
-
-    // Gravity fields
-    std::vector<std::weak_ptr<taeto::GravityField>> gravity_fields_;
+    std::vector<std::weak_ptr<Object>> widgets_;
 
     // Engine camera
-    taeto::Camera camera_ = taeto::Camera(10);
+    Camera camera_ = Camera(10);
 
     // If set to true, engine will display FPS in top left corner
     bool debug_mode_on_ = false;
@@ -82,48 +72,25 @@ float key_state(int id)
     return input_system_->key_state(id);
 }
 
-void load_sprite(std::weak_ptr<Sprite> sprite)
+void load_object(std::weak_ptr<Object> object)
 {
     spdlog::debug("Adding object to engine.");
 
     // Get shared pointer to object
-    std::shared_ptr<taeto::Sprite> s;
-    if (!(s = sprite.lock()))
+    std::shared_ptr<Object> o;
+    if (!(o = object.lock()))
         return;
 
     // Load object to main vector
-    sprites_.push_back(sprite);
+    objects_.push_back(object);
 }
 
-void load_light(std::weak_ptr<taeto::Light> light)
-{
-    spdlog::debug("Adding light to engine.");
-
-    // Get shared pointer to light
-    std::shared_ptr<taeto::Light> l;
-    if (!(l = light.lock()))
-        return;
-
-    // Load light to main vector
-    lights_.push_back(light);
-}
-
-void load_scene(std::shared_ptr<Scene> scene)
-{
-    sprites_.clear();
-    lights_.clear();
-
-    spdlog::debug("Loading scene.");
-    scene_ = scene;
-    scene_->load();
-}
-
-void load_widget(std::weak_ptr<taeto::widgets::Widget> widget)
+void load_widget(std::weak_ptr<Object> widget)
 {
     spdlog::debug("Adding widget to engine.");
 
     // Get shared pointer to widget
-    std::shared_ptr<taeto::widgets::Widget> w;
+    std::shared_ptr<Object> w;
     if (!(w = widget.lock()))
         return;
 
@@ -179,9 +146,9 @@ void run()
 
         // Clear out all dead pointers from engine
         spdlog::debug("Clearing out all dead pointers.");
-        for (int i = sprites_.size()-1; i >= 0; --i)
-            if (sprites_.at(i).expired())
-                sprites_.erase(sprites_.begin() + i);
+        for (int i = objects_.size()-1; i >= 0; --i)
+            if (objects_.at(i).expired())
+                objects_.erase(objects_.begin() + i);
         for (int i = lights_.size()-1; i >= 0; --i)
             if (lights_.at(i).expired())
                 lights_.erase(lights_.begin() + i);
@@ -199,23 +166,11 @@ void run()
         ////                     ANIMATION STEP                     ////
         ////////////////////////////////////////////////////////////////
 
-        spdlog::debug("Telling sprites to animate.");
-        for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
+        spdlog::debug("Telling objects to animate.");
+        for (std::weak_ptr<Object> object : objects_)
             // Get pointer if not dead
-            if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
-                s->animate();
-
-        spdlog::debug("Telling scene to animate.");
-        if (scene_)
-            scene_->animate();
-
-        // TODO: GET POINTERS TO ALL UNIQUE SHADERS, AND TELL THEM TO ANIMATE
-
-        // QUICK AND DIRTY
-        for (std::weak_ptr<taeto::Sprite> sprite : sprites_)
-            if (std::shared_ptr<taeto::Sprite> s = sprite.lock())
-                for (std::shared_ptr<taeto::shaders::Shader> sh : s->shaders())
-                    sh->animate();
+            if (std::shared_ptr<Object> o = object.lock())
+                o->animate();
 
 
         ////////////////////////////////////////////////////////////////
@@ -224,8 +179,8 @@ void run()
 
         // Physics
         spdlog::debug("Applying forces to sprites.");
-        physics_system_.apply_forces(sprites_, gravity_fields_);
-        physics_system_.apply_speeds(sprites_);
+        physics_system_.apply_forces(objects_);
+        physics_system_.apply_speeds(objects_);
 
 
         ////////////////////////////////////////////////////////////////
@@ -233,7 +188,7 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         spdlog::debug("Rendering new frame.");
-        render_system_.render_frame(frame, camera_, sprites_, lights_);
+        render_system_.render_frame(frame, camera_, objects_, objects_);
 
 
         ////////////////////////////////////////////////////////////////
@@ -241,9 +196,9 @@ void run()
         ////////////////////////////////////////////////////////////////
 
         // Draw all windows on the rendered frame
-        for (std::weak_ptr<taeto::widgets::Widget> widget : widgets_)
+        for (std::weak_ptr<IRenderable> widget : widgets_)
         {
-            if (std::shared_ptr<taeto::widgets::Widget> w = widget.lock())
+            if (std::shared_ptr<IRenderable> w = widget.lock())
             {
                 DisplayPixelFrame render = w->render();
                 frame.apply(
@@ -276,7 +231,7 @@ void run()
             frame.add_string(
                 0, 0, "FPS: " + std::to_string((int)(1000.0/last_frame_duration_.count())));
             frame.add_string(
-                1, 0, "NUM SPRITES: " + std::to_string(sprites_.size()));
+                1, 0, "NUM SPRITES: " + std::to_string(objects_.size()));
             frame.add_string(
                 2, 0, "NUM LIGHTS: " + std::to_string(lights_.size()));
             frame.add_string(

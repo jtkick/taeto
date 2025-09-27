@@ -5,8 +5,10 @@
  * define in order to be rendered in the Taeto engine.
  */
 
- #ifndef OBJECT_IRENDERABLE_HPP_
- #define OBJECT_IRENDERABLE_HPP_
+#ifndef OBJECT_IRENDERABLE_HPP_
+#define OBJECT_IRENDERABLE_HPP_
+
+#include "taeto/components/render_pixel.hpp"
 
 namespace taeto
 {
@@ -29,7 +31,7 @@ public:
      * @param pos Position of pixel relative to the object's position.
      */
     virtual RenderPixel pixel_at(const glm::uvec2& pos);
-}
+};
 
 }   // namespace taeto
 

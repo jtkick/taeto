@@ -10,6 +10,8 @@
 #include "spdlog/spdlog.h"
 
 #include "taeto/objects/camera.hpp"
+#include "taeto/objects/iemissive.hpp"
+#include "taeto/objects/irenderable.hpp"
 #include "taeto/components/display_pixel.hpp"
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/display_pixel_frame.hpp"
@@ -75,8 +77,8 @@ public:
     virtual void render_frame(
         taeto::DisplayPixelFrame&,
         taeto::Camera&,
-        std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-        std::vector<std::weak_ptr<taeto::Light>>& lights
+        std::vector<std::weak_ptr<IRenderable>>& sprites,
+        std::vector<std::weak_ptr<IEmissive>>& lights
     );
 
     /**
