@@ -5,16 +5,17 @@
 
 #include "taeto/engine.hpp"
 #include "taeto/objects/lights/directional_light.hpp"
+#include "taeto/objects/object.hpp"
+#include "taeto/objects/iphysical.hpp"
 #include "taeto/objects/sprites/circle.hpp"
 #include "taeto/objects/sprites/rectangle.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
-#include "taeto/scenes/scene.hpp"
 #include "taeto/shaders/checkerboard.hpp"
 
 namespace taeto
 {
 
-class Box : public Sprite
+class Box : public ISprite
 {
 public:
     Box()
@@ -41,7 +42,7 @@ public:
 
     };
 
-    RenderPixel get_pixel_at(glm::uvec2 pos)
+    RenderPixel pixel_at(const glm::uvec2& pos)
     {
         if (pos.x < 2 || pos.x > shape_.x - 3)
             return black_;
@@ -55,7 +56,15 @@ private:
     RenderPixel clear_;
 };
 
-class PhysicsTest : public Scene
+// Create a circle with physics
+class Ball : public Circle, public IPhysical
+{
+  public:
+    Ball(int d, taeto::RenderPixel p, bool n) : Circle(d, p, n) { };
+};
+
+
+class PhysicsTest : public Object
 {
 public:
     PhysicsTest()
@@ -64,19 +73,19 @@ public:
             glm::uvec2(1000, 1000),
             taeto::RenderPixel(' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false));
         cb_->position({
-            -((double)cb_->width()/2),
-            -((double)cb_->height()/2),
+            -((double)cb_->shape().x/2),
+            -((double)cb_->shape().y/2),
             -20});
-        cb_->add_shader(std::make_shared<taeto::shaders::Checkerboard>());
+        cb_->load_shader(std::make_shared<taeto::shaders::Checkerboard>());
 
         box_ = std::make_shared<Box>();
-        box_->position({-((double)box_->width()/2),
-                        -((double)box_->height()/2),
+        box_->position({-((double)box_->shape().x/2),
+                        -((double)box_->shape().y/2),
                         -10});
 
         for (int i = 0; i < 1; i++)
         {
-            std::shared_ptr<Circle> ball = std::make_shared<Circle>(
+            std::shared_ptr<Ball> ball = std::make_shared<Ball>(
                 15,
                 RenderPixel(
                     // true,
@@ -108,11 +117,11 @@ public:
 
     void load()
     {
-        taeto::load_sprite(cb_);
-        taeto::load_sprite(box_);
+        taeto::load_object(cb_);
+        taeto::load_object(box_);
         for (const auto& ball : balls_)
-            taeto::load_sprite(ball);
-        taeto::load_light(dl_);
+            taeto::load_object(ball);
+        taeto::load_object(dl_);
     }
 
 private:
@@ -127,7 +136,8 @@ private:
 int main()
 {
     taeto::debug_mode(true);
-    taeto::load_scene(std::make_shared<taeto::PhysicsTest>());
+    std::shared_ptr<taeto::PhysicsTest> pt = std::make_shared<taeto::PhysicsTest>();
+    taeto::load_object(pt);
     taeto::run();
 }
 

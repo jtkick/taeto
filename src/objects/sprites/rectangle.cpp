@@ -9,12 +9,14 @@ namespace taeto
 
 Rectangle::Rectangle(glm::uvec2 s, taeto::RenderPixel p)
 {
+    shape(s);
     shape_ = s;
     pixel_ = p;
 }
 
-taeto::RenderPixel Rectangle::get_pixel_at(glm::uvec2 pos)
-{
+taeto::RenderPixel Rectangle::pixel_at(const glm::uvec2& pos)
+{  
+    (void) pos;
     return pixel_;
 }
 

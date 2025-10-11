@@ -1,6 +1,10 @@
 # Include the Taeto library headers
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+# Simple Rectangle Test
+add_executable(basic_render_test basic_render_test.cpp)
+target_link_libraries(basic_render_test PUBLIC Taeto)
+
 # Vaporwave Demo
 add_executable(demo demo.cpp)
 target_link_libraries(demo PUBLIC Taeto)
@@ -35,6 +39,6 @@ target_link_libraries(window_test PUBLIC Taeto)
 
 # Output tests to 'build' directory
 set_target_properties(
-    demo hdr_test input_test light_filter_test light_mixing_test normal_mapping_test PROPERTIES
+    basic_render_test demo hdr_test input_test light_filter_test light_mixing_test normal_mapping_test PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/tests"
 )

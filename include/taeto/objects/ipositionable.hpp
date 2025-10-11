@@ -10,6 +10,10 @@
 #ifndef OBJECT_IPOSITIONABLE_HPP_
 #define OBJECT_IPOSITIONABLE_HPP_
 
+#include <glm/glm.hpp>
+
+#include "taeto/objects/object.hpp"
+
 namespace taeto
 {
 
@@ -19,7 +23,7 @@ namespace taeto
  * in space. It provides a default implementation, since this interface should
  * rarely ever be implemented any other way.
  */
-class IPositionable
+class IPositionable : public virtual Object
 {
 public:
     /**
@@ -36,7 +40,7 @@ public:
      * resides in in 3D space or screen space.
      * @return glm::dvec3& The current position of the object in 3D space.
      */
-    virtual glm::dvec3 position() { return position_; };
+    virtual glm::dvec3& position() { return position_; };
 
     /**
      * @brief Setter for the object's position.
@@ -45,8 +49,6 @@ public:
      * @param pos The new position of the object.
      */
     virtual void position(const glm::dvec3& pos) { position_ = pos; };
-
-    virtual ~IPositionable() = default;
 
 protected:
     /**

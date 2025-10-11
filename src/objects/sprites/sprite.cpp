@@ -59,12 +59,12 @@
 //     return false;
 // }
 
-// bool Sprite::on_collision(std::shared_ptr<taeto::Sprite>)
+// bool Sprite::on_collision(std::shared_ptr<ISprite>)
 // {
 //     return false;
 // }
 
-// bool Sprite::collides_with(std::shared_ptr<taeto::Sprite> other)
+// bool Sprite::collides_with(std::shared_ptr<ISprite> other)
 // {
 //     if (this->position().z != other->position().z)
 //         return false;

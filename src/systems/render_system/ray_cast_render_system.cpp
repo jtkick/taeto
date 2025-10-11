@@ -9,7 +9,6 @@
 #include <glm/gtx/compatibility.hpp>
 #include "spdlog/spdlog.h"
 
-// #include "components/position.hpp"
 #include "taeto/components/display_pixel.hpp"
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/frame.hpp"
@@ -21,12 +20,12 @@ namespace taeto
 {
 
 // For sorting vector of sprites
-bool compare_sprites(std::weak_ptr<taeto::Sprite> weak_sprite1,
-                     std::weak_ptr<taeto::Sprite> weak_sprite2)
+bool compare_sprites(std::weak_ptr<ISprite> weak_sprite1,
+                     std::weak_ptr<ISprite> weak_sprite2)
 {
     // Get shared pointers to both sprites
-    std::shared_ptr<taeto::Sprite> sprite1;
-    std::shared_ptr<taeto::Sprite> sprite2;
+    std::shared_ptr<ISprite> sprite1;
+    std::shared_ptr<ISprite> sprite2;
     if (!(sprite1 = weak_sprite1.lock()) ||
         !(sprite2 = weak_sprite2.lock()))
         return false;
@@ -38,8 +37,8 @@ bool compare_sprites(std::weak_ptr<taeto::Sprite> weak_sprite1,
 void RayCastRenderSystem::render_frame(
     taeto::DisplayPixelFrame &rendered_frame,
     taeto::Camera &camera,
-    std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-    std::vector<std::weak_ptr<taeto::Light>>& lights)
+    std::vector<std::weak_ptr<ISprite>>& sprites,
+    std::vector<std::weak_ptr<ILight>>& lights)
 {
     // Get height and width for quick reference
     int h = rendered_frame.height();
@@ -67,14 +66,14 @@ void RayCastRenderSystem::render_frame(
         for (int x = 0; x < w; x++)
         {
             // Make sure to start with completely black pixel
-            rendered_frame.at(glm::uvec2(x, y)).clear();
+            // rendered_frame.at(glm::uvec2(x, y)).clear();
 
             // // Go down sprites until we find one that is completely opaque
             // int pixel_index = sprites.size()-1;
             // while (pixel_index >= 0)
             // {
             //     // Get pointer if not dead
-            //     std::shared_ptr<taeto::Sprite> current_sprite;
+            //     std::shared_ptr<ISprite> current_sprite;
             //     if (!(current_sprite = current_sprite_weak_ptr.lock()))
             //         continue;
             //
@@ -84,15 +83,15 @@ void RayCastRenderSystem::render_frame(
             // }
 
             // Render each sprite at a time
-            for (std::weak_ptr<taeto::Sprite> current_sprite_weak_ptr : sprites)
+            for (std::weak_ptr<ISprite> current_sprite_weak_ptr : sprites)
             {
                 // Get pointer if not dead
-                std::shared_ptr<taeto::Sprite> current_sprite;
+                std::shared_ptr<ISprite> current_sprite;
                 if (!(current_sprite = current_sprite_weak_ptr.lock()))
                     continue;
 
                 // Assume it's invisible and update it as such
-                current_sprite->visible(false);
+                // current_sprite->visible(false);
 
                 // Get distance between sprite and camera
                 double z_diff = (int64_t)camera.position().z -
@@ -116,17 +115,17 @@ void RayCastRenderSystem::render_frame(
                 double rel_x = abs_x - (int64_t)current_sprite->position().x;
 
                 // If pixel doesn't overlap with sprite, move on to next pixel
-                if ( rel_x < 0 || rel_x >= current_sprite->width() ||
-                     rel_y < 0 || rel_y >= current_sprite->height())
+                if ( rel_x < 0 || rel_x >= current_sprite->shape().x ||
+                     rel_y < 0 || rel_y >= current_sprite->shape().y)
                      continue;
 
                 // Get pixel of interest
                 taeto::RenderPixel current_pixel =
-                    current_sprite->get_pixel_at(glm::uvec2(rel_x, rel_y));
+                    current_sprite->pixel_at(glm::uvec2(rel_x, rel_y));
 
                 // Now that we have a pixel from the sprite, we know that it's
                 // visible, so let it know that
-                current_sprite->visible(true);
+                // current_sprite->visible(true);
 
                 // Determine if pixel should be drawn
                 if (!current_pixel.render)
@@ -140,10 +139,10 @@ void RayCastRenderSystem::render_frame(
                 if (current_sprite->respect_light_sources())
                 {
                     glm::vec3 received_light(0.0, 0.0, 0.0);
-                    for (std::weak_ptr<taeto::Light> light_weak_ptr : lights)
+                    for (std::weak_ptr<IEmissive> light_weak_ptr : lights)
                     {
                         // Get pointer if not dead
-                        std::shared_ptr<taeto::Light> light;
+                        std::shared_ptr<IEmissive> light;
                         if (!(light = light_weak_ptr.lock()))
                             continue;
 
@@ -187,9 +186,10 @@ void RayCastRenderSystem::render_frame(
 
                 // Apply shading to pixel
                 for (auto shader : current_sprite->shaders())
-                    current_pixel = shader->shade(
-                        current_pixel, frame_shape, pos_in_frame, pos_in_world,
-                        camera_pos);
+                    if (auto s = shader.lock())
+                        current_pixel = s->shade(
+                            current_pixel, frame_shape, pos_in_frame, pos_in_world,
+                            camera_pos);
 
                 ////////////////////////////////////////////////////////////////
                 ////                      APPLY PIXEL                       ////
@@ -211,14 +211,14 @@ void RayCastRenderSystem::render_frame(
                 {
                     // Default, combine this with previous pixel
                     rendered_pixel.c = current_pixel.c;
-                    // rendered_pixel.fg_color = mix_colors(
-                    //     rendered_pixel.fg_color,
-                    //     current_pixel.fg_color);
-                    // rendered_pixel.bg_color = mix_colors(
-                    //     rendered_pixel.bg_color,
-                    //     current_pixel.bg_color);
-                    rendered_pixel.fg_color = current_pixel.fg_color;
-                    rendered_pixel.bg_color = current_pixel.bg_color;
+                    rendered_pixel.fg_color = mix_colors(
+                        rendered_pixel.fg_color,
+                        current_pixel.fg_color);
+                    rendered_pixel.bg_color = mix_colors(
+                        rendered_pixel.bg_color,
+                        current_pixel.bg_color);
+                    // rendered_pixel.fg_color = current_pixel.fg_color;
+                    // rendered_pixel.bg_color = current_pixel.bg_color;
                     rendered_pixel.bold = current_pixel.bold;
                     rendered_pixel.italic = current_pixel.italic;
                     rendered_pixel.underline = current_pixel.underline;
@@ -343,6 +343,85 @@ void RayCastRenderSystem::render_frame(
                 color = pixel.bg_color;
                 color = color / (color + glm::vec3(1.0));
                 pixel.bg_color = glm::vec4(glm::pow(color, glm::vec3(1.0 / kGamma)), pixel.bg_color.w);
+            }
+        }
+    }
+}
+
+void RayCastRenderSystem::render_windows(
+    DisplayPixelFrame& frame,
+    std::vector<std::weak_ptr<ISprite>>& windows
+)
+{
+    // Get height and width for quick reference
+    int h = frame.height();
+    int w = frame.width();
+
+    ////////////////////////////////////////////////////////////////
+    ////                       PRE-RENDER                       ////
+    ////////////////////////////////////////////////////////////////
+
+    // Sort all windows from closest to farthest
+    // Just going to assume std::sort() is smart enough to use insertion sort
+    // in this scenario (for now)
+    std::sort(windows.begin(), windows.end(), compare_sprites);
+
+    ////////////////////////////////////////////////////////////////
+    ////                         RENDER                         ////
+    ////////////////////////////////////////////////////////////////
+
+    // Loop over each pixel in frame
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            // Render each window at a time
+            for (std::weak_ptr<ISprite> current_window_weak_ptr : windows)
+            {
+                // Get pointer if not dead
+                std::shared_ptr<ISprite> current_window;
+                if (!(current_window = current_window_weak_ptr.lock()))
+                    continue;
+
+                // Map to relative to sprite origin
+                int64_t rel_y = y - (int64_t)current_window->position().y;
+                int64_t rel_x = x - (int64_t)current_window->position().x;
+
+                // If pixel doesn't overlap with sprite, move on to next pixel
+                if ( rel_x < 0 || rel_x >= current_window->shape().x ||
+                     rel_y < 0 || rel_y >= current_window->shape().y)
+                     continue;
+
+                // Get pixel of interest
+                taeto::RenderPixel current_pixel =
+                    current_window->pixel_at(glm::uvec2(rel_x, rel_y));
+
+                // Determine if pixel should be drawn
+                // if (!current_pixel.render)
+                //     continue;
+
+                ////////////////////////////////////////////////////////////////
+                ////                      APPLY PIXEL                       ////
+                ////////////////////////////////////////////////////////////////
+
+                // Now combine this pixel with the previous one rendered
+                taeto::DisplayPixel& rendered_pixel =
+                    frame.at(glm::uvec2(x, y));
+
+                // Default, combine this with previous pixel
+                rendered_pixel.c = current_pixel.c;
+                rendered_pixel.fg_color = mix_colors(
+                    rendered_pixel.fg_color,
+                    current_pixel.fg_color);
+                rendered_pixel.bg_color = mix_colors(
+                    rendered_pixel.bg_color,
+                    current_pixel.bg_color);
+                // rendered_pixel.fg_color = current_pixel.fg_color;
+                // rendered_pixel.bg_color = current_pixel.bg_color;
+                rendered_pixel.bold = current_pixel.bold;
+                rendered_pixel.italic = current_pixel.italic;
+                rendered_pixel.underline = current_pixel.underline;
+                rendered_pixel.strikethrough = current_pixel.strikethrough;
             }
         }
     }

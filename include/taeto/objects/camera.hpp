@@ -2,17 +2,16 @@
 #define OBJECT_CAMERA_HPP_
 
 #include "taeto/objects/ipositionable.hpp"
-#include "taeto/objects/object.hpp"
 
 namespace taeto
 {
 
-class Camera : public Object, public IPositionable
+class Camera : public virtual IPositionable
 {
 public:
     Camera(double l) : focal_length_(l) { };
 
-    ~Camera();
+    ~Camera() { };
 
     /**
      * Get the distance of the drawing plane from the camera.

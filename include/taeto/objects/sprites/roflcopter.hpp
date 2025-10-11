@@ -4,19 +4,20 @@
 #include <glm/glm.hpp>
 
 #include "taeto/components/render_pixel.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/objects/isprite.hpp"
 
 namespace taeto
 {
 
-class Roflcopter: public taeto::Sprite
+class Roflcopter: public ISprite
 {
 public:
     Roflcopter(glm::uvec2 s, taeto::RenderPixel p);
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2 pos);
+    taeto::RenderPixel pixel_at(glm::uvec2& pos);
 
 private:
+    glm::uvec2 shape_;
     taeto::RenderPixel pixel_;
 };
 

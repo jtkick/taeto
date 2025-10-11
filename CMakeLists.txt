@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 
 # Project name and version
 project(Taeto VERSION 0.0.0 LANGUAGES CXX)
+set_target_properties(${LIBRARY_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Specify the library target
 file(GLOB_RECURSE SOURCES
@@ -60,6 +61,7 @@ endif()
 # Set include directories
 target_include_directories(Taeto PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps/lodepng>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps/glm>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )

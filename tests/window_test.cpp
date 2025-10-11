@@ -4,81 +4,92 @@
 #include <memory>
 
 #include "taeto/components/render_pixel.hpp"
+#include "taeto/objects/irenderable.hpp"
+#include "taeto/objects/iwidget.hpp"
 #include "taeto/objects/sprites/rectangle.hpp"
 #include "taeto/engine.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/shaders/checkerboard.hpp"
-#include "taeto/widgets/vertical_layout.hpp"
-#include "taeto/widgets/widget.hpp"
-#include "taeto/widgets/selector.hpp"
-#include "taeto/widgets/text_box.hpp"
+#include "taeto/tools.hpp"
 
-class TestWindow : public taeto::widgets::Widget
+class TextBox : public taeto::IWidget
+{
+public:
+    TextBox(std::string text = "Hello world!") : text_(text) { };
+
+    ~TextBox() { };
+
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos)
+    {
+        if ((pos.y * shape().x) + pos.x < text_.length())
+            return taeto::RenderPixel(text_.at((pos.y * shape().x) + pos.x), glm::vec4(1,1,1,1), glm::vec4(0,0,0,0), false);
+        return taeto::RenderPixel(' ', glm::vec4(0,0,0,0), glm::vec4(0,0,0,0), false);
+    };
+
+private:
+    std::string text_;
+};
+
+class TestWindow : public taeto::IWidget
 {
 public:
     TestWindow()
     {
-        vl_.add_widget(std::make_shared<taeto::widgets::Selector>(std::vector<std::string>({"Low", "Medium", "High"})), 0);
-        vl_.add_widget(std::make_shared<taeto::widgets::TextBox>("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."), 1);
-        vl_.add_widget(std::make_shared<taeto::widgets::TextBox>("THIS IS A TEST"), 1);
+    
     };
 
     ~TestWindow() {};
 
-    void size(glm::uvec2 v)
+    void shape(const glm::uvec2& s)
     {
-        size_ = v;
-        vl_.size(v - glm::uvec2(4, 2));
+        shape_ = s;
+        child()->shape(s-glm::uvec2({4, 2}));
     };
 
-    glm::uvec2 size()
+    glm::uvec2& shape()
     {
-        return size_;
-    }
+        return shape_;
+    };
 
-    taeto::DisplayPixelFrame render()
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos)
     {
-        taeto::DisplayPixelFrame result(size());
-        for (int y = 0; y < result.height(); y++)
+        taeto::RenderPixel ret = default_;
+        if (pos.x == 0 || pos.x == shape().x-1)
         {
-            for (int x = 0; x < result.width(); x++)
+            if (pos.y == 0 || pos.y == shape().y-1)
             {
-                result.at({x, y}).bg_color = glm::vec4(0.0, 0.0, 0.0, 0.5);
-
-                if (y == 0 || y == result.height()-1)
-                    result.at({x, y}).c = '#';
-                else if (x < 2 || x > result.width()-3)
-                    result.at({x, y}).c = '#';
-
+                ret.c = 'O';
+            }
+            else
+            {
+                ret.c = '|';
             }
         }
+        else if (pos.y == 0 || pos.y == shape().y-1)
+        {
+            ret.c = '-';
+        }
+        else
+        {
+            taeto::RenderPixel pix = child()->pixel_at(pos - glm::uvec2({2, 1}));
 
-        taeto::DisplayPixelFrame l = vl_.render();
-        result.apply(
-            l,
-            glm::uvec2(2, 1),
-            false,
-            [](taeto::DisplayPixel& a, taeto::DisplayPixel& b)->taeto::DisplayPixel&
-            {
-                a.c = b.c;
-                a.fg_color = taeto::mix_colors(a.fg_color, b.fg_color);
-                a.bg_color = taeto::mix_colors(a.bg_color, b.bg_color);
-                a.bold = b.bold;
-                a.italic = b.italic;
-                a.underline = b.underline;
-                a.strikethrough = b.strikethrough;
-                return a;
-            }
-        );
-        return result;
-        
+            ret.c = pix.c;
+            ret.fg_color = taeto::mix_colors(ret.fg_color, pix.fg_color);
+            ret.bg_color = taeto::mix_colors(ret.bg_color, pix.bg_color);
+            ret.bold = pix.bold;
+            ret.italic = pix.italic;
+            ret.underline = pix.underline;
+            ret.strikethrough = pix.strikethrough;
+
+        }
+        return ret;
     };
 
 protected:
-    taeto::widgets::VerticalLayout vl_;
+    taeto::RenderPixel default_ = taeto::RenderPixel(' ', glm::vec4(1, 1, 1, 1), glm::vec4(0, 0, 0, 0.75), false);
 };
 
-class WindowTest : public taeto::Scene
+class WindowTest : public taeto::Object
 {
 public:
     WindowTest()
@@ -87,35 +98,44 @@ public:
             glm::uvec2(1000, 1000),
             taeto::RenderPixel(' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false));
         cb_->position({
-            -((double)cb_->width()/2),
-            -((double)cb_->height()/2),
+            -((double)cb_->shape().x/2),
+            -((double)cb_->shape().y/2),
             -10});
-        cb_->add_shader(std::make_shared<taeto::shaders::Checkerboard>());
+        cbs_ = std::make_shared<taeto::shaders::Checkerboard>();
+        cb_->load_shader(cbs_);
+        
         tw_ = std::make_shared<TestWindow>();
-        tw_->size({50, 10});
-        tw_->position({40, 15});
-    }
+        // tw_->shape({50, 10});
+        tw_->position(glm::dvec3({50, 25, -10}));
+
+        tb_ = std::make_shared<TextBox>("This is a test.");
+        tw_->child(tb_);
+
+        // QUICK FIX
+        tw_->shape({50, 10});
+    };
 
     ~WindowTest() {};
 
     void load()
     {
-        taeto::load_sprite(cb_);
-        // taeto::load_widget(tb_);
-        taeto::load_widget(tw_);
-    }
+        taeto::load_object(cb_);
+        taeto::load_object(tw_, taeto::Context::kScreenSpace);
+        // taeto::load_object(tb_);
+    };
 
 private:
     std::shared_ptr<taeto::Rectangle> cb_;
-    // std::shared_ptr<Widget> w_;
-    // std::shared_ptr<TextBox> tb_;
+    std::shared_ptr<taeto::shaders::Checkerboard> cbs_;
     std::shared_ptr<TestWindow> tw_;
+    std::shared_ptr<TextBox> tb_;
 };
 
 int main()
 {
     taeto::debug_mode(true);
-    taeto::load_scene(std::make_shared<WindowTest>());
+    std::shared_ptr<WindowTest> wt = std::make_shared<WindowTest>();
+    taeto::load_object(wt);
     taeto::run();
 }
 

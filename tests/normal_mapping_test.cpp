@@ -9,14 +9,15 @@
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/objects/lights/directional_light.hpp"
 #include "taeto/objects/lights/point_light.hpp"
+#include "taeto/objects/ianimated.hpp"
+#include "taeto/objects/object.hpp"
 #include "taeto/objects/sprites/circle.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
-#include "taeto/scenes/scene.hpp"
-#include "taeto/widgets/selector.hpp"
+// #include "taeto/widgets/selector.hpp"
 
 int const TWO_PI = 6.283;
 
-class NormalMappingTest : public taeto::Scene
+class NormalMappingTest : public taeto::IAnimated
 {
 public:
     NormalMappingTest()
@@ -27,15 +28,15 @@ public:
         last_animate_ = taeto::ms_since_epoch();
         stopwatch_ = std::chrono::milliseconds(0);
         s_ = std::make_shared<taeto::Circle>(51, taeto::RenderPixel(' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false),true);
-        s_->position({-((double)s_->width()/2), -((double)s_->height()/2), -10});
+        s_->position({-((double)s_->shape().x/2), -((double)s_->shape().y/2), -10});
         s_->respect_light_sources(true);
         pl_ = std::make_shared<taeto::PointLight>(glm::vec3(1.0, 1.0, 1.0), 0.9999);
         pl_->position({10, 0, 0});
         dl_ = std::make_shared<taeto::DirectionalLight>(glm::vec3(0.05, 0.05, 0.05), glm::vec3(0.0, 0.0, -1.0));
 
-        sl_ = std::make_shared<taeto::widgets::Selector>(std::vector<std::string>({"OFF", "ON"}));
-        sl_->size({20, 1});
-        sl_->position({20, 20});
+        // sl_ = std::make_shared<taeto::widgets::Selector>(std::vector<std::string>({"OFF", "ON"}));
+        // sl_->size({20, 1});
+        // sl_->position({20, 20});
     };
 
     ~NormalMappingTest() { };
@@ -60,10 +61,10 @@ public:
 
     void load()
     {
-        taeto::load_sprite(s_);
-        taeto::load_light(pl_);
-        taeto::load_light(dl_);
-        taeto::load_widget(sl_);
+        taeto::load_object(s_);
+        taeto::load_object(pl_);
+        taeto::load_object(dl_);
+        // taeto::load_object(sl_);
     };
 
 private:
@@ -80,12 +81,13 @@ private:
     std::shared_ptr<taeto::Circle> s_;
     std::shared_ptr<taeto::PointLight> pl_;
     std::shared_ptr<taeto::DirectionalLight> dl_;
-    std::shared_ptr<taeto::widgets::Selector> sl_;
+    // std::shared_ptr<taeto::widgets::Selector> sl_;
 };
 
 int main()
 {
     taeto::debug_mode(true);
-    taeto::load_scene(std::make_shared<NormalMappingTest>());
+    std::shared_ptr<NormalMappingTest> nmt = std::make_shared<NormalMappingTest>();
+    taeto::load_object(nmt);
     taeto::run();
 }

@@ -13,7 +13,6 @@
 
 #include "systems/physics_system.hpp"
 #include "taeto/objects/camera.hpp"
-#include "taeto/objects/lights/light.hpp"
 #include "taeto/objects/object.hpp"
 #include "taeto/scenes/scene.hpp"
 #include "taeto/systems/render_system/render_system.hpp"
@@ -38,6 +37,19 @@ struct EngineSettings {
     // Engine specific settings
     bool debug_mode = false;
     
+};
+
+/**
+ * This enumeration is used to specify how an object is loaded into the engine.
+ * For example, by default an object may be loaded in to be an object that is
+ * in the game world, but another might be loaded to be a hud element to always
+ * reside in the same place on the screen with a specific size. This enum
+ * allows the user to specify when loading the object.
+ */
+enum class Context {
+    kSkyboxSpace = 0,
+    kWorldSpace,
+    kScreenSpace,
 };
 
 /**
@@ -76,16 +88,9 @@ float key_state(int id);
  * taeto::load_object(rect);
  * @endcode
  */
-void load_object(std::weak_ptr<Object> object);
-
-/**
- * Loads a widget into the engine. If the widget has already been loaded, it
- * will simply be ignored. Unloading is done by destroying the source shared
- * pointer to the widget.
- *
- * @param widget A weak_ptr to the widget to be loaded.
- */
-void load_widget(std::weak_ptr<Object> widget);
+void load_object(
+    std::weak_ptr<Object> object,
+    Context context = Context::kWorldSpace);
 
 /**
  * Continually render and display frames until program stopped.

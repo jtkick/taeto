@@ -8,6 +8,8 @@
 #ifndef OBJECT_IEMISSIVE_HPP_
 #define OBJECT_IEMISSIVE_HPP_
 
+#include "taeto/objects/object.hpp"
+
 namespace taeto
 {
 
@@ -16,7 +18,7 @@ namespace taeto
  * @brief An interface defining how an object implements the ability to emit
  * light into the Taeto engine world and light other objects.
  */
-class IEmissive
+class IEmissive : public virtual Object
 {
 public:
     /**
@@ -27,7 +29,7 @@ public:
      * @param pos The position of the pixel that is being rendered.
      * @return glm::vec3 The color and magnitude of the light from this object.
      */
-    virtual glm::vec3 color(const glm::dvec3& pos);
+    virtual glm::vec3 color(const glm::dvec3& pos) = 0;
 
     /**
      * @brief Gets the vector of the light provided by this object.
@@ -37,7 +39,7 @@ public:
      * @return glm::vec3 The direction that the light arrives at the pixel
      * being rendered at.
      */
-    virtual glm::vec3 vector(const glm::dvec3& pos);
+    virtual glm::vec3 vector(const glm::dvec3& pos) = 0;
 };
 
 }   // namespace taeto

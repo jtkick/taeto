@@ -7,12 +7,13 @@
 
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/render_pixel_frame.hpp"
+#include "taeto/objects/isprite.hpp"
 #include "taeto/objects/sprites/sprite.hpp"
 
 namespace taeto
 {
 
-class Circle: public taeto::Sprite
+class Circle: public ISprite
 {
 public:
     Circle(
@@ -20,7 +21,7 @@ public:
         taeto::RenderPixel r = taeto::RenderPixel(),
         bool spherical_normals = false);
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2) override;
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos);
 
 private:
     taeto::RenderPixelFrame frame_;

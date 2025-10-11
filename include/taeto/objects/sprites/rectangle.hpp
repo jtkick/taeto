@@ -4,18 +4,20 @@
 #include <glm/glm.hpp>
 
 #include "taeto/components/render_pixel.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/objects/isprite.hpp"
 
 namespace taeto
 {
 
-class Rectangle: public taeto::Sprite
+class Rectangle: public ISprite
 {
 public:
     Rectangle(glm::uvec2 s, taeto::RenderPixel p = taeto::RenderPixel(
         ' ', glm::vec4(), glm::vec4(1.0, 1.0, 1.0, 1.0), false));
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2 pos);
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos);
+
+    // glm::uvec2& shape() { return shape_; };
 
 private:
     taeto::RenderPixel pixel_;

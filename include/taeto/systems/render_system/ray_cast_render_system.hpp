@@ -7,8 +7,8 @@
 #include "taeto/objects/camera.hpp"
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/display_pixel_frame.hpp"
-#include "taeto/objects/iemissive.hpp"
-#include "taeto/objects/irenderable.hpp"
+#include "taeto/objects/ilight.hpp"
+#include "taeto/objects/isprite.hpp"
 #include "taeto/systems/render_system/render_system.hpp"
 
 namespace taeto
@@ -30,8 +30,13 @@ public:
     void render_frame(
         taeto::DisplayPixelFrame&,
         taeto::Camera&,
-        std::vector<std::weak_ptr<IRenderable>>&,
-        std::vector<std::weak_ptr<IEmissive>>&
+        std::vector<std::weak_ptr<ISprite>>&,
+        std::vector<std::weak_ptr<ILight>>&
+    );
+
+    void render_windows(
+        DisplayPixelFrame&,
+        std::vector<std::weak_ptr<ISprite>>&
     );
 };
 

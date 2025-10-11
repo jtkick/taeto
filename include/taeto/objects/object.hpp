@@ -18,23 +18,9 @@ namespace taeto
 class Object
 {
 public:
-    /**
-     * @brief Called when object is loaded into the Taeto engine.
-     * @details This function is overridden by sub-classes when they must do
-     * additional processing once loaded into the Taeto engine, such as loading
-     * in other dependent objects.
-     */
-    virtual void load() { };
-
-    /**
-     * @brief Called at the beginning of each frame.
-     * @details This function is overridden by sub-classes when they must do
-     * additional processing on each frame. It is called by the Taeto engine at
-     * the beginning of each frame.
-     */
-    virtual void animate() { };
-
     virtual ~Object() = default;
+
+    virtual void load() { };
 };
 
 }   // namespace taeto

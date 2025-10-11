@@ -10,13 +10,11 @@
 #include "spdlog/spdlog.h"
 
 #include "taeto/objects/camera.hpp"
-#include "taeto/objects/iemissive.hpp"
-#include "taeto/objects/irenderable.hpp"
+#include "taeto/objects/isprite.hpp"
+#include "taeto/objects/ilight.hpp"
 #include "taeto/components/display_pixel.hpp"
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/display_pixel_frame.hpp"
-#include "taeto/objects/lights/light.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
 #include "taeto/systems/system.hpp"
 #include "taeto/tools.hpp"
 
@@ -75,11 +73,16 @@ public:
      * @param[in] lights List of lights that should be used to light the scene.
      */
     virtual void render_frame(
-        taeto::DisplayPixelFrame&,
-        taeto::Camera&,
-        std::vector<std::weak_ptr<IRenderable>>& sprites,
-        std::vector<std::weak_ptr<IEmissive>>& lights
-    );
+        DisplayPixelFrame&,
+        Camera&,
+        std::vector<std::weak_ptr<ISprite>>& sprites,
+        std::vector<std::weak_ptr<ILight>>& lights
+    ) = 0;
+
+    virtual void render_windows(
+        DisplayPixelFrame&,
+        std::vector<std::weak_ptr<ISprite>>& windows
+    ) = 0;
 
     /**
      * @brief Returns the settings struct for the render system.

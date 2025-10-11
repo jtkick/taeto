@@ -1,5 +1,7 @@
 #include "taeto/objects/sprites/roflcopter.hpp"
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
 #include "taeto/components/render_pixel.hpp"
@@ -25,7 +27,7 @@ Roflcopter::Roflcopter(glm::uvec2 s, taeto::RenderPixel p)
     pixel_ = p;
 }
 
-taeto::RenderPixel Roflcopter::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel Roflcopter::pixel_at(glm::uvec2& pos)
 {
     return pixel_;
 }

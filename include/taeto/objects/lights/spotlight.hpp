@@ -3,14 +3,12 @@
 
 #include <glm/glm.hpp>
 
-#include "taeto/objects/iemissive.hpp"
-#include "taeto/objects/ipositionable.hpp"
-#include "taeto/objects/object.hpp"
+#include "taeto/objects/ilight.hpp"
 
 namespace taeto
 {
 
-class Spotlight: public Object, public IEmissive, public IPositionable
+class Spotlight: public ILight
 {
 public:
     /**

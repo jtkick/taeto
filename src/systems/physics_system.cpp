@@ -7,12 +7,8 @@
 #include <stdexcept>
 #include "spdlog/spdlog.h"
 
-#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/objects/iphysical.hpp"
 #include "taeto/tools.hpp"
-
-
-
-
 
 #include <iostream>
 
@@ -20,39 +16,38 @@ namespace taeto
 {
 
 void PhysicsSystem::apply_forces(
-    std::vector<std::weak_ptr<taeto::Sprite>>& sprites,
-    std::vector<std::weak_ptr<taeto::GravityField>>& fields)
+    std::vector<std::weak_ptr<taeto::IPhysical>>& sprites)
 {
     double forces_timer = (double)forces_timer_.reset() / 1000.0;
 
     for (const auto& sprite_weak_ptr : sprites)
     {
         // Get pointer if not dead
-        std::shared_ptr<taeto::Sprite> sprite;
+        std::shared_ptr<IPhysical> sprite;
         if (!(sprite = sprite_weak_ptr.lock()))
             continue;
 
         // Get any forces acting on sprite to start
         glm::dvec3 forces = sprite->force();
 
-        // Apply all gravity fields
-        for (const auto& field_weak_ptr : fields)
-        {
-            // Get pointer if not dead
-            std::shared_ptr<taeto::GravityField> field;
-            if (!(field = field_weak_ptr.lock()))
-                continue;
+        // // Apply all gravity fields
+        // for (const auto& field_weak_ptr : fields)
+        // {
+        //     // Get pointer if not dead
+        //     std::shared_ptr<taeto::GravityField> field;
+        //     if (!(field = field_weak_ptr.lock()))
+        //         continue;
 
-            forces += field->vector(sprite->position());
-        }
+        //     forces += field->vector(sprite->position());
+        // }
 
         // For now, just apply
         sprite->speed(sprite->speed() + (forces * forces_timer));
     }
 }
 
-void PhysicsSystem::apply_speeds(
-    std::vector<std::weak_ptr<taeto::Sprite>>& sprites)
+void PhysicsSystem::move_objects(
+    std::vector<std::weak_ptr<IPhysical>>& sprites)
 {
     double speeds_timer = (double)speeds_timer_.reset() / 1000.0;
 
@@ -64,7 +59,7 @@ void PhysicsSystem::apply_speeds(
     for (const auto& sprite_weak_ptr : sprites)
     {
         // Get pointer if not dead
-        std::shared_ptr<taeto::Sprite> sprite;
+        std::shared_ptr<IPhysical> sprite;
         if (!(sprite = sprite_weak_ptr.lock()))
             continue;
 
@@ -77,7 +72,7 @@ void PhysicsSystem::apply_speeds(
         for (const auto& sprite_weak_ptr : sprites)
         {
             // Get pointer if not dead
-            std::shared_ptr<taeto::Sprite> sprite;
+            std::shared_ptr<IPhysical> sprite;
             if (!(sprite = sprite_weak_ptr.lock()))
                 continue;
 
@@ -91,7 +86,7 @@ void PhysicsSystem::apply_speeds(
                 for (const auto& other_weak_ptr : sprites)
                 {
                     // Get pointer if not dead
-                    std::shared_ptr<taeto::Sprite> other;
+                    std::shared_ptr<IPhysical> other;
                     if (!(other = other_weak_ptr.lock()))
                         continue;
 
@@ -99,9 +94,9 @@ void PhysicsSystem::apply_speeds(
                     if (sprite.get() == other.get())
                         continue;
 
-                    // Collision detection
-                    if (!sprite->collides_with(other))
-                        continue;
+                    // // Collision detection
+                    // if (!sprite->collides_with(other))
+                    //     continue;
 
                     // Handle collisions
                     // Start with moving sprite back to position before colliding

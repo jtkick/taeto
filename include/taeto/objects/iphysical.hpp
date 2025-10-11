@@ -20,7 +20,7 @@ namespace taeto
  * @brief An interface defining how an object implements handling forces and
  * speeds.
  */
-class IPhysical : public IPositionable
+class IPhysical : public virtual IPositionable
 {
 public:
     /**

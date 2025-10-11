@@ -8,7 +8,12 @@
 #ifndef OBJECT_IRENDERABLE_HPP_
 #define OBJECT_IRENDERABLE_HPP_
 
+#include <memory>
+#include <vector>
+
 #include "taeto/components/render_pixel.hpp"
+#include "taeto/objects/ishaped.hpp"
+#include "taeto/shaders/shader.hpp"
 
 namespace taeto
 {
@@ -18,7 +23,7 @@ namespace taeto
  * @brief An interface defining how an object implements the ability to be
  * rendered on the screen as a widget or an object.
  */
-class IRenderable
+class IRenderable : public IShaped
 {
 public:
     /**
@@ -30,7 +35,42 @@ public:
      * origin.
      * @param pos Position of pixel relative to the object's position.
      */
-    virtual RenderPixel pixel_at(const glm::uvec2& pos);
+    virtual RenderPixel pixel_at(const glm::uvec2& pos) = 0;
+
+    /**
+     * @brief Defines whether the object responds to dynamic lights.
+     * @details If this method returns True, the engine will determine what
+     * color and how bright an object is based on lights loaded into the
+     * engine. If False, the object will look the same as what pixel_at()
+     * returns.
+     * @return bool Whether or not to use dynamic lighting.
+     */
+    virtual bool respect_light_sources() { return rls_; };
+
+    virtual void respect_light_sources(bool rls) { rls_ = rls; };
+
+    /**
+     * @brief Loads a shader to adjust the look of the object.
+     * @details Adds a shader that will apply to all pixels rendered with this
+     * object.
+     */
+    virtual void load_shader(std::weak_ptr<shaders::Shader> shader)
+    {
+        shaders_.push_back(shader);
+    };
+
+    /**
+     * @brief Returns a list of all the shaders applied to this object.
+     * @returns std::vector<std::weak_ptr<Shader>> List of shaders
+     */
+    virtual std::vector<std::weak_ptr<shaders::Shader>> shaders()
+    {
+        return shaders_;
+    };
+
+private:
+    bool rls_ = false;
+    std::vector<std::weak_ptr<shaders::Shader>> shaders_;
 };
 
 }   // namespace taeto

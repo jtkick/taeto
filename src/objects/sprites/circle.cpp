@@ -16,7 +16,7 @@ Circle::Circle(int diameter, taeto::RenderPixel r, bool spherical_normals)
 {
     uint height = (int)(diameter / 2.5);
     uint width = diameter;
-    shape_ = {width, height};
+    shape({width, height});
 
     double radius = (double)diameter / 2.0f;
 
@@ -49,7 +49,7 @@ Circle::Circle(int diameter, taeto::RenderPixel r, bool spherical_normals)
     }
 }
 
-taeto::RenderPixel Circle::get_pixel_at(glm::uvec2 pos)
+taeto::RenderPixel Circle::pixel_at(const glm::uvec2& pos)
 {
     return frame_.at(pos);
 }

@@ -9,13 +9,14 @@
 #include "taeto/objects/sprites/rectangle.hpp"
 #include "taeto/components/render_pixel.hpp"
 #include "taeto/frames/render_pixel_frame.hpp"
-#include "taeto/objects/sprites/sprite.hpp"
+#include "taeto/objects/ianimated.hpp"
+#include "taeto/objects/isprite.hpp"
 #include "taeto/scenes/scene.hpp"
 
 namespace taeto
 {
 
-class TaetoLogo : public Sprite
+class TaetoLogo : public ISprite
 {
 public:
     TaetoLogo(glm::vec3 color)
@@ -44,11 +45,11 @@ public:
         };
 
         // Compile actual pixels
-        shape_ = glm::uvec2(glm::uvec2(text_frame.at(0).size(), text_frame.size()));
-        frame_ = taeto::RenderPixelFrame(shape_);
-        for (int y = 0; y < shape_.y; ++y)
+        shape(glm::uvec2(glm::uvec2(text_frame.at(0).size(), text_frame.size())));
+        frame_ = taeto::RenderPixelFrame(shape());
+        for (int y = 0; y < shape().y; ++y)
         {
-            for (int x = 0; x < shape_.x; ++x)
+            for (int x = 0; x < shape().x; ++x)
             {
                 taeto::RenderPixel& pixel = frame_.at(glm::uvec2(x, y));
                 if (text_frame.at(y).at(x) != ' ')
@@ -71,7 +72,7 @@ public:
 
     ~TaetoLogo() { };
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2 pos) override
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos)
     {
         return frame_.at(pos);
     };
@@ -80,7 +81,7 @@ private:
     taeto::RenderPixelFrame frame_;
 };
 
-class GridShader : public taeto::shaders::Shader
+class GridShader : public taeto::shaders::Shader, public IAnimated
 {
 public:
     GridShader(glm::vec3 c, float d)
@@ -156,17 +157,17 @@ private:
     float offset_;
 };
 
-class Stars : public Sprite
+class Stars : public ISprite
 {
 public:
     Stars(float density)
     {
-        shape_ = glm::uvec2(std::numeric_limits<unsigned int>::max());
+        shape(glm::uvec2(std::numeric_limits<unsigned int>::max()));
     };
 
     ~Stars() { };
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2 pos) override
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos)
     {
         static taeto::RenderPixel pixel(
             ' ',
@@ -175,7 +176,7 @@ public:
             false
         );
 
-        srand(pos.y * height() * pos.x);
+        srand(pos.y * shape().y * pos.x);
         if (rand() % 25 == 0)
             pixel.c = '.';
         else
@@ -227,7 +228,7 @@ private:
     glm::vec3 color_;
 };
 
-class VaporwaveSun : public Sprite
+class VaporwaveSun : public ISprite
 {
 public:
     VaporwaveSun(glm::vec3 color1, glm::vec3 color2)
@@ -235,7 +236,8 @@ public:
         uint diameter = 45;
         uint height = (int)(diameter / 2.5);
         uint width = diameter;
-        shape_ = glm::uvec2(width, height);
+        shape(glm::uvec2(width, height));
+        respect_light_sources(false);
 
         double radius = (double)diameter / 2.0f;
 
@@ -252,12 +254,13 @@ public:
                 taeto::RenderPixel& pixel = frame_.at(glm::uvec2(j, i));
 
                 // Compute background color gradient
+                double y = (double)i / height;
                 pixel.bg_color = glm::vec4(
-                    color1.x - (color_steps.x * i),
-                    color1.y - (color_steps.y * i),
-                    color1.z - (color_steps.z * i),
-                    1.0) * 2.0f;
-                pixel.bg_color.a = 1.0f;
+                    (((y - 1.0) * (y - 1.0)) * color1.x) + ((y * y) * color2.x),
+                    (((y - 1.0) * (y - 1.0)) * color1.y) + ((y * y) * color2.y),
+                    (((y - 1.0) * (y - 1.0)) * color1.z) + ((y * y) * color2.z),
+                    1.0
+                );
 
                 // If no z component, we've gone off the edge of the sphere, so
                 // make all of these pixels fully transparent
@@ -280,7 +283,7 @@ public:
 
     ~VaporwaveSun() { };
 
-    taeto::RenderPixel get_pixel_at(glm::uvec2 pos) override
+    taeto::RenderPixel pixel_at(const glm::uvec2& pos)
     {
         return frame_.at(pos);
     };
@@ -289,7 +292,7 @@ private:
     taeto::RenderPixelFrame frame_;
 };
 
-// class Mountains : public Sprite
+// class Mountains : public ISprite
 // {
 // public:
 //     Mountains(glm::vec3 color);
@@ -303,15 +306,15 @@ private:
 // };
 
 
-class Demo : public Scene
+class Demo : public Scene, public virtual IAnimated
 {
 public:
     Demo()
     {
         // Create Taeto logo
         logo_ = std::make_shared<taeto::TaetoLogo>(glm::vec3(3.0, 1.0, 2.0));
-        logo_->position({-((double)logo_->width()/2),
-                        -((double)logo_->height()/2),
+        logo_->position({-((double)logo_->shape().x/2),
+                        -((double)logo_->shape().y/2),
                         -20});
 
         // Create grid rectangle
@@ -321,25 +324,25 @@ public:
             taeto::RenderPixel(' ', glm::vec4(0.0),
                             glm::vec4(0.0, 0.0, 0.0, 1.0), false));
         grid_rect_->position(glm::dvec3(
-            -((double)grid_rect_->width()/2),
+            -((double)grid_rect_->shape().x/2),
             0.0,
             -1000.0));
-        auto grid_shader_ = std::make_shared<taeto::GridShader>(glm::vec3(0.0, 0.4, 2.0), 2.0);
-        grid_rect_->add_shader(grid_shader_);
+        grid_shader_ = std::make_shared<taeto::GridShader>(glm::vec3(0.0, 0.4, 2.0), 2.0);
+        grid_rect_->load_shader(grid_shader_);
 
         // Create sun
-        sun_ = std::make_shared<taeto::VaporwaveSun>(glm::vec3(4.0, 1.75, 0.0),
-                                                    glm::vec3(3.0, 0.0, 1.3));
-        sun_->position({-((double)sun_->width()/2), -18, -20.001});
+        sun_ = std::make_shared<taeto::VaporwaveSun>(glm::vec3(10.5, 10.5, 0.5),
+                                                    glm::vec3(20.0, 0.5, 0.0));
+        sun_->position({-((double)sun_->shape().x/2), -18, -20.001});
 
         // Create stars backdrop
         stars_ = std::make_shared<taeto::Stars>(0.0);
         stars_->position({
-            -((double)stars_->width()/2),
-            -((double)stars_->height()/2),
+            -((double)stars_->shape().x/2),
+            -((double)stars_->shape().y/2),
             -1001});
         stars_shader_ = std::make_shared<taeto::StarsGradient>(glm::vec3(1.0, 0.1, 1.0));
-        stars_->add_shader(stars_shader_);
+        stars_->load_shader(stars_shader_);
 
         taeto::Camera& camera = taeto::camera();
         camera.position().z = -10;
@@ -351,15 +354,16 @@ public:
 
     void load()
     {
-        taeto::load_sprite(logo_);
-        taeto::load_sprite(grid_rect_);
-        taeto::load_sprite(stars_);
-        taeto::load_sprite(sun_);
+        taeto::load_object(logo_);
+        taeto::load_object(grid_rect_);
+        taeto::load_object(stars_);
+        taeto::load_object(sun_);
     };
 
 private:
     std::shared_ptr<taeto::TaetoLogo> logo_;
     std::shared_ptr<taeto::Rectangle> grid_rect_;
+    std::shared_ptr<taeto::GridShader> grid_shader_;
     std::shared_ptr<taeto::VaporwaveSun> sun_;
     std::shared_ptr<taeto::Stars> stars_;
     std::shared_ptr<taeto::StarsGradient> stars_shader_;
@@ -370,7 +374,7 @@ private:
 int main()
 {
     std::shared_ptr<taeto::Demo> demo = std::make_shared<taeto::Demo>();
-    taeto::load_scene(demo);
+    taeto::load_object(demo);
     taeto::run();
 }
 
