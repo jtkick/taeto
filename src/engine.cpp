@@ -10,6 +10,7 @@
 #include <set>
 #include <typeindex>
 #include <unordered_map>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <spdlog/spdlog.h>
@@ -18,6 +19,7 @@
 #include "taeto/components/display_pixel.hpp"
 
 #include "taeto/objects/camera.hpp"
+#include "taeto/filters/filter.hpp"
 #include "taeto/frames/display_pixel_frame.hpp"
 #include "taeto/frames/render_pixel_frame.hpp"
 #include "taeto/objects/object.hpp"
@@ -48,16 +50,18 @@ namespace {
     EngineSettings settings_;
 
     // All objects that exist in the engine
-    std::vector<std::weak_ptr<Object>> objects_;
+    std::vector<std::shared_ptr<Object>> objects_;
     // TODO: ENSURE WE ONLY HAVE ONE POINTER TO AN OBJECT
-    std::vector<std::weak_ptr<IAnimated>> animateds_;
-    std::vector<std::weak_ptr<IPhysical>> physicals_;
-    std::vector<std::weak_ptr<ISprite>> world_space_sprites_;
-    std::vector<std::weak_ptr<ILight>> world_space_lights_;
+    std::vector<std::shared_ptr<IAnimated>> animateds_;
+    std::vector<std::shared_ptr<IPhysical>> physicals_;
+    std::vector<std::shared_ptr<ISprite>> world_space_sprites_;
+    std::vector<std::shared_ptr<ILight>> world_space_lights_;
 
     // Windows to be displayed
-    std::vector<std::weak_ptr<ISprite>> screen_space_sprites_;
-    std::vector<std::weak_ptr<ILight>> screen_space_lights_;
+    std::vector<std::shared_ptr<ISprite>> screen_space_sprites_;
+    std::vector<std::shared_ptr<ILight>> screen_space_lights_;
+
+    std::vector<std::shared_ptr<Filter>> filters_;
 
     // Engine camera
     Camera world_space_camera_ = Camera(10);
@@ -95,7 +99,7 @@ float key_state(int id)
     return input_system_->key_state(id);
 }
 
-void load_object(std::weak_ptr<Object> object, Context context)
+void load_object(std::shared_ptr<Object> object, Context context)
 {
     // We're going to keep caches of each object in regards to any interface
     // it might implement. This allows us to pass objects to systems, in a way
@@ -103,34 +107,60 @@ void load_object(std::weak_ptr<Object> object, Context context)
     // prevents constant checking that the pointer is alive, and that the
     // object implements the interface.
     spdlog::debug("Adding object to engine.");
-    if (auto locked = object.lock())
+    objects_.push_back(object);
+    if (auto obj = std::dynamic_pointer_cast<IAnimated>(object))
+        animateds_.push_back(obj);
+    if (auto obj = std::dynamic_pointer_cast<IPhysical>(object))
+        physicals_.push_back(obj);
+    if (auto obj = std::dynamic_pointer_cast<ISprite>(object))
     {
-        objects_.push_back(object);
-        if (auto obj = std::dynamic_pointer_cast<IAnimated>(locked))
-            animateds_.push_back(obj);
-        if (auto obj = std::dynamic_pointer_cast<IPhysical>(locked))
-            physicals_.push_back(obj);
-        if (auto obj = std::dynamic_pointer_cast<ISprite>(locked))
-        {
-            if (context == Context::kWorldSpace)
-                world_space_sprites_.push_back(obj);
-            else if (context == Context::kScreenSpace)
-                screen_space_sprites_.push_back(obj);
-            // TODO: MAKE SURE SHADER IS ONLY LOADED ONCE
-            for (auto shader : obj->shaders())
-                if (auto locked_shader = shader.lock())
-                    if (auto s = std::dynamic_pointer_cast<IAnimated>(locked_shader))
-                        animateds_.push_back(s);
-        }
-        if (auto obj = std::dynamic_pointer_cast<ILight>(locked))
-            if (context == Context::kWorldSpace)
-                world_space_lights_.push_back(obj);
-            else if (context == Context::kScreenSpace)
-                screen_space_lights_.push_back(obj);
-
-        // Allow object to do its own loading
-        locked->load();
+        if (context == Context::kWorldSpace)
+            world_space_sprites_.push_back(obj);
+        else if (context == Context::kScreenSpace)
+            screen_space_sprites_.push_back(obj);
+        // TODO: MAKE SURE SHADER IS ONLY LOADED ONCE
+        for (auto shader : obj->shaders())
+            if (auto s = std::dynamic_pointer_cast<IAnimated>(shader))
+                animateds_.push_back(s);
     }
+    if (auto obj = std::dynamic_pointer_cast<ILight>(object))
+        if (context == Context::kWorldSpace)
+            world_space_lights_.push_back(obj);
+        else if (context == Context::kScreenSpace)
+            screen_space_lights_.push_back(obj);
+    if (auto obj = std::dynamic_pointer_cast<Filter>(object))
+        filters_.push_back(obj);
+
+    // Allow object to do its own loading
+    object->load();
+}
+
+void unload_object(std::shared_ptr<Object> object)
+{
+    std::erase(objects_, object);
+    std::erase(animateds_, object);
+    std::erase(physicals_, object);
+    std::erase(world_space_lights_, object);
+    std::erase(world_space_sprites_, object);
+    std::erase(screen_space_lights_, object);
+    std::erase(screen_space_sprites_, object);
+    std::erase(filters_, object);
+}
+
+void replace_objects(std::shared_ptr<Object> object)
+{
+    // Clear out all loaded objects
+    objects_.clear();
+    animateds_.clear();
+    physicals_.clear();
+    world_space_lights_.clear();
+    world_space_sprites_.clear();
+    screen_space_lights_.clear();
+    screen_space_sprites_.clear();
+    filters_.clear();
+
+    // Now load the given object
+    load_object(object);
 }
 
 void run()
@@ -204,9 +234,7 @@ void run()
 
         logger->debug("Telling objects to animate.");
         for (auto object : animateds_)
-            // Get pointer if not dead
-            if (auto locked = object.lock())
-                locked->animate();
+            object->animate();
 
 
         ////////////////////////////////////////////////////////////////
@@ -288,6 +316,17 @@ void run()
         //         );
         //     }
         // }
+
+        ////////////////////////////////////////////////////////////////
+        ////                      FILTER STEP                       ////
+        ////////////////////////////////////////////////////////////////
+
+        for (int i = 0; i < frame.height(); i++)
+            for (int j = 0; j < frame.width(); j++)
+                for (auto filter : filters_)
+                    frame.at({j, i}) = filter->shade(
+                        frame.at({j, i}), frame.size(), {j, i}
+                    );
 
 
         ////////////////////////////////////////////////////////////////

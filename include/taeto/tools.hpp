@@ -34,6 +34,8 @@ public:
 
     unsigned int reset();
 
+    unsigned int time();
+
 private:
     unsigned int time_;
 };

@@ -33,7 +33,7 @@ public:
      * @brief Applies forces acting on objects in order to change their speed.
      * @param objects All of the objects to update.
      */
-    void apply_forces(std::vector<std::weak_ptr<IPhysical>>& objects);
+    void apply_forces(std::vector<std::shared_ptr<IPhysical>>& objects);
 
     /**
      * @brief Moves all objects according to their speeds.
@@ -42,7 +42,7 @@ public:
      * accordingly.
      * @param sprites All sprites that move or have collision.
      */
-    void move_objects(std::vector<std::weak_ptr<IPhysical>>& sprites);
+    void move_objects(std::vector<std::shared_ptr<IPhysical>>& sprites);
 
 private:
     std::shared_ptr<spdlog::logger> logger_;

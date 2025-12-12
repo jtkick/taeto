@@ -12,7 +12,7 @@
 
 #include <glm/glm.hpp>
 
-#include "taeto/objects/ilight.hpp"=
+#include "taeto/objects/ilight.hpp"
 #include "taeto/objects/object.hpp"
 
 namespace taeto

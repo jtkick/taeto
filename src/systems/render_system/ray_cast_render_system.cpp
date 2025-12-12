@@ -20,25 +20,17 @@ namespace taeto
 {
 
 // For sorting vector of sprites
-bool compare_sprites(std::weak_ptr<ISprite> weak_sprite1,
-                     std::weak_ptr<ISprite> weak_sprite2)
+bool compare_sprites(std::shared_ptr<ISprite> sprite1,
+                     std::shared_ptr<ISprite> sprite2)
 {
-    // Get shared pointers to both sprites
-    std::shared_ptr<ISprite> sprite1;
-    std::shared_ptr<ISprite> sprite2;
-    if (!(sprite1 = weak_sprite1.lock()) ||
-        !(sprite2 = weak_sprite2.lock()))
-        return false;
-
-    // Compare position
     return sprite1->position().z < sprite2->position().z;
 }
 
 void RayCastRenderSystem::render_frame(
     taeto::DisplayPixelFrame &rendered_frame,
     taeto::Camera &camera,
-    std::vector<std::weak_ptr<ISprite>>& sprites,
-    std::vector<std::weak_ptr<ILight>>& lights)
+    std::vector<std::shared_ptr<ISprite>>& sprites,
+    std::vector<std::shared_ptr<ILight>>& lights)
 {
     // Get height and width for quick reference
     int h = rendered_frame.height();
@@ -83,11 +75,10 @@ void RayCastRenderSystem::render_frame(
             // }
 
             // Render each sprite at a time
-            for (std::weak_ptr<ISprite> current_sprite_weak_ptr : sprites)
+            for (std::shared_ptr<ISprite> current_sprite : sprites)
             {
-                // Get pointer if not dead
-                std::shared_ptr<ISprite> current_sprite;
-                if (!(current_sprite = current_sprite_weak_ptr.lock()))
+                // Don't render if set to invisible
+                if (!current_sprite->render())
                     continue;
 
                 // Assume it's invisible and update it as such
@@ -186,10 +177,9 @@ void RayCastRenderSystem::render_frame(
 
                 // Apply shading to pixel
                 for (auto shader : current_sprite->shaders())
-                    if (auto s = shader.lock())
-                        current_pixel = s->shade(
-                            current_pixel, frame_shape, pos_in_frame, pos_in_world,
-                            camera_pos);
+                    current_pixel = shader->shade(
+                        current_pixel, frame_shape, pos_in_frame, pos_in_world,
+                        camera_pos);
 
                 ////////////////////////////////////////////////////////////////
                 ////                      APPLY PIXEL                       ////
@@ -350,7 +340,7 @@ void RayCastRenderSystem::render_frame(
 
 void RayCastRenderSystem::render_windows(
     DisplayPixelFrame& frame,
-    std::vector<std::weak_ptr<ISprite>>& windows
+    std::vector<std::shared_ptr<ISprite>>& windows
 )
 {
     // Get height and width for quick reference
@@ -376,13 +366,8 @@ void RayCastRenderSystem::render_windows(
         for (int x = 0; x < w; x++)
         {
             // Render each window at a time
-            for (std::weak_ptr<ISprite> current_window_weak_ptr : windows)
+            for (std::shared_ptr<ISprite> current_window : windows)
             {
-                // Get pointer if not dead
-                std::shared_ptr<ISprite> current_window;
-                if (!(current_window = current_window_weak_ptr.lock()))
-                    continue;
-
                 // Map to relative to sprite origin
                 int64_t rel_y = y - (int64_t)current_window->position().y;
                 int64_t rel_x = x - (int64_t)current_window->position().x;

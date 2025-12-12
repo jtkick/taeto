@@ -30,13 +30,13 @@ public:
     void render_frame(
         taeto::DisplayPixelFrame&,
         taeto::Camera&,
-        std::vector<std::weak_ptr<ISprite>>&,
-        std::vector<std::weak_ptr<ILight>>&
+        std::vector<std::shared_ptr<ISprite>>&,
+        std::vector<std::shared_ptr<ILight>>&
     );
 
     void render_windows(
         DisplayPixelFrame&,
-        std::vector<std::weak_ptr<ISprite>>&
+        std::vector<std::shared_ptr<ISprite>>&
     );
 };
 

@@ -78,7 +78,7 @@ float key_state(int id);
  * will simply be ignored. Unloading is done by destroying the source shared
  * pointer to the object.
  *
- * @param object A weak_ptr to the object to be loaded.
+ * @param object A shared_ptr to the object to be loaded.
  *
  * @code
  * // Create an object using std::shared_ptr
@@ -89,8 +89,12 @@ float key_state(int id);
  * @endcode
  */
 void load_object(
-    std::weak_ptr<Object> object,
+    std::shared_ptr<Object> object,
     Context context = Context::kWorldSpace);
+
+void unload_object(std::shared_ptr<Object> object);
+
+void replace_objects(std::shared_ptr<Object> object);
 
 /**
  * Continually render and display frames until program stopped.

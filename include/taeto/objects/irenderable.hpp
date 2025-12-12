@@ -50,27 +50,36 @@ public:
     virtual void respect_light_sources(bool rls) { rls_ = rls; };
 
     /**
+     * @brief Defines whether or not this object should be rendered.
+     * @details If set to false, the object will not be rendered even when it is
+     * loaded in the engine.
+     */
+    virtual void render(bool r) { render_ = r; };
+    virtual bool render() { return render_; };
+
+    /**
      * @brief Loads a shader to adjust the look of the object.
      * @details Adds a shader that will apply to all pixels rendered with this
      * object.
      */
-    virtual void load_shader(std::weak_ptr<shaders::Shader> shader)
+    virtual void load_shader(std::shared_ptr<shaders::Shader> shader)
     {
         shaders_.push_back(shader);
     };
 
     /**
      * @brief Returns a list of all the shaders applied to this object.
-     * @returns std::vector<std::weak_ptr<Shader>> List of shaders
+     * @returns std::vector<std::shared_ptr<Shader>> List of shaders
      */
-    virtual std::vector<std::weak_ptr<shaders::Shader>> shaders()
+    virtual std::vector<std::shared_ptr<shaders::Shader>> shaders()
     {
         return shaders_;
     };
 
 private:
     bool rls_ = false;
-    std::vector<std::weak_ptr<shaders::Shader>> shaders_;
+    bool render_ = true;
+    std::vector<std::shared_ptr<shaders::Shader>> shaders_;
 };
 
 }   // namespace taeto

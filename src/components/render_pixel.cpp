@@ -35,13 +35,13 @@ RenderPixel::RenderPixel(char character)
     collision = false;
 }
 
-RenderPixel::RenderPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool b)
+RenderPixel::RenderPixel(char ch, glm::vec4 fc, glm::vec4 bc, bool r)
 {
-    render = true;
+    render = r;
     c = ch;
     fg_color = fc;
     bg_color = bc;
-    bold = b;
+    bold = false;
     italic = false;
     underline = false;
     strikethrough = false;

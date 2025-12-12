@@ -75,13 +75,13 @@ public:
     virtual void render_frame(
         DisplayPixelFrame&,
         Camera&,
-        std::vector<std::weak_ptr<ISprite>>& sprites,
-        std::vector<std::weak_ptr<ILight>>& lights
+        std::vector<std::shared_ptr<ISprite>>& sprites,
+        std::vector<std::shared_ptr<ILight>>& lights
     ) = 0;
 
     virtual void render_windows(
         DisplayPixelFrame&,
-        std::vector<std::weak_ptr<ISprite>>& windows
+        std::vector<std::shared_ptr<ISprite>>& windows
     ) = 0;
 
     /**
